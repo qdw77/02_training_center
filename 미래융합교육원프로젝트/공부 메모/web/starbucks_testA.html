@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>StarcucksTest</title>
+	<style>
+		/*header{
+			position: fixed;
+		}*/
+		.first{
+			position: relative;
+			width: 100%;
+			height: 300px;
+			background: #f6f5ef;
+		}
+/*		.logo{background-image: url(https://www.starbucks.co.kr/common/img/common/logo.png); position: absolute; background-repeat: no-repeat; width: 80px; height: 80px;}*/
+		nav{display: inline-block;}
+		.util_nav_div{position: absolute; right: 0;}
+		.util_nav{list-style: none;}
+		.util_nav li{display: inline-block; margin: 10px}
+		.menu_nav{height: 60px;}
+		li{list-style: none }
+		.menubarA > li:hover{
+			text-decoration: underline;
+		}
+		.menubarA{
+			margin: 50px;
+			display: inline-block;
+			text-align: left;
+		}
+		.menubarA li{margin: 0px; display: none; padding: 0; top: 110px; width: 100%; position: absolute;text-align: center;}
+		.menubarB{margin: 10px; display: none;}
+		.menubarC{margin: 10px; display: none;}
+		.menubarD{margin: 10px; display: none;}
+/*		visibility: hidden; */
+		.menuA:hover .menubarA li{display: block;}
+		.menuB:hover .menubarB{display: block;}
+		.menuC:hover .menubarC{display: block;}
+		.menuD:hover .menubarD{display: block;}
+		.menu_sub_ttl{font-weight: bold;}
+		a:visited{color: #2C2A29;}
+	</style>
+</head>
+
+<body>
+	<div class="first">
+		<header>
+			<h1 class="logo"><a href="file:///C:/Users/301-10/Desktop/web/starbucks_test.html"></a></h1>
+			<nav class="util_nav_div">
+				<ul class="util_nav">
+					<li class="util_nav1"><a href="https://www.starbucks.co.kr/login/login.do">Sign in</a></li>
+					<li class="util_nav2"><a href="https://www.starbucks.co.kr/login/login.do?redirect_url=%2Fmy%2Findex.do">My Starbucks</a></li>
+					<li class="util_nav3"><a href="https://www.starbucks.co.kr/util/index.do">Customer Service & Ideas</a></li>
+					<li class="util_nav4"><a href="https://www.starbucks.co.kr/util/index.do">Find a Store</a></li>
+				</ul>
+			</nav>
+		</header>
+		<nav>
+			<ul class="menu_nav">
+				<li class="menuA">
+					<h2><a href="">COFFEE</a></h2>
+					<ul class="menubarA">
+						<li class="menu_sub_ttl"><a href="">커피</a></li>
+						<li><a href="">스타벅스 원두</li>
+						<li><a href="">스타벅스 비아</a></li>
+						<li><a href="">스타벅스 오리가미</a></li>
+						<li><a href="">스타벅스앳홈 by 캡슐</a></li>
+						<li><a href="">나와 어울리는 커피</a></li>
+					</ul>
+					<ul class="menubarA">
+						<li class="menu_sub_ttl"><a href="">커피 이야기</a></li>
+						<li><a href="">농장에서 우리의 손으로</a></li>
+						<li><a href="">최상의 아라비카 원두</a></li>
+						<li><a href="">스타벅스 로스트 스펙트럼</a></li>
+						<li><a href="">스타벅스 디카페인</a></li>
+					</ul>
+					<ul class="menubarA">
+						<li class="menu_sub_ttl"><a href="">스타벅스 리저브</a></li>
+						<li><a href="">RESERVE MAGAZINE</a></li>
+					</ul>
+					<ul class="menubarA">
+						<li class="menu_sub_ttl"><a href="">에스프레소 음료</a></li>
+						<li><a href="">도피오</a></li>
+						<li><a href="">에스프레소 마키아또</a></li>
+						<li><a href="">아메리카노</a></li>
+						<li><a href="">마키아또</a></li>
+						<li><a href="">카푸치노</a></li>
+						<li><a href="">라떼</a></li>
+						<li><a href="">모카</a></li>
+					</ul>
+					<ul class="menubarA">
+						<li class="menu_sub_ttl"><a href="">최상의 커피를 즐기는 법</a></li>
+						<li><a href="">커피 프레스</a></li>
+						<li><a href="">푸어 오버</a></li>
+						<li><a href="">아이스 푸어 오버</a></li>
+						<li><a href="">커피 메이커</a></li>
+					</ul>
+				</li>
+				<li class="menuB">
+					<h2><a href="">MENU</a></h2>
+					<ul class="menubarB">
+						<li class="menu_sub_ttl">
+							<a href="">음료</a>
+						</li>
+						<li>
+							<a href="">콜드 브루</a>
+						</li>
+						<li>
+							<a href="">브루스 커피</a>
+						</li>
+						<li>
+							<a href="">에스프레소</a>
+						</li>
+						<li>
+							<a href="">프라푸치노</a>
+						</li>
+						<li>
+							<a href="">블렌디드</a>
+						</li>
+						<li>
+							<a href="">스타벅스 리프레셔</a>
+						</li>
+						<li>
+							<a href="">스타벅스 피지오</a>
+						</li>
+						<li>
+							<a href="">티(티바나)</a>
+						</li>
+						<li>
+							<a href="">기타 제조 음료</a>
+						</li>
+						<li>
+							<a href="">스타벅스 주스(병음료)</a>
+						</li>
+					</ul>
+					<ul class="menubarB">
+						<li class="menu_sub_ttl">
+							<a href="">푸드</a>
+						</li>
+						<li>
+							<a href="">브레드</a>
+						</li>
+						<li>
+							<a href="">케이크</a>
+						</li>
+						<li>
+							<a href="">샌드위치 & 샐러드</a>
+						</li>
+						<li>
+							<a href="">따뜻한 푸드</a>
+						</li>
+						<li>
+							<a href="">과일 & 요거트</a>
+						</li>
+						<li>
+							<a href="">스낵 & 미니 디저트</a>
+						</li>
+						<li>
+							<a href="">아이스크림</a>
+						</li>
+					</ul>
+					<ul class="menubarB">
+						<li class="menu_sub_ttl">
+							<a href="">상품</a>
+						</li>
+						<li>
+							<a href="">머그</a>
+						</li>
+						<li>
+							<a href="">플라스틱 텀블러</a>
+						</li>
+						<li>
+							<a href="">글라스</a>
+						</li>
+						<li>
+							<a href="">스테인레스 텀블러</a>
+						</li>
+						<li>
+							<a href="">보온병</a>
+						</li>
+						<li>
+							<a href="">악세서리</a>
+						</li>
+						<li>
+							<a href="">선물세트</a>
+						</li>
+						<li>
+							<a href="">커피용품</a>
+						</li>
+						<li>
+							<a href="">패키지 티(티바나)</a>
+						</li>
+						<li>
+							<a href="">시럽</a>
+						</li>
+					</ul>
+					<ul class="menubarB">
+						<li class="menu_sub_ttl">
+							<a href="">카드</a>
+						</li>
+						<li>
+							<a href="">실물카드</a>
+						</li>
+						<li>
+							<a href="">스타벅스 모바일 카드</a>
+						</li>
+					</ul>
+					<ul class="menubarB">
+						<li class="menu_sub_ttl">
+							<a href="">메뉴 이야기</a>
+						</li>
+						<li>
+							<a href="">스타벅스 티바나</a>
+						</li>
+						<li>
+							<a href="">스타벅스 콜드 브루</a>
+						</li>
+					</ul>
+				</li>
+				<li class="menuC">
+					<h2><a href="">STORE</a></h2>
+					<ul class="menubarC">
+						<li class="menu_sub_ttl">
+							<a href="">매장 찾기</a>
+						</li>
+						<li>
+							<a href="">퀵 검색</a>
+						</li>
+						<li>
+							<a href="">지역 검색</a>
+						</li>
+					</ul>
+					<ul class="menubarC">
+						<li class="menu_sub_ttl">
+							<a href="">드라이브 스루 매장</a>
+						</li>
+					</ul>
+					<ul class="menubarC">
+						<li class="menu_sub_ttl">
+							<a href="">스타벅스 리저브 매장</a>
+						</li>
+					</ul>
+					<ul class="menubarC">
+						<li class="menu_sub_ttl">
+							<a href="">커뮤니티 스토어 매장</a>
+						</li>
+					</ul>
+				</li>
+				<li class="menuD">
+					<h2><a href="">RESPONSIBILITY</a></h2>
+					<ul class="menubarD">
+						<li class="menu_sub_ttl">
+							<a href="">사회공헌 캠페인 소개</a>
+						</li>
+					</ul>
+					<ul class="menubarD">
+						<li class="menu_sub_ttl">
+							<a href="">지역 사회 참여 활동</a>
+						</li>
+						<li>
+							<a href="">희망 배달 캠페인</a>
+						</li>
+						<li>
+							<a href="">재능기부 카페 소식</a>
+						</li>
+						<li>
+							<a href="">커뮤니티 스토어</a>
+						</li>
+						<li>
+							<a href="">청년 지원 프로그램</a>
+						</li>
+						<li>
+							<a href="">우리 농산물 사랑 캠페인</a>
+						</li>
+						<li>
+							<a href="">국가유산 지킴이 활동</a>
+						</li>
+					</ul>
+					<ul class="menubarD">
+						<li class="menu_sub_ttl">
+							<a href="">환경보호 활동</a>
+						</li>
+						<li>
+							<a href="">친환경 활동</a>
+						</li>
+						<li>
+							<a href="">일회용 컵 없는 매장</a>
+						</li>
+						<li>
+							<a href="">커피 원두 재활용</a>
+						</li>
+					</ul>
+					<ul class="menubarD">
+						<li class="menu_sub_ttl">
+							<a href="">윤리 구매</a>
+						</li>
+						<li>
+							<a href="">윤리적 원두 구매</a>
+						</li>
+						<li>
+							<a href="">공정무역 인증</a>
+						</li>
+						<li>
+							<a href="">커피 농가 지원 활동</a>
+						</li>
+					</ul>
+					<ul class="menubarD">
+						<li class="menu_sub_ttl">
+							<a href="">글로벌 사회 공헌</a>
+						</li>
+						<li>
+							<a href="">윤리경영 보고서</a>
+						</li>
+						<li>
+							<a href="">스타벅스 재단</a>
+						</li>
+						<li>
+							<a href="">지구촌 봉사의 달</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<h2><a href="">STARBUCKS REWARDS</a></h2>
+					<ul>
+						<li class="menu_sub_ttl"></li>
+					</ul>
+				</li>
+				<li>
+					<h2><a href="">CORPORATE SALES</a></h2>
+					<ul>
+						<li class="menu_sub_ttl"></li>
+					</ul>
+				</li>
+				<li>
+					
+				</li>
+			</ul>
+		</nav>
+	</div>
+	
+</body>
+
+</html>

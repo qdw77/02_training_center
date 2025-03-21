@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<style type="text/css">
+/*		body{font-size: 10px;}*/
+		
+		.container{ /*	모바일해상도 기준 / 여기에 지정 방향성,정렬 등	*/
+			display: flex; /* 플랙스 박스를 사용  */
+			flex-direction: column; /* 항목 배치 세로 방향성*/
+			align-items: center; /* 가로 기준의 아이템 정렬 / 교차측 기반? */
+			gap: 20px; /* 아이템간 간격 */
+			height: 100vh;/* 화면 전체 높이 차지 */
+			justify-content: center; /* 아이템 세로기준 정렬 */
+			/* justify-content는 주측(direction) 기반 정렬 */
+			/* align-item는 교차측 기반 정렬 */
+		}
+
+		.item{
+			background: lightblue;
+			padding: 20px;
+			font-size: 20px;
+			width: 80%;
+			text-align: center; /* 글자 중앙 정렬 */
+			border-radius: 10px;
+		}
+				/*	모바일	*/
+		@media(min-width: 768px){
+			.container{
+				flex-direction: row; /* row 가로 방향성 배치 column inherit*/
+				justify-content: center; /* space-around space-between center 가로로 가운데 정렬  */
+				height: auto; /* 높이 자동 설정 */
+			}
+			.item{
+				width: 15%;
+			}
+		}
+
+
+
+	/*		@media (min-width:768px) {
+			pc	body{font-size: 16px;}*/
+			/*p{}
+			.
+			#
+			imput*/
+		}
+		/*//	pc 혹은 모바일	
+		@media (min-width: 1024px){
+			body{font-size: 30px;}
+		}*/
+	</style>
+</head>
+<body>
+	<!-- <div>반응형 미디어뭐리 CSS 속성 설정</div> -->
+	<div class="container">
+		<div class="item">1번 아이템</div>
+		<div class="item">2번 아이템</div>
+		<div class="item">3번 아이템</div>
+	</div> 
+
+</body>
+</html>

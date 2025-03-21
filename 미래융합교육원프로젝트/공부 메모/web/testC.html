@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>캐릭터 이동</title>
+		<style type="text/css">
+			body{margin: 0;}
+			canvas{display: block; background-color: red;}
+		</style>
+	</head>
+	<body>
+		<canvas id='gameCanvas'></canvas>
+		<script type="text/javascript">
+			const canvas=document.getElementById('gameCanvas');
+			const ctx=canvas.getContext('2d');
+			canvas.width=800;
+			canvas.height=400;
+			const characterWidth=50;
+			const characterHeight=50;
+			const gravity=0.5; // 점프 (중력)
+			const jompPower=-12; // 점프()
+			let velocitY=0; // 점프
+			let isJumping=false; // 점프
+			let characterX=canvas.width/2-characterWidth/2;
+			let characterY=canvas.height-characterHeight-10;
+			const characterImage=new Image();
+			characterImage.src='https://image-notepet.akamaized.net/resize/620x-/seimage/20200218/f39eb131523353a8505b008964339967.jpg';
+			let moveLeft=false;
+			let moveRight=false;
+			window.addEventListener('keydown',function(event){
+				if(event.key ==='ArrowLeft'){
+					moveLeft=true;
+				}
+				if (event.key==='ArrowRight') {
+					moveRight=true;
+				}
+				if(event.key =='ArrowUp' && !isJumping){ //점프
+					velocitY=jompPower;
+					isJumping=true;
+				}
+			});
+
+			window.addEventListener('keyup',function(event){
+				if(event.key==='ArrowLeft'){
+					moveLeft=false;
+				}
+				if (event.key === 'ArrowRight') {
+					moveRight=false;
+				}
+			})
+
+
+			function gameLoop() {
+				ctx.clearRect(0,0,canvas.width,canvas.height); //캔버스 초기화
+				// console.log(characterX);
+				if(moveLeft && characterX>0){
+					characterX-=5;
+				}
+				if(moveRight && characterX<canvas.width-characterWidth){
+					characterX+=5;
+				}
+				if (isJumping) { // 점프
+					characterY += velocitY;
+					velocitY += gravity; //속도에 중력
+					if (characterY>=canvas.height-characterHeight-10) {
+						characterY=canvas.height-characterHeight-10;
+						isJumping=false;
+						velocitY=0;
+					}
+				}
+
+				ctx.drawImage(characterImage,characterX,characterY,characterWidth,characterHeight);
+				requestAnimationFrame(gameLoop);
+
+			}
+			characterImage.onload=function(){
+				gameLoop();
+			}
+		</script>
+
+	</body>
+</html>

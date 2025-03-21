@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>이미지 캐릭터 이동</title>
+	<style type="text/css">
+		body{margin:0}
+		canvas{display:block;background: red}
+	</style>
+</head>
+<body>
+	<canvas id='gameCanvas'></canvas>
+	<script type="text/javascript">
+		const canvas=document.getElementById('gameCanvas');
+		const ctx=canvas.getContext('2d');
+		canvas.width=800;
+		canvas.height=400;
+		const characterWidth=50;
+		const characterHeight=50;
+		const gravity=0.5;
+		const jumpPower=-12;
+		let velocityY=0;
+		let isJumping=false;
+		let characterX=canvas.width/2-characterWidth/2;
+		let characterY=canvas.height-characterHeight-10;
+		const characterImage=new Image();
+		characterImage.src='https://aptmanager.co.kr/wp-content/uploads/kboard_thumbnails/8/202307/64b8d4a82e7988146519.png';
+		let moveLeft=false;
+		let moveRight=false;
+		window.addEventListener('keydown',function(event){
+			if(event.key === 'ArrowLeft')
+			{
+				moveLeft=true;
+			}
+			if(event.key === 'ArrowRight')
+			{
+				moveRight=true;
+			}
+			if(event.key ==='ArrowUp' && !isJumping)
+			{
+				velocityY=jumpPower;
+				isJumping=true;
+			}
+		});
+		window.addEventListener('keyup',function(event){
+			if(event.key ==='ArrowLeft')
+			{
+				moveLeft=false;
+			}
+			if(event.key ==='ArrowRight')
+			{
+				moveRight=false;
+			}
+		})
+
+		function gameLoop()
+		{
+			ctx.clearRect(0,0,canvas.width,canvas.height);//캔버스초기화
+			if(moveLeft && characterX>0)
+			{
+				characterX-=5;
+			}
+			if(moveRight && characterX<canvas.width-characterWidth)
+			{
+				characterX+=5;
+			}
+			if(isJumping)
+			{
+				characterY += velocityY;
+				velocityY +=gravity;
+				if(characterY>=canvas.height-characterHeight-10)//바닥에 닿음
+				{
+					characterY=canvas.height-characterHeight-10;
+					isJumping=false;
+					velocityY=0;
+				}
+
+			}
+			ctx.drawImage(characterImage,characterX,characterY,characterWidth,characterHeight);
+			requestAnimationFrame(gameLoop);
+		}
+		characterImage.onload=function(){
+			gameLoop();
+		}
+
+	</script>
+</body>
+</html>

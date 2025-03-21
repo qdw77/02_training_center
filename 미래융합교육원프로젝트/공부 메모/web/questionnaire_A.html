@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>설문지 제작(반려동물)</title>
+		<meta charset="utf-8"> <!-- 규격-->
+		<meta name="author" content="301"> 
+		<meta name="description" content="html 실습">
+		<meta name="keywords" content="설문지 제작">
+
+		<style>
+			html, body{margin: 0; padding: 0; height: 100%; background-color: #EFF8FB}
+			nav{width: 15%;height: 70%;float: left;} /*왼쪽	*/
+			header{width: 100%; height: 15%; background-color: lightsteelblue;} /* 위쪽	*/
+			section{width: 50%;height: 50%; float: left;} /*중앙*/
+			aside{width: 10%;height: 70%; float: left;} /*오른쪽*/
+			footer{width: 100%;height: 10%;bottom: 0px; clear: both; position: relative; transform: translateY(0%);display: flex; padding-bottom: 20px; align-items: center;} /*아래쪽*/
+			#m1{
+				background-color: white;
+			}
+
+			#tbA{
+				background-color: #EFF8FB;
+			}
+
+			#tb_A{
+				background-color: white;
+			}
+		</style>
+		<!-- 점수 체크/ footer 고정 / 모양 망가짐 수정 -->
+	</head>
+
+	<body>
+		
+		<header id="hd">
+			<!-- 제목 -->
+			<h1>반려 동물</h1>
+		</header>
+		<br>
+		<nav>
+			
+		</nav>
+		<section id="md">
+			<!--  -->
+			<form id="m1">
+				<fieldset>
+					<legend>1. 반려 동물을 기르고 있나요?</legend> <!--주제-->
+					<div id="tbA">
+						<table id="th1">
+							<thead id="th_A">
+								<tr>
+									<th>예.<input type="radio" name="1" value="1"></th>
+									<th>아니요.<input type="radio" name="1" value="2" checked></th>
+								</tr>
+							</thead>
+							<tbody id="tb_A">
+								<tr>
+									<td><img src="https://i.namu.wiki/i/oYPEFVHc7B-JIQE__8_nvJoMhboMvObF8fZX1U1uj0H1L_naePFF_t_dhCBvtN27FiAw9fc_w3Yk3j8jNqKQsp_wAqygnWxtctBMhZhz_PzPuyLFiP58Af8mXBFzcKYtvHW_PxqPjF2S_kLPZW6YVQ.webp" width="90px"></td>
+									<td><img src="https://i.namu.wiki/i/t8jXsYzg2UJIOUyNmk5iHzSxHbvIW8MLPZ9bzvEaAVCEH1U_TkRVYiTBARUUMxCT4tdFuPmYO83v4YleJQTpeMUXXCs4QpoHuhypqAZF9pieLnhRpSYuGSS1DzggDVKSwwZzswsLRDjiBBAGQvMuFA.webp" width="80px"></td>
+								</tr>					
+							</tbody>
+						</table>
+					</div>
+				</fieldset>
+			</form>
+			<br>
+			<form id="m2">
+				<fieldset>
+					<legend>2. 기르고 있다면 어떤 동물을 기르고 있습니까?</legend> <!-- 세부 주제1 -->
+					<table>
+						<tr>
+							<th>고양이<input type="checkbox" value="1"></th>
+							<th>강아지<input type="checkbox" value="2"></th>
+							<th>물고기<input type="checkbox" value="3"></th>
+							<th>파충류<input type="checkbox" value="3"></th>
+							<th>기타<input type="checkbox" value="4"></th>
+						</tr>
+						<tr>
+							<td><img src="https://i.namu.wiki/i/9282KqcI5euGwaiSRzP2WVGgloHhJSM25txGdMrDaBsQZm2QNPa3FqlGKQg-kCRhE_i_TecKOMfwDxOeL09pgVD7wM6vP2XPJ-bYpV7pvk80p622oSkUIYfCmflAjfn2gBPFTeo5CB6-er28Nzye0A.webp" width="80px"></td>
+							<td><img src="https://i.namu.wiki/i/MknyLnPac51lx9ZzAccsUKZVapDxjOkD-9qHCu-g5jburDdhn9VOg2oPE-75u5XQ_1wxWDrf1G8hQ7DLJFs-3A.webp" width="80px"></td>
+							<td><img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTaY_RuESPdaKdhPZ41kXopfFkPbdJk4dzTn5EfT4ojOYKAperH1h7_A2maxZUbRWNLVhcszuocXuEbri2FZwKC9g" width="80px" height="60px"></td>
+							<td><img src="https://i.namu.wiki/i/IqKvUlG2mm7OvXGjsAdt3Gxt-rcGdvY0dfBeGQgU-0NTCiIeRP9w1yd6TfLmoAqUyFIgFtKGscXyx3ZpS9iC5A.webp" width="80px"></td>
+							<td><textarea cols="10">ex)호적메이트</textarea> </td>
+						</tr>
+					</table>
+				</fieldset>
+			</form>
+			<br>
+			<form id="m3">
+				<fieldset>
+					<legend>3. 몇 마리나 기르고 있습니까?</legend>
+					<select>
+						<option>
+							<option value="1">1 마리</option>
+							<option value="2">2 마리</option>
+							<option value="3">3 마리</option>
+							<option value="4">4 마리</option>
+							<option value="5">5 마리 이상</option>
+						</option>
+					</select>
+
+				</fieldset>
+			</form>
+			<br>
+			<form id="m4">
+				<fieldset>
+					<legend>4. 추가로 기르고 싶은 동물이 있나요?</legend>
+										<table>
+						<tr>
+							<th>고양이<input type="checkbox" value="1"></th>
+							<th>강아지<input type="checkbox" value="2"></th>
+							<th>물고기<input type="checkbox" value="3"></th>
+							<th>파충류<input type="checkbox" value="4"></th>
+							<th>기타<input type="checkbox" value="5"></th>
+							<th>필요없다<input type="checkbox" value="6"></th>
+						</tr>
+						<tr>
+							<td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXi2TWsRiJW8c9LW10sfreGbK8H1qJvyuQsknM4m43PZC63MHsI8KXfzwW7d0-8XkX94JCbPfcLstJxPheXGLWiw" width="80px" height="60px"></td>
+							<td><img src="https://i.namu.wiki/i/Pe_MS-NYiHczNg4qDrccdkS1FezhxnFm1waBz8msJR9NVHFs0cpO2AykOr68Eok2HvJh8Renls7s52G0LK35kqlk0mjxTf5egQdxfykd730ouaUtqaE65M70TefzWdpu-eMfka3Kgj4tfRbXL0L3BQ.webp" width="80px" height="60px"></td>
+							<td><img src="https://i.namu.wiki/i/SWxgSbtd9dYh0nAIC2Y4aSqWpAfCgyvOCw69MU8UE_vjGviUn6CEP7NjvMyf9xL1c3DUgpcH5D7KUvAR9XyaqA.webp" width="80px" height="60px"></td>
+							<td><img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQbEf3ypmaTMu5TxL-4qisuBhjtno-mntVPxKqDt_cygtwLK3IapZWvpzwJI7ATupTxDAD63cunH20rwiH__Sxiag" width="80px"></td>
+							<td><textarea cols="10"></textarea> </td>
+						</tr>
+					</table>
+				</fieldset>
+			</form>
+			<form>
+				
+			</form>
+
+		</section>
+
+		<aside></aside>
+
+		<footer>
+			<!-- 세부사항 -->
+			<div>
+				모두 입력했는 지 확인 바랍니다.
+			</div>
+		</footer>
+	</body>
+</html>
