@@ -1,0 +1,88 @@
+# 독거 노인 (혼자/친구랑)
+# 소득 수준 1인 월 713102 원 미만 기초생활 1114223 미만 차상위
+# 가족 있음 없음
+# 질환 유무(정신,장애 등)
+# 값 저장용 필요/ 이곳에? init에?
+# from logging import disable
+# 모듈 내 함수에선 print/input 사용 금지 그러므로 수정해야함 
+# 
+
+
+ServiceChoice={}
+disorder={}
+# while people!="0":
+#     if people =="1":
+#         print(ch.choice_one())
+#     elif people == "2":
+#         print(ch.choice_two())
+#두번 입력 불가능 하게 만들어야 하고 수정은 또 따로 할 수 있게 제작해야함
+def choice_input():
+    while True:
+        output = input("1. 독거노인 2. 소득 수준 3. 가족 유무 4. 정신 질환 및 신체 질환 5.전체 출력 및 종료")
+        if output < "5":
+            for i in output:
+                if i == "1":
+                    one = input("독거 노인이십니까? (예/아니요)")
+                    if one == "예":
+                        ServiceChoice["독거노인"] = one
+                        print(ServiceChoice)
+                    else:
+                        print("다시 입력 바랍니다.")
+                        continue
+
+                if i == "2":
+                    two = input("소득 수준을 입력하여주세요.> ")
+                    if two < "713102":
+                        ServiceChoice["기초생활수급자"] = two
+                    elif "1114223" > two >= "713102":
+                        ServiceChoice["차상위계층"] = two
+                    elif "1114223" <= two:
+                        ServiceChoice["일반"] = two
+                    else:
+                        print("다시 입력 바랍니다.")
+                    # print(ServiceChoice)
+
+                if i == "3":
+                    three = input("가족이 있으십니까? (예/아니요)> ")
+                    if three == "예":
+                        family = input("가족 수가 몇명입니까? (숫자만 입력)")
+                        ServiceChoice["가족"] = family
+                    elif three == "아니요":
+                        ServiceChoice["가족"] = "없음"
+                    else:
+                        print("다시 입력해주세요.")
+                    print(ServiceChoice)
+
+                if i == "4":
+                    four = input("1.정신 질환을 가지셨습니까? 2. 신체 질환을 가지셨습니까? 3. 없습니다. 4. 둘다 가지고 있습니다.")
+                    if four == "1":
+                        Spirit = input("어떤 정신적 질환을 가지고 계십니까?")
+                        ServiceChoice["정신 질환"] = Spirit
+                    elif four == "2":
+                        body = input("어떤 신체적 질환을 가지고 계십니까?")
+                        ServiceChoice["신체 질환"] = body
+                    elif four == "3":
+                        ServiceChoice["정상"] = "질환 없음"
+                    elif four == "4":
+                        if disorder== {}:
+                            body = input("어떤 신체적 질환을 가지고 계십니까?")
+                            disorder["신체 질환"] = body
+                            Spirit = input("어떤 정신적 질환을 가지고 계십니까?")
+                            disorder["정신 질환"] = Spirit
+                        # ServiceChoice 에 disorder을 넣기
+                    else:
+                        print("다시 입력 바랍니다.")
+                    print(ServiceChoice)
+        else:
+            print(ServiceChoice)
+            print("입력 종료")
+            break
+
+
+
+
+
+
+
+
+

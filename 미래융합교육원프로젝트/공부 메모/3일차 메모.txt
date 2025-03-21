@@ -1,0 +1,529 @@
+3일차
+
+p165
+#정렬 주의 벽에 딱 붙이기
+#if 조건문 분기문
+# 파이썬 언어
+# print() int() input() str float()
+<회색처리 
+
+import datetime <회색처리 되어 있을경우 사용하지 않았음을 표현하고 있고 사용시 색변환
+
+import datetime
+#import는 라이브러리, 패키지, 모듈불러오기
+# 기본 내장이 아닌 외부 기능 모음
+# 날짜/시간 관련 기능 모음을 불러옴
+# 기본 내장이 아님, 불러오고 사용 가능
+
+"문자열".format()
+# format 문자열 전용
+# 특정 데이터 타입에 쓸 수 있는 함수를 호출한다.
+# .두개 이유는 datetime 모듈에 있는 datetime class에 가능한 함수를 호출(실행)
+# now 변수에 담긴 것은 datetime.datetime 객체
+# type은 int, 등의 객체를 호출
+now=datetime.datetime.now()
+print(type(now))
+
+# year등의 속성은 now를 통해 조회 후 출력
+print(now.year,"년") #year,month,day 등 : 속성
+print(now.month,"월")
+print(now.day,"일")
+print(now.hour,"시")
+print(now.minute,"분")
+print(now.second,"초")
+
+#
+# *args: ?
+import datetime
+now = datetime.datetime.now()
+print("{}년 {}월 {}일 {}시 {}분 {}초".format(
+    now.year,
+    now.month,
+    now.day,
+    now.hour,
+    now.minute,
+    now.second
+))
+
+# if문 활용
+# if : ?
+import datetime
+now =datetime.datetime.now()
+if now.hour < 12:
+    print("현재 시각은 {}시로 오전입니다!".format(now.hour))
+
+if now.hour >= 12:
+    print("현재 시각은 {}시로 오후입니다!".format(now.hour))
+
+if 11<=now.month<=12:
+    print("11~12월")
+
+if 11<=now.month and now.month<=12:
+    print("11~12")
+
+# .을 찍을 시 p는 property, m은
+print(now.weekday()) #요일 확인 함수
+# 0~6 월요일부터 일요일까지
+if now.month==11 and now.hour<12 and now.weekday()==0:
+    print("11월 월요일 오전")
+    print("3조건 만족")
+
+#여기서부터 다시 공부
+# if 마지막 글자 in "02468":
+# if 마지막 글자 ==0 or 마지막 글자 ==2 or 마지막 글자 ==4, 마지막 글자 ==6 or 마지막 글자==8 :
+
+last_num = 0
+if last_num == 0 and 2:
+    print("참")
+
+    # <양쪽 피현산자에 한에 불타입이 와야 하지만 숫자 타입으로 와서 last_num에 어떤 수를 넣어도 생각처럼 되	지 않는다.
+    # 겉으로 봤을 때 숫자 데이터로 보이지만
+    # or연산자는 하나만 참이여도 모두 참
+
+    # bool타입
+    # 숫자 0 / 문자 빈 객체 ""  false와 취급
+    # None 독립적인 것으로 따로 취급
+    zero = ""
+    str1=''
+    List1=[]
+    false = False
+    none=None
+    print(str1==zero,1)
+    print(zero==false,2)
+    print(List1==false,3)
+    print(false==none)
+    print(zero==none)
+
+    if 0:
+        print("123123")
+
+    if "":
+        print("222222")
+
+    if []:
+        print("33333")
+
+#175page 다시
+
+# if ~else , elif
+# if 조건문은 else 또는 elif와 조합 가능
+# 가족 단위로 따지면 이건 두가족이고 else로 같이 하면 한가족으로 분류되어서 더 빠르게 계산
+# number=input("정수 입력>")
+# number=int(number)
+# if number%2==0:
+#     print("짝")
+# if number%2==1:
+#     print("홀")
+
+# else 조건문 활용
+# else문은 if 조건문 뒤에 사용
+# if조건이 거짓(false)일 때 실행된다
+# number=input("정수 입력>")
+# number=int(number)
+# if number%2==0:
+#     print("짝")
+# else:
+#     print("홀")
+#
+# number=input("입력>")
+# number = int(number)
+# if number % 2 ==0:
+#     print("짝수")
+# else: print("홀수")
+
+# elif 구문
+# 두 가지로 구분되지 않는 조건문 작성에 사용
+# elif로 조건 추가
+# if와 else 사이에 위치
+# elif는 여러개 가능
+
+# if 조건 A:
+#     print("A")
+# elif 조건 B:
+#     print("조건 B")
+# elif 조건C:
+#     print("조건 C")
+# else:
+#     print("그 외 모든 경우 (위 조건들이 전부  false)")
+
+import datetime
+
+now = datetime.datetime.now()
+month = now.month
+
+if 3<= month <=5:
+    print("현재는 봄입니다")
+elif 6<=month<=8:
+    print("현재는 여름입니다")
+elif 9<=month<=11:
+    print("현재는 가을입니다")
+else:
+    print("현재는 겨울입니다")
+
+
+# if 3월~5월:
+#     print("봄")
+# elif 6~8월
+# print("여름")
+# elif 9월~11월
+# print("가을")
+# else: print("겨울")
+
+score = float(input("학점입력> "))
+if score == 4.5:
+    print("신")
+elif 4.2 <= score:
+    print("교수님의 사랑")
+elif 3.5 <= score:
+    print("현 체제의 수호자")
+elif 2.8<=score:
+    print("일반인")
+elif 2.3<=score:
+    print("일탈을 꿈꾸는 소시민")
+elif 1.75<=score:
+    print("오락문화의 선구자")
+elif 1.0<=score:
+    print("불가촉천민")
+elif 0.5<= score:
+    print("자벌레")
+elif 0 <score:
+    print("플랑크톤")
+else:
+    print("시대를 앞어가는 혁명의 씨앗")
+
+# if score==4.5:
+#     print("1")
+#  elif 4.2<=score:
+#     print("2")
+# else:
+#     print()
+
+# pass
+# 조건문 내 실행문 없는 경우에 실행 오류가 나지 않도록 처리
+# 임시 처리
+# if 문은 내부 실행문 없으면 문법적 오류가 발생
+
+if 1:
+    pass
+    print("T")
+
+185페이지쪽은 예외처리 이후 하게 될 것
+a=int(input("정수를 입력해주세요: "))
+if a%2 == 0:
+    print("{}는 2로 나누어 떨어지는 숫자입니다".format(a))
+else:
+    print("{}는 2로 나누어 떨어지는 숫자가 아닙니다.".format(a))
+if a%3 == 0:
+    print("{}는 3으로 나누어 떨어지는 숫자입니다".format(a))
+else:
+    print("{}는 3으로 나누어 떨어지는 숫자가 아닙니다.".format(a))
+if a%4 ==0:
+    print("{}는 4로 나누어 떨어지는 숫자입니다".format(a))
+else:
+    print("{}는 4로 나누어 떨어지는 숫자가 아닙니다.".format(a))
+if a%5 ==0:
+    print("{}는 5로 나누어 떨어지는 숫자입니다".format(a))
+else:
+    print("{}는 5로 나누어 떨어지는 숫자가 아닙니다.".format(a))
+
+
+import datetime
+userinput=input("입력")
+
+if "안녕" in userinput:
+    print("안녕하세요")
+    if "지금" in userinput or "몇시" in userinput:
+        print("지금은 {}시입니다".format(datetime.datetime.now().hour))
+elif "지금" in userinput or "몇시" in userinput:
+    print("지금은 {}시입니다".format(datetime.datetime.now().hour))
+else:
+    print(userinput)
+
+x=int(input("num"))
+if x%2 ==0:
+    print("{}는 2로 나누어 떨어지는 숫자입니다".format(x))
+else:
+    print("{}는 2로 나누어 떨어지는 숫자가 아닙니다.".format(x))
+if x%3 == 0:
+    print("{}는 3으로 나누어 떨어지는 숫자입니다".format(x))
+else:
+    print("{}는 3으로 나누어 떨어지는 숫자가 아닙니다.".format(x))
+if x%4 ==0:
+    print("{}는 4로 나누어 떨어지는 숫자입니다".format(x))
+else:
+    print("{}는 4로 나누어 떨어지는 숫자가 아닙니다.".format(x))
+if x%5 ==0:
+    print("{}는 5로 나누어 떨어지는 숫자입니다".format(x))
+else:
+    print("{}는 5로 나누어 떨어지는 숫자가 아닙니다.".format(x))
+
+192p
+리스트
+# 리스트 : 숫자, 문자열, 불 처럼 데이터 타입 중 하나
+# 요소 : 리스트 데이터 타입 내부 단일 데이터
+# 인덱스 : 0부터 시작하는 요소 번호
+# for 반복문 : 특정 실행문 반복 수행하기 위한 문법
+
+# 리스트 : 리스트는 [ ] 대괄호로 표현
+# ListA=[1, 2, 3, 4, 5]
+# 리스트 내부 요소는 쉼표로 구분
+# 리스트 중 빈 리스트 : [ ]
+# 리스트는 여러가지 자료를 저장할 수 있는 자료 타입
+# 문자, 숫자, 불 < 파이썬에서 문자를 대입할 때 단일 데이터로 취급
+# 리스트는 모아 놓은 묶음이다
+
+# List대신 배열했지만 array 와 List 구분 다르게 작동
+array=[273,32,103,"문자열",True,False]
+print(array)
+print(type(array))
+
+# 인덱스 번호를 통해서 리스트 내부 요송 접근 가능
+print("안녕하세요"[0])
+print(array[0])
+print(array[1])
+print(array[:3])
+
+# 리스트는 문자열과 동일하게 인덱스, 슬라이스 사용 가능
+# 리스트는 내부 요소를 인덱싱을 통해 접근한다(조회)
+# 리스트는 내부 요소를 인덱싱을 통해 접근해서 수정 가능
+print(array[-1])
+print(array[-2])
+print(array[-3])
+
+# 이중 인덱스
+print(array[-3][0]) # [-3]한 결과가 문자열> 문자열은 인덱스 가능
+
+# 리스트 안에 리스트
+Lista=[[1,2,3],[4,5,6],7,8,9,'열번째']
+# 이중 인덱스 가능 1,2,5 번째
+Listaa=[[1,2,3,[44,55],66],[4,5,6],7,8,9,'열번째']
+print(Listaa[0][3][0])
+print(type(Listaa[0][3][0]))
+
+
+# 리스트 연산자
+# +
+# *
+# len()
+
+lista=[1,2,3]
+listb=[4,5,6]
+print(lista)
+print(listb)
+print(lista+listb) #리스트+리스트의 결과는 하나의 리스트로 연결
+print(lista*10) #숫자를 *연산해서 빈복되는 리스트 생성
+print(len(lista)) #리스트의 len는 요소의 수
+
+# 수정
+lista[0]=100 #리스트 특정요소 값 수정 방법
+print(lista)
+
+str_x="안녕히세요"
+
+
+# 리스트 관련 함수
+# 1. append()
+# 리스트의 요소를 추가하는 함수
+# 리스트명.append[추가요소]
+print(lista)
+lista.append(4) #lista에 4를 추가함(가장 뒤에 붙는다)
+print(lista)
+
+# 2. insert() 특정 위치에 요소 추가
+# 리스트명.insert(위치,요소)
+lista.insert(0,10)
+print(lista)
+
+# 3. extend()
+listb=[6,7,8]
+# lista.extend([6,7,8])
+lista.extend(listb)
+print(lista)
+
+# 리스트 연결 연산자(+)와 extend()의 차이
+lista=[1,2,3]
+listb=[4,5,6]
+print(lista+listb)#연산자로 연결
+print(lista, 'a') # +로 연산하면 원본 영향 없음
+print(listb, 'b')
+# 빌려서 작성
+
+listc=[1,2,3]
+listd=[4,5,6]
+listc.extend(listd)#extend()함수로 연결
+print(listc, 'c') #extend()적용하면 원본이 변경
+print(listd, 'd')
+# extend() > 원본데이터 변경
+
+# 리스트 요소 제거
+# 1. 인덱스를 통한 접근 후 제거
+# 2. 값으로 제거
+
+listx=[1,2,3,4,5,6]
+# del키워드로 제거 - 인덱스를 통한 제거 방법 1
+del listx[0]
+# del 명령문 0번째 것을 지워라. 일뿐이고 return 이 오는 건 아니기 때문에 출력 불가
+print(listx) #이렇게만 출력 가능
+# pop()함수를 통한 제거 - 인덱스를 통한 제거 방법 2
+
+# pop() : 매개변수 설정 안하면 -1인덱스 위치의 요소 제거
+listx.pop()
+print(listx)
+# pop(인덱스) : 지정한 인덱스 위치의 요소 제거
+listx.pop(0)
+print(listx)
+
+
+# remove()값으로 요소 제거
+# 리스트타입.remove(값)
+listc=[1,2,1,2]
+if 2 in listc:
+#     listc.remove(2)#2값을 찾아 제거해라(여러 개일 경우 제일 왼쪽 하나만 제거)
+print(listc)
+
+# remove함수로 지정한 값이 리스트 내부에 여러개 있으면
+# 가장 먼저 발견 되는 것(좌측부터)을 제거 하고 종료
+
+# 리스트 요소 전부 제거
+# clear()
+list2=[2,3,4,5,6]
+list2.clear()
+# print(list2) #clear() 호출 후 리스트는 빈 리스트
+# 결과 [] <빈 리스트
+
+# 규칙성
+listslice=[1,2,3,4,5,6,7,8]
+print(listslice[::2],"res")
+print(listslice[::-1],"res")
+
+
+# 리스트의 정렬 방법
+# sort()
+# 기본 값이 오른차순 정렬
+# 리스트.sort()
+list_e=[52,273,103,32,275,1,17]
+
+list_e.sort()# 오름차순
+print(list_e)
+
+list_e.sort(reverse=True)# 내림차순
+print(list_e)
+
+
+list_text=["a","c","b"]
+list_text.sort()
+print(list_text)
+
+# 리스트 내부 검사
+# in
+# not in
+# 값 in list
+# 깂 not in list
+list_a=[222,33,103,55,52]
+print(222 in list_a)
+print(34 in list_a)
+print(34 not in list_a)
+print(not(34 in list_a))
+
+
+# 반복문
+# for문
+"""
+    for 반복자 in 반복할 수 있는 것:
+    실행문
+
+"""
+# """새로운 주석""" 따로 호출만 안하면 그냥 넘어가기 때문에 주석으로 사용
+
+# i에 숫자를 넣으며 반복 / 0부터 시작
+for i in range(100): # 0~99 포함 까지의 숫자 범위
+    print("출력",i) # 0~99까지 순차적으로 대입
+    # 출력이란 단어 100호출
+
+
+    print(range(100))
+    # range 함수는 특정 숫자 범위를 쉽게 만들어 준다
+    # list와 비슷함
+
+  # for문의 반복가능한 객체는 문자열/리스트/딕셔너리(아직 배우지 않음)/range 등
+    # 여러 요소를 가진 객체는 반복 가능 객체이고 for문에 사용 가능
+    # for문에서만 쓰일 i라는 변수 꼭 i라고 적을 필요없음
+for i in "안녕하세요":
+     print(i)
+
+for element in range(0, 100):
+     print(element, "다른 변수")
+    # 좌상단 0,0
+    # n차원 리스트
+
+lol=[[1,2,3],[4,5,6,7],[8,9]]#2차원 리스트
+for i in lol:
+    # print(type(i))
+    # print(i[0])
+    for j in i:
+        print(j)
+	# for ~~~ in ~~~:
+        #     for ~~~~~ in ~~~~:
+        #         print(~~~)
+
+# 전개연산자
+listx=[1,2,3,4]
+print(*listx)
+print(listx[0],listx[1],listx[2],listx[3])
+
+
+list_a=[0,1,2,3,4,5,6,7]
+list_a.append(list_a)
+print(list_a)
+list_a.append(10)
+print(list_a)
+list_a.insert(3,0)
+print(list_a)
+list_a.remove(3)
+print(list_a)
+list_a.pop(3)
+print(list_a)
+list_a.clear()
+print(list_a)
+
+numbers = [273,103,5,32,65,9,72,800,99]
+
+for number in numbers:
+    if number>100:
+        print("- 100이상의 수:",number)
+
+
+numbers=[273,103,5,32,65,9,72,800,99]
+for number in numbers:
+    if number%2==0:
+        print("{}는 짝수입니다.".format(number))
+    else: print("{}는 홀수입니다".format(number))
+
+
+numbers=[273,103,5,32,65,9,72,800,99]
+for number in numbers:
+    if number[:3]:
+        print("{}는 3 자리수 입니다".format(number))
+else:
+    print("")
+
+
+# numbers =[1,2,3,4,5,6,7,8,9]
+# output=[[],[],[]]
+# for number in numbers:
+#     output[:].append(number)
+# print(output)
+#
+# numbers = [1,2,3,4,5,6,7,8,9]
+#
+# for i in range(0, len(numbers)//2):
+#     j =
+#     print(f"i = {i}, j ={j}")
+#     numbers[j] = numbers[j] ** 2
+#
+#     print(numbers)
+
+
+https://pythontutor.com/
+>간단하게 설명 및 결과 확인 해석도 확인 가능하므로 외부에서 공부 시 유용하게 사용가능
+

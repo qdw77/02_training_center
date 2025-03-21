@@ -1,0 +1,61 @@
+
+# [ [ 4,2,0,0,0]
+#   [ 0,2,0,2,0]
+#   [ 1,0,0,2,0] ]
+# 박스 객체, 물풍선 객체, 아이템 객체, 0(없음), 1(물줄기)
+# for i in range(25)
+# for j in range(25)
+# 	랜덤돌려서
+# 	빈칸이면 map_info[i][j] = 0
+# 	박스면 map_info[i][j] = Box(j,i)
+
+
+# character  # 캐릭터
+  # map_size  # 맵 가로 세로
+  # map_info  # 현재맵정보,  [[]]
+  # max_tick 최대틱
+  # current_tick 현재틱
+  # enemy_list 적 리스트
+
+  # initialize()
+  # play()
+  # display()
+  # game_state()
+
+  # initialize()  # 초기화
+
+
+
+  # 정보전달 3종류
+  #
+  # [w, w, a] wwa
+  # [ture, false, true] tft
+  #
+  # 캐릭터 생성자로 넘길 정보([x좌표, y좌표])
+  # ctr_point
+
+  # 캐릭터한테 줄정보
+  # {
+  # 현재틱: int
+  # 물풍선맞음여부: bool
+  # 적충돌횟수 : int # 이동입력값이랑 결과대로 했을 때 충돌하는 횟수
+  # 먹은아이템 : Item
+  # 이동입력값: list[str] (예: [‘w’, ‘w’, ‘a’])
+  # 이동결과: list[bool] (예: [true, false, true])
+  # 물풍선사용여부: bool
+  # }
+  #
+  # 박스 생성자로 넘길 정보([x좌표, y좌표], 박스체력)
+  # 박스한테줄정보
+  # {
+  # 현재 틱 : int
+  #  물줄기맞음여부: bool
+  # }
+  #
+  # 적 생성자로 넘길 정보(보스수, 보스좌표[], 잡몹수, 잡몹좌표[])
+  # 적한테줄정보 / 각 적마다
+  # info = {
+  # 현재 틱: int
+  # 물줄기맞음여부: bool
+  # 이동가능여부(상하좌우): list[bool]  #[상, 하, 좌, 우]
+  # }

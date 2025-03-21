@@ -1,0 +1,115 @@
+#241223.py
+#Module
+import os
+
+# 왼쪽 아래 Python Packages <현재 이 곳에 설치된 패키지 / 내부 패키지,외부 패키지
+# Module+부가적 기능
+# 라이브러리 +부가적 기능
+# 패키지+부가적 기능 
+
+# import math #내부 패키지 <수학 관련 함수, 필드 제공
+# import datetime #내부 패키지 < 날짜 시간 관련 함수 필드 제공
+# import random #내부 패키지 <난수 생성 관련 함수 필드 제공
+
+#math. #점을 찍는 순간 내부 활성화
+# 읽기는 get/쓰기는 set
+# math.pi <파이
+# math.floor() <소수점 무조껀 버리기
+# math.ceil() <소수점 무조껀 올리기
+
+# round(1.5) #반놀림 함수 (짝수는 무조껀 내림)
+# from 모듈이름 import 가져오고 싶은 변수 혹은 함수
+# from math import sin,cos,tan #math에서 sin,cos,tan만 가져오겠다.
+# from math import * math에서 모두 가져오기
+# as
+
+# os 운영체제 모듈 > 폴더 내부 목록 확인 등을 모두 os모듈 활용
+
+# import os
+# print("현재 운영체제:",os.name)
+# print("현재 폴더:",os.getcwd())
+# print("현재 폴더 내부 요소:",os.listdir())
+# os.mkdir("hello")
+# os.rmdir("hello")
+#
+# with open("original.txt","w") as file:
+#     file.write("hello")
+# os.rename("original.txt","new.txt")
+#
+# os.remove("new.txt")
+# # os.unlink("new.txt")
+#
+# os.system("dir")
+# import datetime
+# print("# 현재 시각 출력하기")
+# now=datetime.datetime.now()
+# print(now.year,"년")
+# print(now.month,"월")
+# print(now.day,"일")
+# print(now.hour,"시")
+# print(now.minute,"분")
+# print(now.second,"초")
+# print()
+#
+# print("# 시간을 포맷에 맞춰 출력하기")
+# output_a=now.strftime("%Y.%m.%d %H:%M:%S")
+# output_b="{}년 {}월 {}일 {}시 {}분 {}초".format(now.year,\
+#                                           now.month,\
+#                                           now.day,\
+#                                           now.hour,\
+#                                           now.minute,\
+#                                           now.second)
+# output_c=now.strftime("%Y{} %m{} %d{} %H{} %M{} %S{}").format(*"년월일시분초")
+# print(output_a)
+# print(output_b)
+# print(output_c)
+# print()
+
+# time
+
+# urllib
+
+# from urllib import request
+#
+# target=request.urlopen("http://google.com")
+# output=target.read()
+#
+# print(output)
+# # 'b' <바이너리 데이터 (f12 누르면 나오는 개발자 모드)
+
+# 2,(2번은 건너뛰기)
+import os
+
+# output=os.listdir(".")
+# print("os.listdir():",output)
+# print()
+#
+# print("#폴더와 파일 구분하기")
+#
+# for path in output:
+#     if os.path.isdir(path):
+#         print("폴더:",path)
+#     else:
+#         print("파일:",path)
+
+def read_folder(path):
+    
+    # 폴더 요소 읽어 들어가기
+    output=os.listdir(".")
+    # 폴더의 요소 구분하기
+    for item in output:
+        if os.path.isdir(path):
+            # 폴더라면 계속 읽기
+            read_folder(path+"/"+item)
+        else:
+            # 파일이라면 출력하기
+            print("파일: ",item)
+# 현재 폴더의 파일/폴더를 출력합니다
+read_folder(".")
+
+
+
+
+
+
+

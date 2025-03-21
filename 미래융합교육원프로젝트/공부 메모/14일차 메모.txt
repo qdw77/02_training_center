@@ -1,0 +1,573 @@
+일요일날 복습 필수
+
+일회용 채혈침
+스트레스볼
+
+# #20241211
+# # p.302
+# # 조기리턴에 대하여-
+# dictionary ={
+#     1:1,2:1
+# }
+# def fi(n):
+#     if n in dictionary:
+#         return dictionary[n]
+#     else:
+#         output = fi(n-1)+fi(n-2)
+#         dictionary[n]=output
+#         return output
+#
+#
+# [1,2,3,4,5,6,7,8,9,10]
+# x=[1,2,3,[4,5,6],[7,[8,9]],10]
+# # 리스트 중첩 270p
+# # 리스트 평탄화
+# # 원래는 이런식으로
+# for i in x:
+#     if type(i) is list:
+#         for j in i:
+#             if type(j) is list:
+#                 print(j)
+#
+# for i in x:
+#     if type(i) is list:
+#         print("찾았다")
+#
+# # p303
+# #def flatten(data):
+# #     output=[]
+# #     return output
+#
+#
+# # def flatten(data):
+# #     output=[]
+# #
+# #     for i in data:
+# #         if type(i) is list:
+# #             for j in i:
+# #                 output.append(j)
+# #         else:
+# #             output.append(i)
+# #     return output
+#
+# # 예제처럼
+# def flatten(data):
+#     output = []
+#
+#     for i in data:
+#         if type(i) is list:
+#             output+=i
+#         else:
+#             output.append(i)
+#     return output
+# ex=[[1,2,3],[4,[5,6]],7,[8,9]]
+# print("원본",ex)
+#
+# print("변환",flatten(ex))
+#
+# # 재귀함수
+# def flatten(data):
+#     output = []
+#     for i in data:
+#         if type(i) is list:
+#             output+=flatten(i)
+#         else:
+#             output.append(i)
+#     return output
+# ex=[[1,2,3],[4,[5,6]],7,[8,9],10,[11,12,[13,14,[15]]]]
+# print("원본",ex)
+# print("변환",flatten(ex))
+# from collections.abc import list_iterator
+# from tkinter.font import names
+
+# # 초가 55일 때까지 재귀 함수 , 찾으면 탈출 못 찾으면 재귀
+# import datetime
+# import sys #setrecursionlimit 사용하기 위해서
+# import time #time.sleep을 사용하기 위해서
+# sys.setrecursionlimit(10000) #재기함수 깊이 제안 해제
+# now=datetime.datetime.now() # n이랑 다른 시간/호출하는 시점의 시각이고 고정 값
+#
+# count=0
+# def fide(x):
+#     global count #함수 밖 count를 사용하겠다
+#     count+=1#함수 밖 count의미
+#     time.sleep(0.5) #프로세스 진행 중 1초간 정지했다가 다음 코드로 이동
+#     n = datetime.datetime.now() #시간 지연으로 새로운 초/함수에 들어올 떄 새롭게 생신되는 시간 객체 n
+#     if x ==55: #재귀 종료되는 시간 : x가 55초 발견
+#         return count
+#     else: #재귀 호출 조건
+#         return fide(n.second) #n.second: 함수 내에서 새롭게 얻어낸 최근 시간의 초
+#         # 재기함수는 return값 필수
+#
+# print(fide(now.second))
+
+# 315p내용이지만 난이도가 너무 높아서 답지 보고 분석
+# min_x=2
+# # 앉힐 수 있는 최소 사람수=2
+# max_x=10
+# # 앉힐 수 있는 최대 사람수=10
+# total_x=100
+# # 전체 사람의 수=100
+# memo={}
+# # A 남은 사람 수
+# # B 앉힌 사람 수
+# def resol(A,B):
+#     key = str([A,B])
+#     # key값을 memo에 놓고
+#     if key in memo: #이미 메모가 되어 있는 것을 리턴
+#         return memo[key] # memo[key] 밸류를 리턴
+#     if A < 0: #무효
+#         return 0
+#     if A == 0: #유효
+#         return 1
+#     #재귀처리
+#     count=0 #카운트 변수
+#     for i in range()
+#     memo[key]=count #메모화
+#
+#     return count #최종 수 리턴 종료
+# print(resol(total_x,min_x))
+# # 만약 앉는 사람이 10명 이상이다라고 한다면 무효화 /그렇지 않는 다면 지속/전체 사람 수는 100명
+# # 100!와 방식이 같다
+# #
+#
+# # 재귀처리
+# # 메모화 처리
+# # 종료
+
+
+# p. 316
+# 콜백함수
+# 람다
+# with구문
+# 튜플
+
+# 람다: def로 작성 함수를 줄여서 작성하는 방식
+# 튜플 개인적으로 다시 공부
+
+# # p322 함수의 매개변수로 함수 전달하기
+# def call_10_time(func):
+#     for i in range(10):
+#         func()
+#
+# def print_hello():
+#     print("안녕하세요.")
+#
+# call_10_time(print_hello)
+# # 호출보다 함수 자체 명을 전달
+# # 함수 매개변수로 함수 전달
+# print()
+# x=print_hello#담아놓을 떈 호출(()빼기)이 아니라 함수명
+# call_10_time(x)
+# 함수의 매개변수에 사용하는 함수 : 콜백 함수
+
+# filter()->filer(함수, 리스트)
+# map() -> amp(함수,리스트)
+#
+# def power(item):
+#     return item*item
+# def under_3(item):
+#     return item<3
+# list_input_a=[1,2,3,4,5]
+# output_a=map(power,list_input_a)
+# print(output_a)
+# print(list(output_a))
+#
+# output_b=filter(under_3,list_input_a)
+# print(output_b)
+# print(list(output_b))
+# print(under_3(1))
+
+# <map object at 0x00000185E0996410>
+# <filter object at 0x00000185E09940A0>
+# 위 obj들ㅇ르 재너레이터라고 한다
+# 리스트로 변환가능
+
+# a=[1,2,3,4,5]
+# a리스트의 모드 요소를 제곱해서 리스트로 만들어서 출럭
+# out=[]
+# a=[1,2,3,4,5]
+# for i in a:
+#     out.append(i*i)
+# print(out)
+
+# lambda
+
+# lambda 매개변수:리턴값
+# lambda x: x*x >파워함수
+
+# power=lambda x:x*x #이거 자체가 선언
+# under_3=lambda x:x<3
+# list_input_a=[1,2,3,4,5]
+# print(list(map(lambda x:x*x,list_input_a)))
+# print(list(filter(lambda x:x<3,list_input_a)))
+# print(list(map(power,list_input_a)))
+# print(list(filter(under_3,list_input_a)))
+#
+# # filer map lambda 를 사용하고
+# lista=[1,2,3,4,5,6,7,8,9,10]
+# # 3의 배수만 뽑아서 제곱한 리스트를 리턴 받아 출력하세요.
+# print(list(map(lambda x:x*x,list(filter(lambda x:x%3==0,lista)))))
+# # list(filter(lambda x:x%3==0,lista))<필터
+# lambda x:x*x
+# map >list 받아서 출력
+
+# 파일 처리
+# 파일은 크게 텍스트파일과 바이너리 파일로 나뉜다
+# open() 파일을 연다
+# 파일 읽기,쓰기가 가능하ㅏ
+
+# 파일 객체=open(문자열: 파일경로,문자열: 읽기모드)
+# open함수의 첫 매개변수는 파일 경로
+# 두번째 매개변수 모드
+
+# w 쓰기모드 : 파일을 새로 생성하고 작성
+# a append모드 : 기존에 있는 파일을 열고 작성
+# r 읽기모드 : 읽기만 한다
+# 파일객체.close()
+
+# file = open("basic.txt","w")
+# file.write("Hello Python Programing........!")
+# file.close()
+# #파일 객체는 사용 완료 후 항상 닫아줘야 함 /주석 처리 후 실행하면 밑에 내용과 함께 있게 됨/ 엉킬 수 있기 떄문에 둘 중 하나만 작성
+# # 왼쪽 파일 생성
+#
+#
+# # 위의 내용이 날라가고 새로 생성w
+# with open("basic.txt",'w') as file: #close()를 수동으로 안해도 된다
+#     file.write("12345")
+#
+# with open("basic.txt",'r') as file: # 파일을 열어보지 않아도 내용 출력
+#     contents=file.read()
+# print(contents)
+
+# csv(엑셀),xml,json
+
+# import random
+# # hanguls = list("가나다라마바사아자차카타파하")
+# # with open("info.txt","w") as file:
+# #     for i in range(1000):
+# #         name = random.choice(hanguls) + random.choice(hanguls)
+# #         weight = random.randrange(40,100)
+# #         height=random.randrange(140,200)
+# #
+# #         file.write("{}, {}, {}\n".format(name,weight,height))
+# han=list("가나다라마바사아")
+# with open("info.txt", "w") as file:
+#     for i in range(1000):
+#         name=random.choice(han)+random.choice(han)
+#         weight=random.randrange(40,100)
+#         height=random.randrange(160,200)
+#
+#         file.write("{}, {}, {}\n".format(name,weight,height))
+#
+# # print(random.choice([1,2,3,4,5]),"rchoice")
+# # print(random.randrange(40,100),"rrange")
+# # print(random.random(),"rrandom")
+#
+# count=0
+# with open("info.txt","r") as file:
+#     for line in file:
+#         (name,weight,height) = line.strip().split(", ")
+#         count+=1
+#         # print(line.strip().split(", "))
+#         # print(line.strip()
+#         # global.count
+#         if (not name) or (not weight) or (not height): #필터 / 결측치
+#             print(count)
+#             continue
+#         bmi= int(weight) / ((int(height) / 100) ** 2)
+#         result=""
+#         if 25<=bmi:
+#             result="과체중"
+#         elif 18.5 <= bmi:
+#             result="정상체중"
+#         else:
+#             result="저체중"
+#
+#         print('\n'.join([
+#             "이름: {}",
+#             "몸무게: {}",
+#             "키: {}",
+#             "BMI: {}",
+#             "결과: {}"
+#         ]).format(name,weight,height,bmi,result))
+#         print()
+#
+
+
+# 제너레이터
+# dictA=[1,2,3,4]
+# for i in dictA,B:
+#     print(i)
+#
+# for i in dictA:
+#     print(i)
+
+# def test():
+#     print("함수가 호출되었습니다.")
+#     yield "test"
+#
+# print("A지점 통과")
+# print()
+#
+#
+# print("B지점 통과")
+# test()
+# print(test())
+# print()
+# print("#"*100)
+# print()
+# # 이터레이터는 for문으로 반복한 후에 다시 반복하더라도 그 값을 더 가지고 오짐 못하고 next로 값을 한번만 가져올 수 있음
+#
+# # 제너레이터는 이터레이터를 샹성해주는 함수로 next함수 호출 시 그 값을 차례로 얻을 수 있다
+#
+# import  time
+# def longtime_job():
+#     print("job start")
+#     time.sleep(0.1)
+#     return "done"
+#
+# # 이터래이터 변환 만들 때 리스트 내포 사용
+# list_job = iter([longtime_job() for i in range(5)]) # 리스트로 5호출 자동 #1번 ,"list>iter"
+# print(type(iter([longtime_job() for i in range(5)])),"list")
+# print(type([longtime_job() for i in range(5)])) # 리스트로 5호출 자동 #1번 ,"list>iter"
+#
+# print(next(list_job)) #next한번 > job5 done/ done을 두번 꺼내고 싶으면 두번 작성
+# print(next(list_job)) #next한번 > job5 done
+# print("#"*100)
+#
+# # 제터레이터표현식 / 튜플 순회 불가능이기 때문에 5번 호출 시 5번 작성
+# list_job = (longtime_job() for i in range(5)) #2번
+# #함수 호출
+# print(next(list_job)) #next()한번 사용 > job1 done1
+# print(type(list_job),"( gen )")
+#
+# # 1번 설명
+# # 같은 식 longtime_job() for i in range(5)을 리스트 내포하면 결과값 타입이 리스트가 된다
+# # >생성과 동시에 job()함수가 5번 다 호출되고 job() 리턴값 5개를 가지고 리스트를 구성한다
+#
+# # 2번 성령 제너레이터 컴프리헨션
+# # 같은 식 logtime_job() for i in range(5)
+# # 제너레이터를 사용하여 job함수 5번 실행
+# # 한번에 하나씩 값을 생성,계산,연산한다
+# # next()호출되면 하나씩 실질적인 계산한다
+# # 메모리 낭비 줄이기 위해
+# # 각 함수의 실행은 필요할 때 next()함수 통해 실행
+# # 지연 실행
+#
+#
+# print()
+# print("---"*60)
+# print()
+
+# p336
+# def test(): #재너 함수 test XX / next OO
+#     print("함수가 호출되었다.")
+#     yield "test"
+#
+# print("a지점") #1
+# test() #2
+# print("b지점") #3
+# test() #4
+# print(test()) #5
+
+
+# # 337p예재로 변경
+# # 함수 선언
+# def test(): #재너 함수 test XX / next OO
+#     print("A지점 통과")
+#     yield 1
+#     print("B지점 통과")
+#     yield 2
+#     print("C지점 통과")
+# # 함수 호출
+# output= test() #test() 제너레이터는 일반 호출방식을 사용하면 > gen obj
+# output2=test()
+# # next함수를 통해서 호출
+# print("D지점 통과")#출력
+# a=next(output) #1.yield까지 실행
+# print(a)#yield에 의해 a변수에 1이 들어온다.
+# # print("E지점 통과")
+# # b=next(output) #2.yield까지 실행
+# # print(b) #yield에 의해 b변수에 2가 들어온다.
+# # print("F지점 통과")
+# # c=next(output)#3번째 yield는 없고 print("c통과")만 있는 상태
+# # print(c)#stopIteration 발생
+# # 한번 더 실행하기
+# # next(output)
+# print()
+# print("--"*100)
+# print()
+# # print(output2)
+# # # 이터레이터와 제너레이터의 공통점은 한바퀴 돌면 더 이상 못쓴다
+# # # for i in output:
+# # #     print(i)
+# # #     print(type(i))
+# # #     aa=next(i)
+# # for i in range(1):
+# #     print(next(output2)) #다시 output으로 하면 다시 오류 발생
+#
+# for i in output:
+#     print(i)
+#
+#
+# # 리스트네포를 통해 이터레이터를 생성
+# # 이 리스트는 random 모듈을 사요한 o,x (소수점 1자리 까지)형태의 난수를 저장한다
+# # 라스트 변수명은 r
+# # print(str(random.random())[:]) >모든 소수점 0>[:1] ,0. > [:2], 0.2 > [:3]
+# r = iter([str(random.random())[:3] for i in range(10)]) #3자리 짜르기
+# for i in r:
+#     print(i)
+#
+# # import time
+# def gen(count):
+#     start = 1 #몇번째 바퀴 / 시작값
+#     while start <= count: #count매개변수
+#         print("시작",start)
+#         print("123")
+#         yield start
+#         time.sleep(5) #yield start 실행 후 2초간 대기
+#         start +=1
+#
+# print(gen(10))
+# for i in gen(3):
+#     print(i)
+
+# 282p <관련
+# 338p
+a=[52,273,32,103,57]
+print(min(a),"최소값")
+print(max(a),"최댓값")
+print()
+
+print("1번째 방법")
+print("--"*70)
+
+books=[{
+    "제목":"혼자 공부하는 파이썬",
+    "가격":18000
+},{
+    "제목":"혼자 공부하는 머신러닝 + 딥러닝",
+    "가격":26000
+},{
+    "제목":"혼자 공부하는 자바스크립트",
+    "가격":24000
+}]
+
+def x (book):
+    return book["가격"]
+
+print("#가장 저렴한 책")
+print(min(books,key=x)) #key <sort할때 비슷한거
+print()
+
+print("#가장 비싼 책")
+print(max(books,key=x))
+
+print("--"*70)
+
+# file=open("info.txt","r")
+# print(type(file))
+# print(type(iter(file)))
+#
+# lista=[1,2,3]
+# print(type(iter(lista)))
+# print(type(iter(range(10))))
+# print(type(range(10)))
+
+print()
+print("2번쨰 방법")
+print("=="*70)
+# 340p
+books=[{
+    "제목":"혼자 공부하는 파이썬",
+    "가격":18000
+},{
+    "제목":"혼자 공부하는 머신러닝 + 딥러닝",
+    "가격":26000
+},{
+    "제목":"혼자 공부하는 자바스크립트",
+    "가격":24000
+}]
+
+print("#가장 저렴한 책")
+print(min(books,key=lambda book: book["가격"])) #key <sort할때 비슷한거
+print()
+print("#가장 비싼 책")
+print(max(books,key=lambda book: book["가격"]))
+print("=="*70)
+print()
+
+print("람다 함수 두개의 식별자 x,y로","1단계")
+print("--"*70)
+test=lambda x,y:x+y #원래 : 앞에 매개변수가 하나인데 x,y 두개로 매개변수를 지정해주고 test에 넣어줌
+# 람다 함수에 식별자 부여
+# #매개변수가 2개인 람다함수
+
+print(test(10,20),": test 람다의 결과 값")
+print("--"*70)
+print()
+
+print("람다 함수 두개의 식별자 a,b로","2단계")
+print("--"*70)
+max_value=lambda a,b:a if a>b else b # a>b 이면 a리턴,else라면 b리턴
+print(max_value(10,20))
+print(max_value(40,20))
+print("--"*70)
+print()
+# 매개변수 2개 조건식 구성
+# a>b a리턴 else면 b리턴
+
+print("ssssum합계","3단계")
+print("--"*70)
+ssssum=lambda *args : sum(args) # * 가변 매개변수 여러개 받아서 가변 매개변수의 합계 리턴 #람다의 가변에게 변수 사용
+print(ssssum(1,2,3,4,5,6),"ssssum합계")
+# 가변 매개변수는 *args 사용/ 매개변수 여러개 받을 수 있음
+# args는 듀플 형태로 저장
+print("--"*70)
+print()
+
+print("사용자 이름","4단계")
+print("--"*70)
+m=lambda **kwargs:f" 사용자의 이름: {kwargs.get('n','모르는 사람')} | 나이: {kwargs.get('age','모르겠음')}"
+print(m(n='302호',age=50,x=100))
+print(m(n='301호'))
+print(m())
+# **kwargs를 사용해서 키워드 매개변수 여러개 받을 수 있음
+# kwargs는 딕셔너리 형태로 저장
+# lambda는 식 안에 들어가는 것정도만 사용/ 간단한 함수만 사용/ 많은 조건식 사용시 어려워지고 복잡해짐 def가 나음
+print("--"*70)
+print()
+
+print("오름차순 내림차순 a.sort")
+print("--"*70)
+a=[52,273,32,103,57]
+a.sort()
+print(a,"오름차순")
+# 원본에 변형이 생긴다. 파괴적 함소
+
+a.sort(reverse=True)
+print(a,"내림차순")
+print("--"*70)
+print()
+
+print("가격 오름차순")
+print("--"*70)
+books=[{
+    "제목":"혼자 공부하는 파이썬",
+    "가격":18000
+},{
+    "제목":"혼자 공부하는 머신러닝 + 딥러닝",
+    "가격":26000
+},{
+    "제목":"혼자 공부하는 자바스크립트",
+    "가격":24000
+}]
+print("# 가격 오름차순 정렬")
+books.sort(key=lambda book: book["가격"])
+for book in books:
+    print(book)
+print("--"*70)
+print()
+#2024.12.12은 p342부터

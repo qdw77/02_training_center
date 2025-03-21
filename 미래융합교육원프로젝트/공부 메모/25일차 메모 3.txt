@@ -1,0 +1,33 @@
+import datetime
+
+class ATM2:
+  def __init__(self,atm_m):
+    self.atm_m=atm_m # 보유 현금을 저장해주는 공간
+    self.open_ch=False # atm 작동 여부
+    self.open_User=None
+    
+  def ch_bankbook(self):
+    print()
+    
+    print()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

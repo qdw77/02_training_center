@@ -1,0 +1,7 @@
+# output > 1,2,3,4 >1. 독거노인 예/아니요 > 2. 소득 수준 (숫자만) > 3. 가족 유무 > 4. 정신 혹은 장애
+import choice as ch
+
+print(__name__,"init")
+
+people=ch.choice_input()
+# 값을 입력 받고 몇 명인지 확인 후 그중 가장 심각한 사람 순서로 원하는 사람 수 만큼 출력

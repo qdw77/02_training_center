@@ -1,0 +1,785 @@
+12일차 메모
+#키오스크 코드 작성
+# 유저 input 의 입력은 1~30까지 숫자로만 입력한다[문자열로 입력]
+# x=input["버튼 1.버거 2.사이드 ~~~~~"]
+# 처음으로/이전으로/취소 : 돌아가는 시점: while 반복문으로 자식 구조 만드는 것
+# while을 전부 True로 처리하면 돌아가는 시점에 대한 문제 생김[조건문으로 처리]
+
+# 변수 지정 - 시간대 : 0[04:00~10:30],1[10:30~14:00],2/메뉴
+# 0비프,1치킨
+
+# 버거 카테고리
+bggroup={"0.비프","1.치킨","2,전체"}
+# 버거
+bg={"1.더블쿼터파운더치즈":['6000',2,0],"2.쿼터파운더치즈":['5000',2,0],"3.불고기":['3000',2,0],"4.더블 불고기":['3500',2,0],"5.빅맥":['4500',2,0],"6.치즈":['3000',2,0],"7.베이컨토마토디럭스":['5000',2,0],"8.햄버거":['2500',2,0],"9.맥스파이시상하이":['5500',2,1],"10.맥치킨":['4500',2,1],"11.맥크리스피디럭스":['6000',2,1]} #버거
+
+# 맥모닝
+mm={"1.에그맥머핀":['2800',0],"2.소시지에그맥머핀":['3000',0],"3.베이컨에그맥머핀":['3300',0],"4.치킨맥머핀":['3000',0]} #맥모닝
+
+# 맥런치
+ml={"1.빅맥세트":['5500',1],"2.더블 불고기 세트":['4500',1],"3.베이컨 토마토 디럭스 세트":['6000',1]} #맥런치
+
+# 해피스낵
+happysnack={"1.드립커피M":['1000',2],"2.제로콜라M":['1000',2],"3.치즈버거":['2000',2],"4.치즈스틱2조각":['2000',2],"5.후렌치후라이s":['1000',2]}
+
+# 사이드
+s={"1.맥윙 2조각":['2000',2],"2.맥윙 4조각":['3500',2],"3.맥윙 8조각":['6000',2],"4.치즈스틱4조각":['3800',2],"5.후렌치후라이s":['1000',2],"6.후렌치후라이M":['1500',2],"7.후렌치후라이L":['2000',2],"8.맥너겟4조각":['2000',2],"9.맥너겟 6조각":['2800',2]}
+
+# 디저트
+d={"1.맥플러리":['3000',2],"2.아이스크림콘":['1000',2]}
+
+# 해피밀
+# 0>if 0400~1030 / else>3
+hm={"1.에그맥머핀":['4000',0],"2.소시지에그맥머핀":['4200',0],"3.베이컨에그맥머핀":['4500',0],"4.치즈버거":['4200',2,3],"5.햄버거":['3800',2,3],"6.불고기버거":['4200',2,3]}
+# 해피밀 음료 세트
+hms=["1.오렌지 주스","2.생수"]
+
+# 음료
+dr={"1.콜라 M":['1000',2],"2.콜라 L":['1500',2],"3.콜라제로 M":['1000',2],"4.콜라제로 L":['1500',2],"5.사이다 M":['1000',2],"7.사이다 L":['1500',2],"8.오렌지주스":['1000',2,4],"9.생수":['1000',2,4]}
+
+# 맥카페
+k={"1.카페라떼":['2000',2],"2.아이스카페라떼":['2000',2],"3.아이스드립커피":['1000',2],"4.드립커피":['1000',2]}
+
+# 카테고리
+kt0=['1.버거', '2.맥모닝', '3.해피스낵', '4.사이드', '5.디저트', '6.해피밀', '7.음료', '8.맥카페']
+kt1=['1.버거', '2.맥런치', '3.해피스낵', '4.사이드', '5.디저트', '6.해피밀', '7.음료', '8.맥카페']
+kt2=['1.버거', '2.해피스낵', '3.사이드', '4.디저트', '5.해피밀', '6.음료', '7.맥카페']
+
+# 버거 추가
+bre=['1.양상추','2.토마토','3.소스']
+import datetime
+menu={}
+# 장바구니
+my={}
+# 메뉴
+
+now = datetime.datetime.now()
+a = str(now.time())
+
+while True:
+
+    moc = input("1. 주문")
+    while moc=="1":
+
+        out=input("1.포장 2.매장 3.처음으로")
+        print(now)
+
+        if out=="1" or out=="2":
+            if "10:30"< a <= "14:00":
+                a = "1"  # 런치
+                print(a)
+            elif "04:00" < a <= "10:30":
+                a = "0"  # 모닝
+                print(a)
+            else:
+                a = "2"
+                print(a)
+
+            if a=="0":
+                for i in kt0:
+                    print(i)
+
+            if a=="1":
+                for i in kt1:
+                    print(i)
+
+            if a=="2":
+                for i in kt2:
+                    print(i)
+
+            while True:
+
+                # 일반
+                if a == "2":
+                    print(kt2)
+                    mu = input("주문을 입력해주세요.")
+                    print(sorted(mu))
+                    print(type(mu))
+                    if mu == "1":
+                            print(bggroup)
+                            bggroup2 = input("버거의 카테고리를 골라주세요.")
+                            # 카테고리 호출
+                            if bggroup2 == "0":
+                                print(bg)
+                                for w, v in bg.items():
+                                    h = list(v)[:][2]
+                                    if h == 0:
+                                        print(w)
+                            elif bggroup2 == "1":
+                                print("@치킨")
+                                for w, v in bg.items():
+                                    h = list(v)[:][2]
+                                    if h == 1:
+                                        print(w)
+                            elif bggroup2 == "2":
+                                print("전체메뉴")
+                                print(bg)  # 전체 메뉴
+                            else:
+                                print("다시 입력 해주세요.")
+                                continue
+                            bm = input("메뉴를 입력해주세요.")
+                            # 정확한 번호만 나오도록
+                            bms = [mi for mi, v in bg.items() if bm in mi]
+                            # print(bms)
+                            # print(type(bms))
+
+
+                            while bm != "0":
+                                # bms=str(bms) #키가 될 bms을 str로 변환 시킨 후 menu 안에 bms을 키로 넣고 a를 값으로 받아온다
+                                # menu[bms]="a"
+                                # print(menu)
+                                print("현재 선택한 버거>", bms)
+                                bm3 = input("1.세트 2.단품 3.취소 4.처음부터")
+                                while bm3 == "1":
+                                    bm4 = input("1.버거 재료 삭제 또는 추가 2.(사이드)메뉴를 선택해주세요 3.음료를 선택해주세요 4.장바구니에 담기")
+                                    # 전체적인 취소 & 처음으로
+                                    if bm4 == "1":
+                                        print(sorted(bre))
+                                        b2 = input("어떤 것을 삭제 또는 추가하시겠습니까?")
+                                        if b2 == "1":  # 양상추
+                                            bms2 = [k for k in bre if b2 in k]
+                                            #
+
+                                            print(bms2)  # 재료의 값 호출
+                                            b22 = input("1.추가 2.삭제")
+                                            bms2 = str(bms2)
+                                            bms = str(bms)
+
+                                            if b22 == "1":
+                                                # 만약 이미 키에 값이 있다면
+                                                # if menu in list(bms2):
+                                                #     print("aaaaa")
+                                                # else:
+                                                #     print("vv")
+                                                bms22 = [kl for kl, jj in menu.items() if bms2 in jj]
+                                                if bms22 != 0:
+                                                    print("성공",bms22)
+                                                    menu[bms] = bms2  # 이건 그냥 키&값 추가
+                                                else:
+                                                    print("놉")
+
+                                                print(menu)
+                                                print("추가 되었습니다.")
+                                                # 카운트 값 넣어서 추가로 몇개나 들어가는 지 확인 가능하도록 /
+                                                # 카운트로 if문을 줘서 만약 다시 추가로 한다면 삭제가 가능하도록 만들 것
+                                                # 문제는 현재 리스트 값 안에 리스트로 들어가 있다는 점이고 이걸 해결
+
+
+                                            # if b22 == "2": # 삭제 문
+                                            #     if menu[bms] == bms2:
+                                            #         print("b")
+                                            #         del menu[bms][sss] #딕셔너리[키 이름][값 위치]
+                                            #         sss = menu[bms].index(bms2)
+                                            #         print(sss)
+
+                                            # sss = menu[bms].index(bms2)
+                                            # print(sss)
+                                            print(menu.values(), "현재 버거 재료")
+                                            # print(menu in list(bms2))
+                                            # 나중엔 따로 버거 값을 찾아서 호출
+                                            # print(menu)
+                                        if b2 == "2":
+                                            # 추가 삭제
+                                            # 취소
+                                            bms22 = [q for q in bre if b2 in q]
+                                            print(bms22)
+                                            bms22 = str(bms22)
+                                            bms = str(bms)
+                                            b23 = input("1.추가 2.삭제")
+                                            if b23 == "1":
+                                                bms220 = [kl for kl, jj in menu.items() if bms22 in jj]
+                                                print(bms220)
+                                                if bms220 != 0:
+                                                    print("성공")
+                                                    menu[bms] = bms22  # 이건 그냥 키&값 추가
+                                                    print(menu)
+                                                else:
+                                                    print("놉")
+                                                print("선택한 재료 ", bms22)
+                                                print("추가 되었습니다.")
+                                            print(menu.values(), "현재 버거 재료")
+                                        if b2 == "3":
+                                            # 추가 삭제
+                                            # 카운트로 갯수를 값으로 줄 것
+                                            # 취소
+                                            bms24 = [k for k in bre if b2 in k]
+                                            bms24 = str(bms24)
+                                            bms = str(bms)
+                                            b24 = input("1.추가 2.삭제")
+                                            if b24 == "1":
+                                                bms245 = [kl for kl, jj in menu.items() if bms24 in jj]
+                                                if bms245 != 0:
+                                                    print("성공", bms245)
+                                                    menu[bms] = bms24  # 이건 그냥 키&값 추가
+                                                else:
+                                                    print("놉")
+                                                print("선택한 재료 ", bms24)
+                                            print(menu.values(), "현재 버거 재료")
+                                    if bm4 == "2":
+                                        print(s)
+                                        b3 = input("사이드메뉴를 선택하여 주세요.")
+                                        print("사이드메뉴 세트")
+                                        bms=str(bms)
+                                        if b3 != "0":
+                                            bs = [r for r, vv in s.items() if b3 in r]
+                                            print(bs)
+                                            if s !=0:
+                                                menu[bms,"사이드메뉴"] = bs
+                                                print("성공")
+                                                print(menu)
+                                    if bm4 == "3":
+                                        print(dr)
+                                        b4 = input("음료를 선택하여 주세요.")
+                                        print("음료 세트")
+                                        if b4 != "0":
+                                            drs = [d for d, dv in dr.items() if b4 in d]
+                                            print(drs)
+                                            if dr !=0 :
+                                                menu[bms,"음료메뉴"] = drs
+                                                print("성공2")
+                                                print(menu)
+                                    if bm4 == "4":
+                                        for my in menu :
+                                            print(my)
+                                        print(menu, "장바구니")
+                                        # 장바구니 값을 가지고 반복 for문 사용으로 초반으로 가기
+                                        # 장바구니 값 담기
+                                while bm3 == "2":
+                                    # 단품
+                                    print("단품")  # 담은 버거 값 출력
+                                    bm4 = input("1.버거 재료 삭제 또는 추가 2.장바구니에 담기")
+                                    # 전체적인 취소 & 처음으로
+                                    if bm4 == "1":
+                                        print(sorted(bre))
+                                        b2 = input("어떤 것을 삭제 또는 추가하시겠습니까?")
+                                        if b2 == "1":  # 양상추
+                                            bms2 = [k for k in bre if b2 in k]
+                                            print(bms2)  # 재료의 값 호출
+                                            b22 = input("1.추가 2.삭제")
+                                            bms2 = str(bms2)
+                                            bms = str(bms)
+
+                                            if b22 == "1":
+                                                menu[bms] = bms2  # 이건 그냥 키&값 추가
+                                                print("추가 되었습니다.")
+                                                # 카운트 값 넣어서 추가로 몇개나 들어가는 지 확인 가능하도록 /
+                                                # 카운트로 if문을 줘서 만약 다시 추가로 한다면 삭제가 가능하도록 만들 것
+                                            sss = menu[bms].index(bms2)
+                                            print(sss)
+                                            print(menu.values(), "현재 버거 재료")
+                                            # 나중엔 따로 버거 값을 찾아서 호출
+                                            # print(menu)
+                                        if b2 == "2":
+                                            # 추가 삭제
+                                            # 취소
+                                            b23 = input("1.추가 2.삭제")
+                                            if b23 == "1":
+                                                bms22 = [q for q in bre if b2 in q]
+                                                bms22 = str(bms22)
+                                                bms = str(bms)
+                                                print("선택한 재료 ", bms22)
+                                                menu[bms] = bms22
+                                                print("추가 되었습니다.")
+                                            print(menu.values(), "현재 버거 재료")
+                                        if b2 == "3":
+                                            # 추가 삭제
+                                            # 카운트로 갯수를 값으로 줄 것
+                                            # 취소
+                                            b24 = input("1.추가 2.삭제")
+                                            if b24 == "1":
+                                                bms24 = [k for k in bre if b2 in k]
+                                                bms24 = str(bms24)
+                                                bms = str(bms)
+                                                print("선택한 재료 ", bms24)
+                                                menu[bms] = bms24
+                                            print(menu.values(), "현재 버거 재료")
+                                    if bm4 == "2":
+                                        print(menu)
+                                        print("장바구니")
+                                    # 장바구니 값
+                                    # 초기 화면으로
+                     # 해피스낵
+                    elif mu == "2":
+                        print(happysnack)
+                        happymenu = input("메뉴를 입력해주세요.")
+                        hpm = [hsm0 for hsm0, hs in happysnack.items() if happymenu in hsm0]
+                        print(hpm)
+                    # 사이드
+                    elif mu == "3":
+                        print(s)
+                        sm = input("메뉴를 입력하세요.")
+                        smm = [smm0 for smm0, sv in s.items() if sm in smm0]
+                        print(smm)
+
+                    # 디저트?
+                    elif mu == "4":
+                        print(d)
+                        dm = input("메뉴를 입력하세요.")
+                        dmm = [du for du, mv in d.items() if dm in du]
+                        print(dmm)
+
+                    else:
+                        print("다시")
+
+
+
+                # 런치
+                elif a == "1":
+                    mu = input("주문을 입력해주세요.")
+                    print(sorted(mu))
+                    print(type(mu))
+                    if mu == "1":
+                        print(bggroup)
+                        bggroup2 = input("카테고리를 골라주세요.")
+                        # 카테고리 호출
+                        if bggroup2 == "0":
+                            print(bg)
+                            for w, v in bg.items():
+                                h = list(v)[:][2]
+                                if h == 0:
+                                    print(w)
+                        if bggroup2 == "1":
+                            print("@치킨")
+                            for w, v in bg.items():
+                                h = list(v)[:][2]
+                                if h == 1:
+                                    print(w)
+                        elif bggroup2 == "2":
+                            print("전체메뉴")
+                            print(bg)  # 전체 메뉴
+                        bm = input("메뉴를 입력해주세요.")
+
+                        # 정확한 번호만 나오도록
+                        bms = [mi for mi, v in bg.items() if bm in mi]
+                        # print(bms)
+                        # print(type(bms))
+                        while bm != "0":
+                            # bms=str(bms) #키가 될 bms을 str로 변환 시킨 후 menu 안에 bms을 키로 넣고 a를 값으로 받아온다
+                            # menu[bms]="a"
+                            # print(menu)
+                            print("현재 선택한 버거>", bms)
+                            bm3 = input("1.세트 2.단품 3.취소 4.처음부터")
+                            if bm3 == "1":
+                                bm4 = input("1.버거 재료 삭제 또는 추가 2.(사이드)메뉴를 선택해주세요 3.음료를 선택해주세요 4.장바구니에 담기")
+                                # 전체적인 취소 & 처음으로
+                                if bm4 == "1":
+                                    print(sorted(bre))
+                                    b2 = input("어떤 것을 삭제 또는 추가하시겠습니까?")
+                                    if b2 == "1":  # 양상추
+                                        bms2 = [k for k in bre if b2 in k]
+                                        print(bms2)  # 재료의 값 호출
+                                        b22 = input("1.추가 2.삭제")
+                                        bms2 = str(bms2)
+                                        bms = str(bms)
+
+                                        if b22 == "1":
+                                            menu[bms] = bms2  # 이건 그냥 키&값 추가
+                                            print("추가 되었습니다.")
+                                            # 카운트 값 넣어서 추가로 몇개나 들어가는 지 확인 가능하도록 /
+                                            # 카운트로 if문을 줘서 만약 다시 추가로 한다면 삭제가 가능하도록 만들 것
+
+                                        # if b22 == "2": # 삭제 문
+                                        #     if menu[bms] == bms2:
+                                        #         print("b")
+                                        #         del menu[bms][sss] #딕셔너리[키 이름][값 위치]
+                                        #         sss = menu[bms].index(bms2)
+                                        #         print(sss)
+
+                                        sss = menu[bms].index(bms2)
+                                        print(sss)
+                                        print(menu.values(), "현재 버거 재료")
+                                        # 나중엔 따로 버거 값을 찾아서 호출
+                                        # print(menu)
+                                    if b2 == "2":
+                                        # 추가 삭제
+                                        # 취소
+                                        b23 = input("1.추가 2.삭제")
+                                        if b23 == "1":
+                                            bms22 = [q for q in bre if b2 in q]
+                                            bms22 = str(bms22)
+                                            bms = str(bms)
+                                            print("선택한 재료 ", bms22)
+                                            menu[bms] = bms22
+                                            print("추가 되었습니다.")
+                                        print(menu.values(), "현재 버거 재료")
+                                    if b2 == "3":
+                                        # 추가 삭제
+                                        # 카운트로 갯수를 값으로 줄 것
+                                        # 취소
+                                        b24 = input("1.추가 2.삭제")
+                                        if b24 == "1":
+                                            bms24 = [k for k in bre if b2 in k]
+                                            bms24 = str(bms24)
+                                            bms = str(bms)
+                                            print("선택한 재료 ", bms24)
+                                            menu[bms] = bms24
+                                        print(menu.values(), "현재 버거 재료")
+                                if bm4 == "2":
+                                    print(s)
+                                    b3 = input("사이드메뉴를 선택하여 주세요.")
+                                    print("사이드메뉴 세트")
+                                    if b3 != "0":
+                                        bs = [r for r, vv in s.items() if b3 in r]
+                                        print(bs)
+
+                                if bm4 == "3":
+                                    print(dr)
+                                    b4 = input("음료를 선택하여 주세요.")
+                                    print("음료 세트")
+                                    if b4 != "0":
+                                        drs = [d for d, dv in dr.items() if b4 in d]
+                                        print(drs)
+                                if bm4 == "4":
+                                    b5 = menu
+                                    print(b5, "장바구니")
+                                    # 장바구니 값 담기
+                            elif bm3 == "2":
+                                # 단품
+                                print("단품")  # 담은 버거 값 출력
+                                bm4 = input("1.버거 재료 삭제 또는 추가 2.장바구니에 담기")
+                                # 전체적인 취소 & 처음으로
+                                if bm4 == "1":
+                                    print(sorted(bre))
+                                    b2 = input("어떤 것을 삭제 또는 추가하시겠습니까?")
+                                    if b2 == "1":  # 양상추
+                                        bms2 = [k for k in bre if b2 in k]
+                                        print(bms2)  # 재료의 값 호출
+                                        b22 = input("1.추가 2.삭제")
+                                        bms2 = str(bms2)
+                                        bms = str(bms)
+
+                                        if b22 == "1":
+                                            menu[bms] = bms2  # 이건 그냥 키&값 추가
+                                            print("추가 되었습니다.")
+                                            # 카운트 값 넣어서 추가로 몇개나 들어가는 지 확인 가능하도록 /
+                                            # 카운트로 if문을 줘서 만약 다시 추가로 한다면 삭제가 가능하도록 만들 것
+                                        sss = menu[bms].index(bms2)
+                                        print(sss)
+                                        print(menu.values(), "현재 버거 재료")
+                                        # 나중엔 따로 버거 값을 찾아서 호출
+                                        # print(menu)
+                                    if b2 == "2":
+                                        # 추가 삭제
+                                        # 취소
+                                        b23 = input("1.추가 2.삭제")
+                                        if b23 == "1":
+                                            bms22 = [q for q in bre if b2 in q]
+                                            bms22 = str(bms22)
+                                            bms = str(bms)
+                                            print("선택한 재료 ", bms22)
+                                            menu[bms] = bms22
+                                            print("추가 되었습니다.")
+                                        print(menu.values(), "현재 버거 재료")
+                                    if b2 == "3":
+                                        # 추가 삭제
+                                        # 카운트로 갯수를 값으로 줄 것
+                                        # 취소
+                                        b24 = input("1.추가 2.삭제")
+                                        if b24 == "1":
+                                            bms24 = [k for k in bre if b2 in k]
+                                            bms24 = str(bms24)
+                                            bms = str(bms)
+                                            print("선택한 재료 ", bms24)
+                                            menu[bms] = bms24
+                                        print(menu.values(), "현재 버거 재료")
+                                # 장바구니 값
+                                # 초기 화면으로
+
+                    #맥런치
+                    if mu=="2":
+                        print(ml)
+                        mlmenu=input("메뉴를 입력해주세요.")
+                        mlk = [mk for mk,mv in ml.items() if mlmenu in mk]
+                        print(mlk)
+
+                    # 해피스낵
+                    if mu == "3":
+                        print(happysnack)
+                        happymenu = input("메뉴를 입력해주세요.")
+                        hpm = [hsm0 for hsm0, hs in happysnack.items() if happymenu in hsm0]
+                        print(hpm)
+                    # 사이드
+                    if mu == "4":
+                        print(s)
+                        sm = input("메뉴를 입력하세요.")
+                        smm = [smm0 for smm0, sv in s.items() if sm in smm0]
+                        print(smm)
+
+                    # 디저트?
+                    if mu == "5":
+                        print(d)
+                        dm = input("메뉴를 입력하세요.")
+                        dmm = [du for du, mv in d.items() if dm in du]
+                        print(dmm)
+
+
+                # 모닝
+                elif a == "0":
+                    mu = input("주문을 입력해주세요.")
+                    print(sorted(mu))
+                    print(type(mu))
+                    if mu == "1":
+                        print(bggroup)
+                        bggroup2 = input("카테고리를 골라주세요.")
+                        # 카테고리 호출
+                        if bggroup2 == "0":
+                            print(bg)
+                            for w,v in bg.items():
+                                h=list(v)[:][2]
+                                if h==0:
+                                    print(w)
+                        if bggroup2 == "1":
+                            print("@치킨")
+                            for w,v in bg.items():
+                                h=list(v)[:][2]
+                                if h==1:
+                                    print(w)
+                        elif bggroup2 == "2":
+                            print("전체메뉴")
+                            print(bg)  # 전체 메뉴
+                        bm = input("메뉴를 입력해주세요.")
+
+                        # 정확한 번호만 나오도록
+                        bms = [mi for mi,v in bg.items() if bm in mi]
+                        # print(bms)
+                        # print(type(bms))
+                        while bm != "0":
+                            # bms=str(bms) #키가 될 bms을 str로 변환 시킨 후 menu 안에 bms을 키로 넣고 a를 값으로 받아온다
+                            # menu[bms]="a"
+                            # print(menu)
+                            print("현재 선택한 버거>",bms)
+                            bm3 = input("1.세트 2.단품 3.취소 4.처음부터")
+                            if bm3 == "1":
+                                bm4 = input("1.버거 재료 삭제 또는 추가 2.(사이드)메뉴를 선택해주세요 3.음료를 선택해주세요 4.장바구니에 담기")
+                                # 전체적인 취소 & 처음으로
+                                if bm4 == "1":
+                                    print(sorted(bre))
+                                    b2 = input("어떤 것을 삭제 또는 추가하시겠습니까?")
+                                    if b2 == "1": # 양상추
+                                        bms2=[k for k in bre if b2 in k]
+                                        print(bms2) # 재료의 값 호출
+                                        b22 = input("1.추가 2.삭제")
+                                        bms2 = str(bms2)
+                                        bms = str(bms)
+
+                                        if b22=="1":
+                                            menu[bms] = bms2 #이건 그냥 키&값 추가
+                                            print("추가 되었습니다.")
+                                            # 카운트 값 넣어서 추가로 몇개나 들어가는 지 확인 가능하도록 /
+                                            # 카운트로 if문을 줘서 만약 다시 추가로 한다면 삭제가 가능하도록 만들 것
+
+                                        # if b22 == "2": # 삭제 문
+                                        #     if menu[bms] == bms2:
+                                        #         print("b")
+                                        #         del menu[bms][sss] #딕셔너리[키 이름][값 위치]
+                                        #         sss = menu[bms].index(bms2)
+                                        #         print(sss)
+
+                                        sss = menu[bms].index(bms2)
+                                        print(sss)
+                                        print(menu.values(),"현재 버거 재료")
+                                        # 나중엔 따로 버거 값을 찾아서 호출
+                                        # print(menu)
+                                    if b2 == "2":
+                                        # 추가 삭제
+                                        # 취소
+                                        b23 = input("1.추가 2.삭제")
+                                        if b23 == "1":
+                                            bms22 = [q for q in bre if b2 in q]
+                                            bms22 = str(bms22)
+                                            bms = str(bms)
+                                            print("선택한 재료 ",bms22)
+                                            menu[bms] = bms22
+                                            print("추가 되었습니다.")
+                                        print(menu.values(),"현재 버거 재료")
+                                    if b2 == "3":
+                                        # 추가 삭제
+                                        # 카운트로 갯수를 값으로 줄 것
+                                        # 취소
+                                        b24 = input("1.추가 2.삭제")
+                                        if b24 =="1":
+                                            bms24 =[k for k in bre if b2 in k]
+                                            bms24 = str(bms24)
+                                            bms = str(bms)
+                                            print("선택한 재료 ",bms24)
+                                            menu[bms] = bms24
+                                        print(menu.values(),"현재 버거 재료")
+                                if bm4 == "2":
+                                    print(s)
+                                    b3 = input("사이드메뉴를 선택하여 주세요.")
+                                    print("사이드메뉴 세트")
+                                    if b3 !="0":
+                                        bs =[r for r,vv in s.items() if b3 in r]
+                                        print(bs)
+
+                                if bm4 == "3":
+                                    print(dr)
+                                    b4 = input("음료를 선택하여 주세요.")
+                                    print("음료 세트")
+                                    if b4 != "0":
+                                        drs=[d for d,dv in dr.items() if b4 in d]
+                                        print(drs)
+                                if bm4 == "4":
+                                    b5 = menu
+                                    print(b5, "장바구니")
+                                    # 장바구니 값 담기
+                            elif bm3 == "2":
+                                # 단품
+                                print("단품")  # 담은 버거 값 출력
+                                bm4 = input("1.버거 재료 삭제 또는 추가 2.장바구니에 담기")
+                                # 전체적인 취소 & 처음으로
+                                if bm4 == "1":
+                                    print(sorted(bre))
+                                    b2 = input("어떤 것을 삭제 또는 추가하시겠습니까?")
+                                    if b2 == "1":  # 양상추
+                                        bms2 = [k for k in bre if b2 in k]
+                                        print(bms2)  # 재료의 값 호출
+                                        b22 = input("1.추가 2.삭제")
+                                        bms2 = str(bms2)
+                                        bms = str(bms)
+
+                                        if b22 == "1":
+                                            menu[bms] = bms2  # 이건 그냥 키&값 추가
+                                            print("추가 되었습니다.")
+                                            # 카운트 값 넣어서 추가로 몇개나 들어가는 지 확인 가능하도록 /
+                                            # 카운트로 if문을 줘서 만약 다시 추가로 한다면 삭제가 가능하도록 만들 것
+                                        sss = menu[bms].index(bms2)
+                                        print(sss)
+                                        print(menu.values(), "현재 버거 재료")
+                                        # 나중엔 따로 버거 값을 찾아서 호출
+                                        # print(menu)
+                                    if b2 == "2":
+                                        # 추가 삭제
+                                        # 취소
+                                        b23 = input("1.추가 2.삭제")
+                                        if b23 == "1":
+                                            bms22 = [q for q in bre if b2 in q]
+                                            bms22 = str(bms22)
+                                            bms = str(bms)
+                                            print("선택한 재료 ", bms22)
+                                            menu[bms] = bms22
+                                            print("추가 되었습니다.")
+                                        print(menu.values(), "현재 버거 재료")
+                                    if b2 == "3":
+                                        # 추가 삭제
+                                        # 카운트로 갯수를 값으로 줄 것
+                                        # 취소
+                                        b24 = input("1.추가 2.삭제")
+                                        if b24 == "1":
+                                            bms24 = [k for k in bre if b2 in k]
+                                            bms24 = str(bms24)
+                                            bms = str(bms)
+                                            print("선택한 재료 ", bms24)
+                                            menu[bms] = bms24
+                                        print(menu.values(), "현재 버거 재료")
+                                # 장바구니 값
+                                # 초기 화면으로
+
+                    if mu == "2":
+                        print(a)
+                        while a == "0":
+                            print(mm)
+                            mm2 = input("메뉴를 입력해주세요.")
+                            mmm = [m for m,v in mm.items() if mm2 in m]
+                            print(mmm)
+                            while mm2 != "0":
+                                mm3 = input("1.세트 2.단품 3.취소 4.처음부터")
+                                if mm3 == "1":
+                                    print("선택한 버거 > ",mmm)
+                                    mm4 = input("1.버거 재료 삭제 또는 추가 2.(사이드)메뉴를 선택해주세요 3.음료를 선택해주세요 4.장바구니에 담기 5.취소")
+                                    # 전체적인 취소&처음으로
+                                    if mm4 == "1":
+                                        print(sorted(bre))
+                                        bm2 = input("어떤 것을 추가 또는 삭제하시겠습니까?")
+                                        bms24 = [k for k in bre if bm2 in k]
+                                        bms24=str(bms24)
+                                        mmm=str(mmm)
+                                        print("선택한 재료 ", bms24)
+                                        if bm2 == "1":
+                                            m2 = input("1.추가 2.삭제")
+                                            if m2 =="1":
+                                                    # 내용 값이 있을 경우 append로 넣기
+                                                    # menu[mmm].append(bms24)
+                                                    menu[mmm]=bms24
+                                            print(menu.values(),"현재 버거 재료")
+                                        if bm2 == "2":
+                                            # 추가 삭제
+                                            # 취소
+                                            m2 = input("1.추가 2.삭제")
+                                            if m2 =="1":
+                                                    menu[mmm] = bms24
+                                            print(menu.values(),"현재 버거 재료")
+                                        if bm2 == "3":
+                                            # 추가 삭제
+                                            # 취소
+                                            m2 = input("1.추가 2.삭제")
+                                            if m2 =="1":
+                                                    menu[mmm] = bms24
+                                            print(menu.values(),"현재 버거 재료")
+                                    if mm4 == "2":
+                                        print(sorted(s))
+                                        print("사이드메뉴 세트")
+                                        b3 = input("사이드메뉴를 선택하여 주세요.")
+                                        bsm = [sm0 for sm0, sv in s.items() if b3 in sm0]
+                                        # menu[mmm] = bsm
+                                        print()
+                                        print(menu.values(), "현재 버거 재료")
+
+                                    if mm4 == "3":
+                                        b4 = input("음료를 선택하여 주세요.")
+                                        print(sorted(dr))
+                                        print("음료 세트")
+                                    if mm4 == "4":
+                                        b5 = input("장바구니")
+                                        print(b5 + "장바구니")
+                                        # 장바구니 값 담기
+                                else:
+                                    print()  # 담은 버거 값 출력
+                                    # 장바구니 값
+                                    # 초기 화면으로
+                    # 해피스낵
+                    if mu == "3":
+                        print(happysnack)
+                        happymenu = input("메뉴를 입력해주세요.")
+                        hpm = [hsm0 for hsm0,hs in happysnack.items() if happymenu in hsm0]
+                        print(hpm)
+                    # 사이드
+                    if mu=="4":
+                        print(s)
+                        sm = input("메뉴를 입력하세요.")
+                        smm =  [smm0 for smm0,sv in s.items() if sm in smm0]
+                        print(smm)
+
+                    # 디저트?
+                    if mu=="5":
+                        print(d)
+                        dm= input("메뉴를 입력하세요.")
+                        dmm =[du for du,mv in d.items() if dm in du]
+                        print(dmm)
+
+                    # if mu=="6":
+                    #     if a=="0":
+                    #         print()
+                    #     else:
+                    #         print()
+
+
+# 전체 메뉴 장바구니로 담기
+# 세트 메뉴에 담을 땐 값만 추가로 담기
+# 추가 메뉴 담기
+
+
+# 카운트로 메뉴 정리하기
+# 처음/되돌아가기
+# 정리 if/elif문 & for문/while문 위치와 값 오류 및 필요 없는 부분이 있을 수 있음
+
+# 버거값 받아오고 버거 채소 값(1개만),사이드메뉴,음료(세트) 장바구니/
+# 70~80%를 하려면 우선 기본적인 메뉴 구성을 1차 적으로 끝내고 수정 값을 제대로 입력 받고 출력까지 가능하도록 하고나서 처음/취소 기능을 위해서 정리
+# 가장 우선이 무엇일까 일단 값을 제대로 입력 받는 것이 1/그 값을 제대로 입력 받아서 장바구니에 여러 값이 들어가도록 하는 것이 2/값이 들어가고 출력까지 된 이후에 삭제 할 수 있도록 제작3
+# 정리가 중요할 것 같음 for문으로 반복해서 받아주는 형식으로 수정
+
+
+
+
+
+

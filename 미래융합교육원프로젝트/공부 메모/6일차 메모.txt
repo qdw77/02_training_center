@@ -1,0 +1,494 @@
+타임 모듈 타임함 수 
+출석체크
+이름/핸드폰 뒷자리
+
+import time
+number=0
+target_tick = time.time()+5
+while time.time() <target_tick:
+    number +=1
+
+print("5초 동안 {}번 while반복함".format(number))
+# 5초간 2천만번 반복
+
+
+import time
+number=0
+num=0
+x=[1,2,3,4,5,6,7,8,9]
+target_tick = time.time()+5
+while time.time() <target_tick:
+    num+=1
+    for i in x:
+        x.count(i)
+    number +=1
+
+print("5초 동안 {}번 while반복함".format(num))
+#5초간 2백만번 반복
+from itertools import count
+
+import time
+number=0
+num=0
+x=[[1,2,3],[4,5,6],[7,8,9],[10,11,12]]
+target_tick = time.time()+5
+while time.time() <target_tick:
+    num+=1
+    for i in x:
+        for j in i:
+         i.count(j)
+    number +=1
+
+print("5초 동안 {}번 while반복함".format(num))
+# 5초간 2천만번 반복
+
+lista=[1,2,3,[4,5,6],7,8,9,["A","222"]]
+for i in lista:
+    if type(i)==list:
+        for j in i:
+            print(j)
+
+lista=[1,2,3,[4,5,6],7,8,9,["A","222"]]
+lista=["1","2","3",["4","5","6"],"7","8","9",["A","222"]]
+target_tick = time.time()+5
+while time.time() <target_tick:
+        num+=1
+        for i in lista:
+            if type(i) == list:
+                for j in i:
+                    print(j)
+print("5초 동안 {}번 while반복함".format(num))
+
+
+# 키워드
+# break
+# continue
+# 위 두가지 키워드는 반복문의 내부에서만 사용가능
+# 반복문의 내부에 들여쓰기로 들어간 자식
+# break 키워드는 반복문을 탈출가능
+# continue 키워드는 반복문의 처음으로 돌아가서 실행 가능
+
+while True: #종료 시점이 정해져 있지 x
+    # print("123")
+    print("while문 진입")
+    break
+
+count=0
+ifcount=0
+elsecount=0
+while True: #종료 시점이 정해져 있지 x
+    count+=1
+    print(count)
+    if count<200000:
+        ifcount+=1
+        continue
+    else:
+        elsecount+=1
+        break
+print(count,ifcount,elsecount)
+
+i=0
+while True:
+    print("{}번쨰 반복문입니다.".format(i))
+    i = i+1
+    input_text = input(">종료하시겠습니까?(y/n): ")
+    if input_text in ["y", "Y"]:
+        print("{}번째 반복을 종료합니다.".format(i-1))
+        break
+
+numbers = [5,15,6,20,7,25]
+
+for number in numbers:
+    if number <10:
+        continue
+    print(number)
+
+# 2번문제
+key_list = ["name","hp","mp","level"]
+value_list =["기사",200,30,5]
+character = {}
+
+for i in range(len(key_list)):
+    character[key_list[i]]=value_list[i]
+print(character)
+
+# 3번문제
+limit=10000
+i=1
+sum_value=0
+while True:
+    sum_value+=i
+    # i += 1 #142
+    if sum_value>=10000:
+        break
+    i += 1 #141
+print("{}를 더할 때 {}을 넘으며 그때의 값은 {}입니다.".format(i,limit,sum_value))
+
+# 4번문제
+max_value = 0
+a =0
+b = 0
+for i in range(1,100):
+    j=100-i
+
+    if j*i>max_value:
+        max_value=j*i
+        a=j
+        b=i
+
+    print("최대 경우는 {} * {}= {}".format(a,b,max_value))
+
+# 4번문제
+max_value = 0
+a =0
+b = 0
+for i in range(1,100):
+    j=100-i
+
+    if j*i>max_value:
+        max_value=j*i
+        a=j
+        b=i
+
+    print("최대 경우는 {} * {}= {}".format(a,b,max_value))
+
+
+    # time => UTC 1970 1 1 기반 sec 얻을 수 있음
+    # p.244 예제 처럼 반복해서 input을 요청하는 문제
+    # 아래 UTC기반 초에서 아래 데이터 기준 971.6를 입력하는 문제
+    # 사용자 입력에늩 xxx.x글자 입력형태
+    # 민약 문제를 틀린 경우 => 힌트출력 1732759971까지 보여준다 (ms) 소숫점은 보여주지 않음
+    # 문제를 20번 안에 맞추지 못하면 '실패' 출력
+    # 20번 안에 정답 맞추면 성공
+    # 1732759971.6714258
+
+
+    # float<소수점
+    # int 정수
+    # 다시 시도 오류 발견 스탑이 안됌
+    # i=0
+    # while True:
+    #     if i<20:
+    #         input_num = input(">정답을 입력하십시오: ")
+    #         input_num= float(input_num)
+    #         if input_num in [6714258,1732759971.6714258]:
+    #             print("정답입니다")
+    #             break
+    #         else:
+    #             i = i + 1
+    #             print(i)
+    #             print("오답")
+    #             print("힌트: 1732759971.")
+    #     else:
+    #         print("기회를 전부 사용하셨습니다.")
+    #         break
+
+# while i<20:
+
+
+# count=0
+# while count!=20:
+#     count+=1#몇바퀴인지 카운트
+#     x=str(time.time())[7:12]#시간값을 문자열로 변환하며 변수에 기여
+#     x2=x#정답 형태로 xxx.x문자열로 슬라이싱
+#     print(x2)
+#     v=input("xxx.x초 입력")#사용자입력 받는다
+#     if x2==v: #정답이 사용자입력과 같은지
+#         print("정답")
+#         break#정답 후 게임종료 반복문 탈출
+#     else:#오답
+#         print("오답",x.split(".")[0])
+#     if count==20:#시도 기회 소진
+#         print("실패")
+
+# 딕셔너리에 사용가능한 딕셔너리 함수
+# keys():키 리스트를 얻을 수 있다.
+a={"A":100,"B":200,"C":300}
+print(a.keys())#a.keys는 a딕셔너리의 키 묶음 객체 리턴
+list(a.keys())#키 믂음 객체는 list로 형변환가능
+print(type(list(a.keys())))#리스트로 변환 후 타입
+# class함수 딕셔너리 키
+
+for i in list(a.keys()):
+    print(i)
+
+for i in a:
+    print(i)
+
+for i in a.keys():
+    print(i)
+
+# items(): 딕셔너리 내부 키 : 밸류들을 얻는 함수
+print(a.items())
+# 튀플
+
+# # clear() : 딕셔너리 지우기
+# a.clear()
+# print(a)
+
+# get()
+
+print("1" in "1234567")
+print("1" in ["1",'2'])
+print('A' in a)
+
+if 'A' in a:
+    print("A키가 있음")
+
+# 리스트에 적용 가능 함수 min() max() sum()
+# 최소, 최대. 합 함수
+# reversed() 리스트 뒤집기
+# enumerate() 열거 함수
+
+num=[1,2,3,4,5,6,6,7,8]
+print(min(num))
+print(max(num))
+print(sum(num))
+
+reversed_num=reversed(num)
+print(reversed_num)
+print(list(reversed_num))
+
+temp =reversed([1,2,3,4,5,6])
+for i in temp:
+    print(i)
+for i in temp:
+    print(i,"2222222")
+
+temp =reversed([1,2,3,4,5,6])
+for i in temp:
+    print(i,"1111111")
+for i in temp:
+    print(i,"2222222")
+
+# 하나의 값
+a=reversed([1,2,3,4,5,6])
+b=a
+for i in a:
+    print(i,"ree")
+for i in b:
+    print(i,"reee2")
+# 값이 담긴 주소가 두개/reversed만 하나
+a="dddddd"
+b=a
+
+a=11111
+b=a
+
+# 인터넌스
+print()
+
+# 두번째 for문이 출력되지 않는 이유?
+# reversed()를 통해 만들어진 객체 <list_reverseiterator object>는
+# 한 번 for문을 통해 내부 순회가 끝나면
+# 객체 내부적으로 더 이상 조합되지 않는 객체 형태입
+# for문을 통해 첫 번째 순화시 내부 데이터가 소모됨
+
+# 변수 temp 유무
+# 각자 따로 reversed 값을 지정해 줌
+for i in reversed([1,2,3,4,5,6]):
+    print(i,"3333333")
+
+print()
+
+for i in reversed([1,2,3,4,5,6]):
+    print(i,"4444444")
+# 두번 for문을 반복하려면 위 코드 방식으로 작성해야함
+# 위 코드는 두 for문 모두 출력
+
+
+temp =list(reversed([1,2,3,4,5,6]))
+for i in temp:
+    print(i,"5555555")
+print()
+for i in temp:
+    print(i,"6666666")
+
+
+import time
+x=time.time()
+if type(1) is int:
+    print(x)
+time.sleep(1) #강제 시간 지연
+if type(1) is int:
+    print(x)
+
+
+if type(1) is int:
+    print(time.time())
+time.sleep(1)
+if type(1) is int:
+    print(time.time())
+
+example_list=['요소a','요소b','요소c']
+for i in example_list:
+    print("{}번쨰 요소는 {}입니다.".format(i, "#"))
+
+x=0
+for i in example_list:
+    print(x,i,"##")
+    x+=1
+
+for i in range(len(example_list)):
+    print("{}번쨰 요소는 {}입니다.".format(i,example_list[i]))
+
+# enumerate() 열거함수
+example_list=['A','B','C']
+print("#단순 출력")
+print(example_list)
+print()
+
+print("# enumerate() 함수 적용 출력")
+print(enumerate(example_list))
+print()
+
+print("#list()함수로 강제 변환 출력")
+print(list(enumerate(example_list)))
+print()
+
+print("#반복문과 조합하기")
+for i, value in enumerate(example_list):
+    print("{}번쨰 요소는 {}입니다.".format(i, value))
+
+test=["A","B","C"]
+print(enumerate(test))
+print(list(enumerate(test)))
+
+for value,i in enumerate(test):
+    print(i,value+400,"@@@@@@@")
+
+dicta={"A":"100","B":"200"}
+print(dicta.items())
+for i,j in dicta.items():
+    print(i,j)
+
+
+
+example_dictionary={
+    "키A":"값A",
+    "키B":"값B",
+    "키C":"값C",
+    "키D":"값D"
+}
+
+print("#딕셔너리의 items() 함수")
+print("items():",example_dictionary.items())
+print()
+
+print("#딕셔너리의 items() 함수와 반복문 조합하기")
+
+for key, element in example_dictionary.items():
+    print("dictionary[{}] = {}".format(key, element))
+
+
+array=[]
+for i in range(0,20,2): #2스텝)
+    array.append(i*i)
+print(array)
+
+
+
+
+
+# 이런 것도 있다 정도만
+# array2=[i*i for i in range(0,20,2)]
+# print(array2)
+# 리스트 내포
+# 리스트 변수명=[경과식 for 반복변수 in 반복가능한 객체]
+# 리스트 변수명=[결과식 for 반복변수 in 반복간으한 객체 if 조건문]
+arr=["사과","자두","초콜릿","바나나","체리"]
+output=[fruit for fruit in arr if fruit !='초콜릿']
+print(output)
+# 261~262가볍게 건너감
+
+number = int(input("정수 입력> "))
+# 
+# if number % 2 ==0:
+#     print("""\
+#         입력한 문자열은 {}입니다.
+#         {}는(은) 짝수입니다.""".format(number, number))
+# else:
+#     print("""\
+#         입력한 문자열은 {}입니다.
+#         {}는(은) 홀수입니다.""".format(number, number))
+# 
+# 
+# 
+# number = int(input("정수 입력> "))
+# 
+# if number % 2 ==0:
+#     print("""입력한 문자열은 {}입니다.
+#     {}는(은) 짝수입니다.""".format(number, number))
+# else:
+#     print("""입력한 문자열은 {}입니다.
+#     {}는(은) 홀수입니다.""".format(number, number))
+# 
+# 
+# number = int(input("정수 입력> "))
+# 
+# if number % 2 ==0:
+#     print("""입력한 문자열은 {}입니다.\n{}는(은) 짝수입니다.""".format(number, number))
+# else:
+#     print("""입력한 문자열은 {}입니다.\n{}는(은) 홀수입니다.""".format(number, number))
+# 했던 부분 지나감
+
+
+
+
+
+
+# 이터레이터(요소)
+# 이터러블
+
+# print(r_n)
+#
+# print(next(r_n))
+# print(next(r_n))
+#
+# print(next(r_n))
+#
+# print(next(r_n))
+#
+# print(next(r_n))
+#
+# print(next(r_n))
+#
+# print(next(r_n))
+# 있는 것보다 오버해서 오류
+# Traceback (most recent call last):
+#   File "C:\Users\301-10\PycharmProjects\PythonProject\20241128.py", line 455, in <module>
+#     print(next(r_n))
+#           ~~~~^^^^^
+# StopIteration
+
+n=[1,2,3,4,5,6]
+r_n=list(reversed(n))
+print(r_n)
+
+for i in range(len(r_n)):
+    print(r_n)
+
+
+# print()
+
+# for i in 반복가능한 객체
+# 반복할 수 있는 것: 이터러블
+# 이터레이터 & 이터러블
+# 이터러블 : 순차적인 값을 변환 할 수 있는 구조 > 리스트 문자열, 딕셔너리 등
+
+# 이터레이터: 반복을 실제 수행하는 객체
+# 이터레이터는 이터러블 객체에서 값을 순차적으로 하나씩 꺼내는 역할을 한다.
+# reversed()의 변환 값/iter() 변환 값/enumerate() 변환값
+# 이터레이터는 print()해보면 at 메모리 주소 형태로 출력
+# next()를 통해 순차적으로 다음 값을 변환
+# next()사용시 stopIteration 더 이상 반환 할 값 없다
+# 한번 순회를 마치면 다시 조회 불가
+
+testlist=["500","600","700"]# 이터러블 객체
+# print(next(testlist)) testlist는 이터러블이지만 이터블레이터는 아님 next()불가
+testlist=iter(testlist)#이터러블 객체에서 이터러블레이터로 변환 iter()
+print(testlist)
+print(next(testlist))
+print(next(testlist))
+# next() 안돼면 for문
+print()

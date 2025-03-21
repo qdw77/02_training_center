@@ -1,0 +1,276 @@
+import random
+
+from pyparsing import empty
+
+
+# zip()
+# shuffle() 랜덤하게 섞는 것
+# 내부 값 퍼센트 별로 리스트로 저장 후 random
+# https://rfriend.tistory.com/808
+# random.choices(range(1, 6), weights = [0.2, 0.3, 0.1, 0.1, 0.3])
+# 출처: https://think-tech.tistory.com/60 [자윰이의 성장일기:티스토리]
+# v=len()
+# count=[]
+# # mapplace = []
+
+# for i in range(25):
+#   for j in range(25):
+#
+#
+#     # count+="□"
+#     print("□", "\t",end='')
+#     # random.choice("□", weights=[0.3, 0.7])
+#
+#     # print('--------' if i == 8 and j == 15 else 'o')
+#   print()
+# c_num= random.randint(4,5)
+# print()
+
+
+# def initializeA(map_size, box_pointA, box_pointB, box_pointC):
+
+# for i in range(25):
+#   i += 1
+#   print(i)
+#   for j in range(25):
+#     j += 1
+# map_size=[i,j]
+#
+# print(map_size)
+
+# point_num=random.uniform(0,1)
+# print(point_num)
+# map_po=[[0 for i in range(25)] for j in range(25)]
+# #print(map_po)
+# for i in range(25):
+#   for j in range(25):
+#     po_num=random.uniform(0,1)
+#     pp_num=random.randint(1,3)
+#     if po_num > 0.3:
+#       map_po[i][j]= pp_num
+#
+#     # print(0,'\t',end='')
+#   print()
+# print(map_po)
+class Map:
+  def __init__(self,height,width):
+    self.character = None
+    self.map_size = [height, width]
+    # self.map_size = [17, 17]
+    self.map_info = [[]]
+    self.max_tick = 1000
+    self.current_tick = 0
+    self.enemy_list = []
+    self.initialize()
+
+  # character # 캐릭터
+  # map_size # 맵 가로 세로
+  # map_info # 현재맵정보,  [[]]
+  # max_tick 최대틱
+  # current_tick 현재틱
+  # enemy_list 적 리스트
+
+
+
+  # def initialize(self,map_size):
+  #   for i in range(25):
+  #     i+=1
+  #     for j in range(25):
+  #       j+=1
+  #   map_size = [i, j]
+
+  def initialize(self):
+    # 2중 리스트로 [[]]
+    self.map_info = [[0 for i in range(self.map_size[0])]for j in range(self.map_size[1])]
+
+    for i in range(self.map_size[1]): # y
+      for j in range(self.map_size[0]): # x
+        point_num=random.uniform(0,1) # 확률
+        if point_num > 0.3: # 70% 박스
+          self.map_info[i][j] = 4 # Box 4
+          # 체력이 1, 2, 3, -1
+          # 4, 5, 6, 7
+          # i,j(좌표)의 위치에 4
+        else:
+          self.map_info[i][j]= 0
+          # i,j(좌표)의 위치에 0
+          # {"hp": 1~3}
+    #
+    for q in range(3):
+      for qq in range(3):
+        # self.map_info[][] # 다른 구역 나누기?
+        self.map_info[int((self.map_size[0]/2)) - q][int((self.map_size[1]/2)) - qq] = 0  # 중앙 고정 값(보스)
+        self.map_info[int((self.map_size[0]-2)) - q][int((self.map_size[1]-2)) - qq] = 0 # 오른쪽 모서리 아래 [24][24] # self.map_info[23 - q][23 - qq] = 0  
+        self.map_info[int() - q][int((self.map_size[1]-2)) - qq] = 0  # 오른쪽 모서리 위 [2][24]
+        # self.map_info[3 - q][23 - qq] = 0  # 오른쪽 모서리 위 [2][24]
+        # self.map_info[13 - q][23 - qq] = 0  # 오은쪽 중앙 # [13][24]
+        # self.map_info[23 - q][13 - qq] = 0  # 아래 중앙 # [24][13]
+        # self.map_info[23 - q][3 - qq] = 0  # 왼쪽 모서리 아래 # [24][2]
+        # self.map_info[3 - q][3 - qq] = 0  # 왼쪽 위 모서리 # [2][2]
+        # self.map_info[13 - q][3 - qq] = 0  # 오른쪽 중앙의 중앙 # [13][2]
+        # self.map_info[3 - q][13 - qq] = 0  # 위 중앙 # [2][13]
+
+        # if self.map_info[i][j] == 0:  # 박스가 비어있을 경우
+          # self.map_info[i][j] = 66
+
+        # 내부 값(보스,쫄,캐릭터)을 주어지도록 함
+
+    # Character.init() 캐릭터 초기 좌표
+    # Mob.init() {보스 좌표: [], 쫄 좌표:  []} 좌표는 [x,y]
+    # Box.init() {박스 체력들: []}
+    # self.current_tick = 0
+
+    for i in range(25):
+      for j in range(25):
+        print(self.map_info[i][j], end="\t")
+      print()
+
+
+  pass
+
+      # get / set
+
+      # Box.init({"box_info" = box_info})
+      # Character.init({"character_info"=character_info})
+      # Mob.init({"mob_info"=mob_info})
+
+
+      # 여기 값들을 모아서 한곳에 넣고 내용을 랜덤으로 주기
+
+
+m = Map(25,25)
+
+class Character:
+  @classmethod
+  def init(cls, **kwargs):
+    pass # 캐릭터 정보
+
+
+class Box:
+  @classmethod
+  def init(cls, **kwargs):
+    pass # 박스 정보
+
+
+class Mob:
+  @classmethod
+  def init(cls,**kwargs):
+    pass # 몬스터 정보
+
+
+
+    # self.character
+
+    # 9구역 나누고 빈값 만들고 self.map_info[][] = 0
+    # 랜덤으로 나머지 내용 저장 (잡몹,캐릭터) & 보스(중앙 고정)
+    # c_num= random.randint(4,5)
+
+    # 잡몹 넣고 4
+    # 캐릭터 인스턴스 5
+    # 보스 6
+    # 적 정보 전달 7
+    # 틱 current_tick = 0
+
+
+    #
+
+
+    # # 칸 30% 빈칸이랑 70% 박스로 채우기
+    # for i in range(25):
+    #   for j in range(25):
+    #
+    #
+    #     # 먼저 0~1
+    #     # 만약 그게 0.3 이하면 그대로 두고
+    #     # 0.3 초과면 랜덤으로 1~3 뽑아서
+    #     self.map_info[i][j] = Box(1)
+
+    # 6 12 18
+    # for 문으로 여러번 돌려서 빈 박스 제작
+    # self.map_info[12-1][12-1]
+    # 11 11 ~ 13 13
+
+    # 6 12 : 5 11 ~ 7 13
+
+
+    # 캐릭터랑 보스랑 잡몹 넣기
+
+    # 2. 맵에서 9개 구역에 3x3 구멍 뚫기
+    #  - 현재 맵 사이즈에 따라 비율로
+    #  - 좌표 9개 정하기
+    #  - 가운데에 보스 넣고 나머지 중 랜덤으로 뽑아서 캐릭터/잡몹
+    #
+    # 3. 캐릭터 인스턴스 생성
+    # 4. 보스 리스트 생성
+    # 현재틱 0틱 설정
+
+
+
+    # for i in range(25):
+    #   for j in range(25):
+    #
+    #     print()
+
+        # j,i 를 돌리고 그 안의 값들을 빈칸인지 아닌지 정하고 30%
+        # 빈칸이 아니면 박스
+        #
+
+        # pass
+
+    # 맵 초기상태로 설정
+    # 1. 25x25 각 칸마다
+    # 1) 빈칸인지 아닌지 정하고 (30% 확률?)
+    # 2) 빈칸이 아니면 체력 몇인 박스인지 (1~3 동일확률)
+    #
+    # 2. 맵에서 9개 구역에 3x3 구멍 뚫기
+    #  - 현재 맵 사이즈에 따라 비율로
+    #  - 좌표 9개 정하기
+    #  - 가운데에 보스 넣고 나머지 중 랜덤으로 뽑아서 캐릭터/잡몹
+    #
+    # 3. 캐릭터 인스턴스 생성
+    # 4. 보스 리스트 생성
+    # 현재틱 0틱 설정
+  #
+  #   pass
+
+  # def play(self):
+  #   # 이벤트 진행
+  #   # display
+  #   # while (게임 진행중)
+  #   # 현재틱 +1
+  #   # input 받기
+  #   # input 검사
+  #   # input에 따른 처리
+  #   #
+  #   # 캐릭터한테 정보전달
+  #
+  #   # 박스한테 정보전달
+  #   # 적한테 정보전달
+  #   #
+  #   # 화면 출력
+  #   pass
+  #
+  # def display(self):
+  #   # 현재맵 정보랑 캐릭터 상태, 적 체력 등 콘솔 출력
+  #   # 왼쪽부분에 맵 오른쪽에 상태, 정보 이거
+  #   # 캐릭터, 바닥, 박스, 아이템, 적, 보스, 물풍선, 물줄기, << 이것들이 겹쳤을때
+  #   # 기본: 흰색, 물풍선: 하늘색, 적이랑 보스는 빨간색, 박스/아이템 …
+  #   # 문자, 색깔
+  #   pass
+  #
+  # def game_state(self):
+  #   # 게임 진행 상황
+  #   #     if 적 리스트에서 체력 검사해서 싹다 죽었으면
+  #   #     return 클리어
+  #   #     if 캐릭터가 죽었으면
+  #   #     return 게임오버
+  #   #     if 틱이 최대틱 넘었으면
+  #   #     return 게임오버
+  #   #
+  #   # return 아직진행중
+  #   # 0이면 클리어
+  #   # 1이면 게임오버
+  #   # 2이면 진행중
+  #   pass
+
+

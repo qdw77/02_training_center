@@ -1,0 +1,16 @@
+import pandas as pd
+#
+# exam=pd.read_excel('excel_exam.xlsx')
+# exam.head() # df의 상단 5개의 행
+# exam.head(10) # df의 상단 10개의 행
+# exam.tail() # 하단 5행
+# exam.tail(8) # 하단 8행
+# print(type(exam))
+
+# pd.DataFrame > n열 프레임구조
+# pd.Series > 1억 데이터
+
+import numpy as np
+np.nan#결측치
+# 그래프 병합, 연결 ,행찾기, 열 찾기, 그룹화 필드 찾기, 열마다 합, 등
+# 게임 통계 히스토그램 / 틱이라고 하는 한 단위

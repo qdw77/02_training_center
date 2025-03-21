@@ -1,0 +1,276 @@
+# 241226
+# 460p
+# 클래스의 기본
+
+# 객체 >
+# 객체 지향
+# 추상화
+# 클래스 >
+# 인스턴스
+# 생성자
+# 메소드 >
+
+# C언어를 제외한 프로그래밍 언어는 객체 지향 프로그래밍 언어이다.
+# 객체 지향 : 객체를 중심으로 생각해서 작성하는 프로그래밍 방식
+# 클래스를 기반으로 객체를 만든다.
+
+# 객체: 속성과 메소드를 갖는 것
+# 클래스: 객체를 만드는 틀
+
+
+# 추상화: 특정 프로그램을 만들 때 필요한 요소가 무엇인지 생각해서 정리하는 것
+# def x (**kwargs): return kwargs
+# 465p
+
+# class Student:
+#   def __init__(self): # 생성자 함수
+#     print("생성")#생성자 함수 호출시 코드 작성 부분
+
+# student=Student() # 생성자 함수를 통해 객체를 만든다
+
+# class 클래스이름:
+#   클래스 내부 내용
+#   클래스 내부 내용
+
+# a() #생성자 함수를 통해 객체를 만든다
+
+# student=[Student(),Student(),Student(),Student(),Student(),Student()]
+# 인스턴스: 클래스 구조를 통해 만들어진 객체를 의미
+
+# 467p
+# class Student:
+#   def __init__(self,name,korean,math,english,science): #생성자 함수
+#     self.name = name # 윤인성
+#     # 인스턴스(object).필드명= 생성자 / 매개변수 > 필드 set
+#     self.korean = korean # 87
+#     self.math = math # 98
+#     self.english = english # 88
+#     self.science = science # 95
+#
+#   def __del__(self): # 소멸자 함수 / 소멸할때 표시해주고 싶다고하면 작성
+#     print("객체 소멸",self.name)
+#     # 객체가 6개이므로 6번 출력
+#     # 생성된 것 역순으로 삭제 / 생략 가능 하지만 안에 꾸며야 할 내용이 있다면 작성
+#
+# student=[
+#   Student("윤인성",87,98,88,95),
+#   Student("연하진",92,98,96,98),
+#   Student("구지연",76,96,94,90),
+#   Student("나선주",98,92,96,92),
+#   Student("윤아린",95,98,98,98),
+#   Student("윤명월",64,88,92,92)
+# ]
+# # 속성 / 필드 / 변수 self.name = name
+# # 필드 self.name 등 5개 / 속성 5개 / 변수 5개
+# # self란 object 자체 / > 필드
+# print(
+#   student[0].name,
+#   student[0].korean,
+#   student[0].math,
+#   student[0].english,
+#   student[0].science
+# )
+#
+# print(student[0].name) #get < 조회
+# print(student[3].korean) #get < 조회
+# 딕셔너리로 쓰는 게 더 쉬워보일 테지만 복합적인 구조의 경우 사용해야 편해짐
+# 클래스의 개념 5분의 1도 안나옴
+# 클래스를 배워야하는 큰 이유는 기본 프레임워크가 클래스
+
+# p469
+# class Student:
+#   def __init__(self, name, korean, math, english, science):  # 생성자 함수
+#     self.name = name
+#     self.korean = korean
+#     self.math = math
+#     self.english = english
+#     self.science = science
+#
+#   # self.korean <필드
+#   #  def get_sum(self): 객체 메소드(생성자로 이미 인스턴트 생성)
+#   # 메서드
+#   def get_sum(self):
+#     return self.korean+self.math +\
+#     self.english + self.science
+#
+#   def get_average(self):
+#     return self.get_sum() / 4
+#
+#   def to_string(self):
+#     return "{}\t{}\t{}".format(\
+#                              self.name,\
+#                                   self.get_sum(),\
+#                                   self.get_average())
+#
+#
+# student=[
+#   Student("윤인성",87,98,88,95),
+#   Student("연하진",92,98,96,98),
+#   Student("구지연",76,96,94,90),
+#   Student("나선주",98,92,96,92),
+#   Student("윤아린",95,98,98,98),
+#   Student("윤명월",64,88,92,92)
+# ]
+#
+# print("이름","총점","평균",sep="\t")
+# for student in student:
+#   print(student.to_string())
+
+# class A:
+#   def __init__(self,open,close):
+#     self.open=open
+#     self.close=close
+# # ab=A
+#
+# ab=[
+#     A("1Day","1DayClose"),
+#     A("2Day", "2DayClose"),
+#     A("3Day", "3DayClose"),
+# ]
+# print(ab[0].open)
+
+
+
+
+# class Test: #클래스
+#   def __init__(self,T,FA,FB,PA,PB):
+#     self.Time=T
+#     self.FoodA=FA
+#     self.FoodB=FB
+#     self.PriceA=PA
+#     self.PriceB=PB
+#
+#   def Tsum(self):
+#     return self.PriceA+self.PriceB
+#
+#   def getT(self):
+#     return self.Tsum()/2
+# L=[
+#   Test("점심","신라면","핫바",1000,2500),
+#   Test("점심","고구마","닭가슴살",1500,2500),
+#   Test("저녁","삼겹살","볶음밥추가",17000,3000),
+#   Test("아침","단백질바","블랙보리차",3000,2500),
+#   Test("아침","감자","제로콜라",2000,2000),
+#   Test("야식","치킨","제로콜라",20000,2000)
+# ]
+#
+#
+#
+# class gla:
+#   def __init__(self):
+#     self.sight=0.2
+#
+# myglass=gla()
+#
+# class Bag:
+#   def __init__(self,name,cat,mat,stuff,who,stat):
+#     self.name=name
+#     self.cat=cat
+#     self.mat=mat
+#     self.inside=stuff
+#     self.who=who
+#     self.status=stat #T열림,F닫힘
+#
+#   def __del__(self):
+#     pass
+#
+#   def open(self):
+#     print("가방을 열었습니다.")
+#     self.status=True
+#
+#   def close(self):
+#     print("가방을 닫았습니다")
+#     self.status=False
+#
+#   def show_inside(self):
+#     for i in self.inside:
+#       print(i)
+#
+#   def addItem(self,item):
+#     if self.status == True:
+#       self.inside.append(item)
+#       print("{}을 가방에 넣었다".format(item))
+#     else:
+#       print("가방이 닫혀있습니다. 물건 넣기 실패")
+#
+#
+# b=Bag("그냥 가방","크로스백","가죽",[],"AB",False)
+#
+# print(b.name)
+# if b.who=="AB":
+#   print("AB의 가방이다")
+#
+# if b.status==False:
+#   b.open()
+#   # b.addItem("텀블러")
+#   b.addItem(myglass)
+#   b.addItem(gla())
+#   b.close()
+#
+# print(b.inside[0].sight,b.inside[1].sight)
+# # print(b.inside[0])
+# # .sight
+#
+# # # Bag() 힙에 올리는 역할
+# # mybag=Bag("책가방","백팩","가죽",["펜","지갑"],"AA")
+# # print(mybag.inside)
+# # print(mybag.show_inside())
+# #
+# # print(mybag.mat)
+# # print(mybag.name)
+# # print(mybag.who)
+# #
+# # print("{}의 가방이며 재질은 {}이고 종류는 {}이다".format(mybag.who,mybag.mat,mybag.name))
+
+
+# 클래스룸을 만들어서 몇번 자리에 앉는지 출석 체크
+# 출석부
+# 1 클래스> lms 전산 출석부
+# 지갑 카드 현대 /T/F/20000/v,sdf
+# 카드 - 삼성
+# 카드 - 국민
+# 신분증 - 주민번호,이름,주소
+# 현금
+
+# 1번슬롯,2번슬롯 등 >지갑 (1번슬롯),(2번슬롯),(3번슬롯)
+# 2개의 클래스
+# - 신용카드 넣기 - 체크 < 뺴고
+
+# ATM
+# - 입금 / 출금 / 송금 / 잔고조회/ 종료
+# - 송금시 계좌번호 / 사용자의 잔고와 송금하고자 하는 사람의 계좌번호(정보) 체크
+
+
+# class A
+# ATM 사용자
+# 통장을 지녀야함
+# 이름
+
+# class B
+# 통장
+# 계좌번호
+# 예금주
+# 잔액
+
+# class C
+# 은행 전산
+
+# 변경시 매소드로
+
+# class ATM > 사용자의 통장 여부 조회/잔고 조회/
+# class
+
+# class P:
+#   def __init__(self,name,m,n):
+#     self.name=name
+#     self.m = m
+#     self.n = n
+#   # 입금
+#   # 출금
+#   # 송금
+#
+# class ATM:
+#   def __init__(self,):
+#
+# class B:
+#   def __init__(self):

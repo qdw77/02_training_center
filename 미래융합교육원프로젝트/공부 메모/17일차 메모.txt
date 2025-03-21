@@ -1,0 +1,72 @@
+키보드, 모니터
+
+import random
+
+count=0
+pp2=0
+pp=["사람1","사람2","사람3","사람4","사람5","사람6","사람7","사람8","사람9","사람10"]
+pduty=[]
+# pduty=[][0]
+age=[]
+
+with open("프로젝트(근로).txt","r", encoding='UTF-8') as pp0:
+        pp2+=1
+        for i in pp0:
+            a=(pp0.readline()).replace("\n","")
+            aa = a.strip().split(",")
+            pduty.append(aa)
+        print(pduty)
+        pduty=map(int,pduty)
+# 세금 계산
+# 국민연금0.045(4.5%)
+# 건강보험0.033(3.335%)
+# 장기요양보험0.1(10.25%)
+# 고용보험 0.008(0.8%)
+# 값을 다시 정돈해서 받고
+# with open("re2.txt","w",encoding='UTF-8') as ree2:
+#     for ii2 in range(10):
+#         name = random.sample(pp, 1)
+#     print(name)
+# with open("re.txt","w",encoding='UTF-8') as ree:
+#     for ii in range(10):
+#         # name = [pp[p2] for p2 in range(count) ]
+#         # name=[pr for pr in range(10) if pp2<len(pp) and pp2+=1 ]
+#         name=random.sample(pp,1)
+#         pd = random.sample(pduty,1) #전체 근로 소득세
+#         pdd = pd[0:1]# 월급
+#         pdp=pd[2:]# 부양가족별
+#         age=random.randrange(20,70)
+#         # 지금 문제는 중복이 있음
+#         # 이상 이하 따로 구분
+#         # 평균 값을 구하고
+#         # 부양 가족 따로
+#         ree.write("{},{},{},{}\n".format(name, pd,age,pdp))
+#
+#  #  # 앞 두개는 월급 이상 이하/ 그 뒤로는
+#
+# with open("re.txt","r", encoding='UTF-8') as ree:
+#     count=0
+#     for i22 in ree:
+#         name=i22.strip().split(",")[0]
+#         pd = i22.strip().split(",")[1:13]
+#         age=i22.strip().split(",")[13]
+#         pdd=i22.strip().split(",")[1:3]
+#         pdp=i22.strip().split(",")[3:13]
+#         # 부양 가족 수
+#         count += 1
+#         # print(i22.strip().split(","))
+#         if (not name) or (not pd):
+#             print(count)
+#             continue
+#         print(name)
+#         print('\n'.join([
+#             "이름: {}",
+#             "근로소득세: {}",
+#             "연령: {}",
+#             "월급(이상,이하): {}",
+#             "부양가족(1~10): {}"
+#         ]).format(name, pd, age,pdd,pdp))
+#         print(count)
+# #         # 월급 랜덤으로 받고 그 월급을 바탕으로 가족 수도 랜덤으로 받아서 출력
+# #         # for 문을 사용해서
+# #

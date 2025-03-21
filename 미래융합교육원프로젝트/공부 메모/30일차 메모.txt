@@ -1,0 +1,25 @@
+# get / set
+      # for 문(반복문)
+      # classmethod
+      # 좌표 / 퍼센트
+      # if문
+      
+      # 전반적인 실습
+
+    # 9구역으로 나눈 곳들을 가져와서 그 내부에 캐릭터,쫄,보스들이 들어갈 수 있게 값을 나눠줘야 하는 데
+    # 9구역으로 나뉜 곳을 어떻게 가져와야 하나...
+    # 각 구간의 중앙 값을 랜덤적으로 각 쫄과 캐릭터에게 나눠주는 게 낫나?
+
+    # 각 구간의 중앙 값
+    boss_point = [[(self.map_size[0]+3) // 2 - i, (self.map_size[1]+3) // 2 - j]]  # 중앙 보스
+    minion_pointA = [[(self.map_size[0]-1) - i, (self.map_size[1]-1) - j]]  # 오른쪽 모서리 아래 [23][23] 쫄1
+    minion_pointB = [[(self.map_size[0]-1) - i, (self.map_size[1]+3)// 2 - j]]  # 아래 중앙 [23][13] 쫄2
+    minion_pointC = [[-(i+1), (self.map_size[1]+3) // 2 - j]]  # 위 중앙 [3][13] 쫄3
+    minion_pointD = [[(self.map_size[0]+3) // 2 - i, -(j+1)]]  # 왼쪽 중앙 [13][3] 쫄4
+    minion_pointE = [[(self.map_size[0]+3) // 2 - i, (self.map_size[1]-1) - j]] # 오른쪽 중앙 쫄5 [13][23]
+    character_point = [[-(i+1), (self.map_size[1]-1) - j]]  # 오른쪽 모서리 위 [3][23] 캐릭터
+
+# zip()
+# shuffle() 랜덤하게 섞는 것
+# 내부 값 퍼센트 별로 리스트로 저장 후 random
+# 클래스로 호출 받음

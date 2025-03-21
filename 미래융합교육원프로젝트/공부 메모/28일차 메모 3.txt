@@ -1,0 +1,171 @@
+□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+■ 	■ 	■ 	■ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+■ 	■ 	■ 	■ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+■ 	■ 	■ 	■ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+■ 	■ 	■ 	■ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	
+■ 	■ 	■ 	■ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 	□ 
+
+
+■
+
+import random
+
+# zip()
+# shuffle() 랜덤하게 섞는 것
+# 내부 값 퍼센트 별로 리스트로 저장 후 random
+# https://rfriend.tistory.com/808
+
+v=len()
+count=[]
+mapline = []
+for i in range(25):
+  for j in range(25):
+    mapline.append(0)
+
+    # count+="□"
+    # print("□", "\t",end='')
+    # random.choice("□", weights=[0.3, 0.7])
+    # plt.rc("□",end='',size=15)
+
+  print()
+
+print(mapline)
+
+
+class Map:
+  def __init__(self):
+    self.character = None
+    self.map_size = [0, 0]
+    self.map_info = [[]]
+    self.max_tick = 1000
+    self.current_tick = 0
+    self.enemy_list = []
+    self.initialize()
+
+  # character # 캐릭터
+  # map_size # 맵 가로 세로
+  # map_info # 현재맵정보,  [[]]
+  # max_tick 최대틱
+  # current_tick 현재틱
+  # enemy_list 적 리스트
+
+  def initialize(self,map_size):
+    for i in range(25):
+      for j in range(25):
+
+        print()
+
+        # j,i 를 돌리고 그 안의 값들을 빈칸인지 아닌지 정하고 30%
+        # 빈칸이 아니면 박스
+        #
+        pass
+
+    # 맵 초기상태로 설정
+    # 1. 25x25 각 칸마다
+    # 1) 빈칸인지 아닌지 정하고 (30% 확률? 70%)
+    # 2) 빈칸이 아니면 체력 몇인 박스인지 (1~3 동일확률)
+    #
+    # 2. 맵에서 9개 구역에 3x3 구멍 뚫기
+    #  - 현재 맵 사이즈에 따라 비율로
+    #  - 좌표 9개 정하기
+    #  - 가운데에 보스 넣고 나머지 중 랜덤으로 뽑아서 캐릭터/잡몹
+    #
+    # 3. 캐릭터 인스턴스 생성
+    # 4. 보스 리스트 생성
+    # 현재틱 0틱 설정
+
+    pass
+
+  def play(self):
+    # 이벤트 진행
+    # display
+    # while (게임 진행중)
+    # 현재틱 +1
+    # input 받기
+    # input 검사
+    # input에 따른 처리
+    #
+    # 캐릭터한테 정보전달
+
+    # 박스한테 정보전달
+    # 적한테 정보전달
+    #
+    # 화면 출력
+    pass
+
+  def display(self):
+    # 현재맵 정보랑 캐릭터 상태, 적 체력 등 콘솔 출력
+    # 왼쪽부분에 맵 오른쪽에 상태, 정보 이거
+    # 캐릭터, 바닥, 박스, 아이템, 적, 보스, 물풍선, 물줄기, << 이것들이 겹쳤을때
+    # 기본: 흰색, 물풍선: 하늘색, 적이랑 보스는 빨간색, 박스/아이템 …
+    # 문자, 색깔
+    pass
+
+  def game_state(self):
+    # 게임 진행 상황
+    #     if 적 리스트에서 체력 검사해서 싹다 죽었으면
+    #     return 클리어
+    #     if 캐릭터가 죽었으면
+    #     return 게임오버
+    #     if 틱이 최대틱 넘었으면
+    #     return 게임오버
+    #
+    # return 아직진행중
+    # 0이면 클리어
+    # 1이면 게임오버
+    # 2이면 진행중
+    pass
+
+
+class Character:
+  def crt_info(self, info):
+    # 캐릭터한테 보낼 정보
+    # info에 뭐가 들어갈지
+    # {
+    #     현재틱: int
+    #     물풍선맞음여부: bool
+    #     적충돌횟수: int  # 이동입력값이랑 결과대로 했을 때 충돌하는 횟수
+    #     먹은아이템: list[Item]
+    #     이동입력값: list[str](예: [‘w’, ‘w’, ‘a’])
+    # 이동결과: list[bool](예: [true, false, true])
+    # 물풍선사용여부: bool
+    # }
+
+    return {}
+
+
+class Box:
+  def box_info(self, info):
+    # 박스한테 보낼 정보
+    # info에 뭐가 들어갈지
+    # {
+    #     현재틱: int
+    # 물줄기맞음여부: bool
+    # }
+
+    return {}
+
+
+class Item:
+  pass
+
+
+class Mob:
+  def mob_info(self, info):
+    # 몹한테 보낼 정보
+    # info에 뭐가 들어갈지
+    # {
+    #     현재틱: int
+    # 물줄기맞음여부: bool
+    # 이동가능여부(상하좌우): list[bool]  # [상, 하, 좌, 우]
+    # }
+    return {}

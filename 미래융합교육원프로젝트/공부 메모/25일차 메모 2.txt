@@ -1,0 +1,197 @@
+import datetime
+
+class ATM:
+   def __init__(self, atm_money):
+       self.atm_money = atm_money  # ATM 보유 현금
+       self.is_check = False  # ATM 작동 여부
+       self.account = None  # 연결된 계좌 # 정보 복사 후 저장된 곳
+
+   def check_bankbook(self,account):  # 통장 연결 여부 확인
+       if bank.chk_account(account):
+           self.account=account
+           self.is_check=True
+       else:
+           print("유효하지 않은 통장입니다.\nATM을 종료합니다.")
+           self.is_check=False
+
+   def atm_withdraw(self, money):  # 출금 함수
+       if money > self.atm_money:
+           print("출금 실패: ATM 현금이 부족합니다.")
+       if bank.chk_calc(self.account,money,'-')==False:
+           print("출금 실패: 통장 잔고가 부족합니다.")
+       else:
+           bank.bank_deposit(self.account,money,'-')
+           self.atm_money -= money  # ATM에서 출금
+           self.account.balance = bank.account_DB[self.account.user][1]
+
+   def atm_deposit(self, money):  # 입금 함수
+       bank.bank_deposit(self.account,money,'+')
+       self.account.balance=bank.account_DB[self.account.user][1]
+       self.atm_money += money  # ATM 현금 증가
+
+
+   def run_send(self, money, target_account):  # 송금 함수
+       if bank.chk_calc(self.account, money, '-') == False:
+           print("출금 실패: 통장 잔고가 부족합니다.")
+       else:
+           bank.send_account(self.account,target_account,money)  # 대상 계좌에 입금
+           self.account.balance = bank.account_DB[self.account.user][1]
+           target_account.balance = bank.account_DB[target_account.user][1]
+
+
+   # 잔고 조회
+   def view_user_balance(self):
+       print(f"{self.account.user}님의 현재 잔고 : {self.account.balance:,}원")
+
+   # 통장 정리
+   def run_arrange(self):
+       for line in bank.log_DB:
+           if line[1] == self.account.user:
+                self.account.log.append(line)
+
+
+class User:
+   def __init__(self, user):
+       self.user = user
+
+   def open(self):
+       # atm 시작
+       print("ATM 사용을 시작합니다.")
+       atm.is_check = True
+
+   def atm_input(self, account): #값 복사 후 account 저장
+       # atm 통장 확인
+       atm.check_bankbook(account)
+
+   def account_view(self, account):
+       account.display_account()
+
+   def user_deposit(self, money):
+       # 입금
+       # atm으로 입금
+       atm.atm_deposit(money)
+
+
+   def user_withdraw(self, money):
+       # 출금
+       # atm으로 출금
+       print("출금")
+       atm.atm_withdraw(money)
+
+   def remittance(self, money, target_account):
+       # 송금
+       # atm으로 입금(송금)
+       atm.run_send(money, target_account)
+
+   def disp_account(self):
+       atm.view_user_balance()
+
+   def user_arrange(self):
+       atm.run_arrange()
+
+   def close(self):
+       # atm 종료
+       print("ATM 사용을 종료합니다.")
+       atm.chk_start = False
+
+
+class Account:
+   def __init__(self, user, balance, bankbook):
+       # 이름,잔액,통장
+       self.user = user
+       self.balance = balance
+       self.bankbook = bankbook
+       self.log = []
+       # Bank.add_account(self.user, self.balance, self.bankbook)
+
+   def display_account(self):
+       # 통장
+       print("계좌번호: {} 예금자명: {} 현재 잔고: {}".format(self.bankbook, self.user, self.balance))
+       # 통장내역
+       print(f"{"일시":22} {"예금주":5} {"계좌번호":8} {"입출금":7} {"잔액":6}")
+       for list in self.log:
+          print(f"{list[0]:25} {list[1]:3} {list[2]:12} {list[3]:6} {list[4]:6}")
+
+class Bank:
+    # Dictionary 추가 (잔고와 로그 두 개를 나누어 진행)
+    def __init__(self):
+        self.account_DB = {}  # {이름:[계좌번호,잔고]}
+        self.log_DB = []
+# bank.account_DB[self.account.name][1] ==> dict[key][index]
+
+    # 새로운 계좌일 시, 잔고DB에 계좌 추가
+    def add_account(self, account):
+        self.account_DB[account.user] = [account.bankbook, account.balance]
+
+    # 해당 은행에 유효한 계좌인지 확인(+입출금 가능여부)
+    def chk_account(self, account):
+        # 1. 유효한 계좌
+        if account.user in self.account_DB.keys():
+            return True
+        else:
+            return False
+
+    def chk_calc(self, account, money, calc):
+        # 출금 시, 잔고가 부족할 경우
+        if calc == '-' and self.account_DB[account.user][1] < money:
+            return False
+        else:
+            return True
+
+    # 송금
+    def send_account(self, account, to_account, money):  # account는 현재계좌
+        now=datetime.datetime.now()
+        self.account_DB[account.user][1] -= money
+        self.account_DB[to_account.user][1] += money
+        bank.make_log(account, self.account_DB[account.user][1], ('-' + str(money)))
+        bank.make_log(to_account, self.account_DB[to_account.user][1], ('+' + str(money)))
+
+    # 입금 및 출금
+    def bank_deposit(self, account, money, calc):
+        if calc == '+':
+            self.account_DB[account.user][1] = self.account_DB[account.user][1] + money
+            bank.make_log(account, self.account_DB[account.user][1], (calc + str(money)))
+        elif calc == '-':
+            self.account_DB[account.user][1] = self.account_DB[account.user][1] - money
+            bank.make_log(account, self.account_DB[account.user][1], (calc + str(money)))
+
+    # log DB에 데이터 추가
+    def make_log(self, account, balance, action):
+        now = datetime.datetime.now()
+        self.log_DB.append([now.strftime("%Y.%m.%d %H:%M:%S"), account.user, self.account_DB[account.user][0], action, balance])
+
+
+# # 실행 실험
+
+
+# # DB 생성
+bank = Bank()
+# # 계좌 생성 (3인) // 이름, 잔고, 계좌번호
+A_account = Account("A", 0, "123-1234-11")
+B_account = Account("B", 0, "987-4567-55")
+C_account = Account("C", 0, "454-8521-99")
+#
+# # 유저 생성 (3인)
+A_user = User("A")
+B_user = User("B")
+C_user = User("C")
+
+# 유저 동작
+# ATM 시작
+atm = ATM(10000)
+bank.add_account(A_account)
+bank.add_account(B_account)
+bank.add_account(C_account)
+
+# A_user가 500원을 입금
+A_user.open()
+A_user.atm_input(A_account)
+A_user.user_deposit(5000)
+A_user.user_withdraw(200)
+A_user.remittance(4000,B_account)
+A_user.disp_account()
+A_user.user_arrange()
+A_user.account_view(A_account)
+A_user.close()
+
+

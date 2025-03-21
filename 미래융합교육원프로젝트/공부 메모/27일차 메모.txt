@@ -1,0 +1,239 @@
+85p
+쉽게 배우는 파이썬 데이터 분석
+
+파이참 왼쪽 아래 터미널
+jupyter lab
+pip install openpyxl
+pip install jupyterlab
+# 컨트롤 C 실수로 눌렀을 땐 다시 실행
+
+import pundas as pd 
+df_exam=pd.read_excel('excel_exam.xlsx')
+df_exam
+
+
+import pandas as pd
+
+df_exam=pd.read_excel('excel_exam_novar.xlsx')
+df_exam
+
+
+import pandas as pd
+
+df_exam=pd.read_excel('excel_exam_novar.xlsx',header=None)
+df_exam
+
+
+#.to_csv()
+#read_csv(exam.csv)
+
+
+df_midterm=pd.DataFrame({'english':[90,80,60,70],'math':[50,60,100,20],'nclass':[1,1,2,2]})
+df_midterm
+
+#파이참
+df_midterm=pd.DataFrame({'english':[90,80,60,70],'math':[50,60,100,20],'nclass':[1,1,2,2]})
+print(df_midterm)
+
+
+
+df_midterm=pd.DataFrame({'english':[90,80,60,70],'math':[50,60,100,20],'nclass':[1,1,2,2]})
+df_midterm
+
+df_midterm.to_csv('output_newdata.csv',index=False)
+
+데이터 프레임은 기본적으로 생김 None 값과 index 값
+
+
+import pandas as pd
+
+exam=pd.read_excel('excel_exam.xlsx')
+#df 구조 20행 5열 변수, 속성
+exam.head() # df의 상단 5개의 행
+exam.head(10) # df의 상단 10개의 행
+exam.tail() # 하단 5행
+exam.tail(8) # 하단 8행
+exam.shape
+exam.shape #프로포티드
+exam.info()
+exam.describe()
+
+문자 통계 include 추가 > 
+mpg=pd.read_csv('mpg.csv')
+mpg.describe(include='all')
+#p108
+# NaN > Not a Number
+# 컨트롤 엔터 전체부터 다시 한번씩 실행
+
+df_raw=pd.DataFrame({
+    'var1':[1,2,1],
+    'var2':[2,3,2]    
+})
+df_raw
+
+df_new=df_raw.copy()
+df_new
+
+df_new=df_new.rename(columns={'var2':'v2'})
+df_new
+
+
+mpg_new=mpg.copy()
+mpg_new
+
+mpg_new=mpg_new.rename(columns={'cty':'city','hwy':'highway'})
+mpg_new
+#p115
+
+
+df=pd.DataFrame({'var1':[4,3,8],
+               		  'var2':[2,6,1]})
+
+df['var_sum']=df['var1']+df['var2']
+
+df['var_mean']=(df['var1']+df['var2'])/2
+df
+
+
+# 게임이라는 주제로 레인지/게임데이터 로그 뽑기 프로젝트 예정 이걸 토대로 완성
+
+
+mpg['total']=(mpg['cty']+mpg['hwy'])/2
+mpg.head()
+ 
+sum(mpg['total'])/len(mpg)
+
+mpg['total'].mean()
+
+mpg['total'].describe()
+
+# mpg['total'].plot.hist()
+
+
+import numpy as np
+mpg['test']=np.where(mpg['total']>=20,'pass','fall')
+mpg.head()
+mpg.tail()
+
+
+count_test=mpg['test'].value_counts()
+# count_test.plot.bar(rot=0)
+
+
+mpg['grade']=np.where(mpg['total']>=30, 'A',
+                      np.where(mpg['total']>=20,'B','C'))
+mpg.head(20)
+
+
+count_grage=mpg['grade'].value_counts() #.sort_index()
+count_grage
+
+
+# count_grage.plot.bar(rot=0)
+
+
+mpg['grade2']=np.where(mpg['total'] >=30, 'A',
+              np.where(mpg['total']>=20,'B',
+              np.where(mpg['total']>=20,'c','D')))
+
+
+mpg['size']=np.where((mpg['category']=='compact') | (mpg['category']=='subcompact') |
+                     (mpg['category']=='2seater'),'small','large')
+mpg['size'].value_counts()
+
+
+mpg['size']=np.where(mpg['category'].isin(['compact','subcompact','2seater']),'small','large')
+mpg['size'].value_counts()
+
+
+# Raw 데이터(원자료)
+# p132
+# 데이터 전처리
+
+import pandas as pd
+exam=pd.read_excel('excel_exam.xlsx')
+exam
+nclass1=exam.query('nclass in [1]')
+nclass1
+# nclass2=exam.query('nclass1==2')
+
+# nclass1['math'].mean()
+# nclass2['math'].mean()
+
+
+df=pd.DataFrame({'sex'  :['F','M','F','M'],'country':['Korea','China','Japan','USA']})
+df.query('sex=="F" & country=="Korea"')
+
+
+# exam['math'] # 시리즈 하나의 열만
+exam[['math']] # 1개 열을 추출 시 []에 넣어서 추출하면 DF형태로 나옴
+
+
+exam.drop(columns=['math', 'science'])
+
+
+exam.query('nclass==1')[['english']]
+
+
+exam.query('math >=50')[['id','math']]
+# 행 추출 query
+# 어떤 것에 따라 처리 np
+
+
+exam.sort_values('math') # sort의 기본 값은 오름차순
+exam.sort_values('math',ascending=False) # 내림차순
+
+
+exam.sort_values(['nclass','math']) # nclass 기반으로 다음 math 기반
+
+
+exam.assign(total=exam['math']+exam['english']+exam['science'],
+            mean=(exam['math']+exam['english']+exam['science'])/3)
+
+
+import numpy as np
+exam.assign(test=np.where(exam['science']>=60,'pass','fall'),
+            total=exam['math']+exam['english']+exam['science']).sort_values('total') # 조건 값 추가
+
+
+long_name=pd.read_excel('excel_exam.xlsx')
+long_name.assign(new=lambda x:x['math']+x['english']+x['science'])
+
+
+# df.agg()
+exam.agg(mean_math=('math','mean')) # index 생성 mean함수
+
+
+exam.groupby('nclass').agg(mean_math=('math','mean')) # 반 별로 나눠서 출력 # groupby는 
+exam.groupby('nclass',as_index=False).agg(mean_math=('math','mean')) # 열 , 함수
+
+
+exam.groupby('nclass', as_index=False).agg(mean_math=('math','mean'), 
+                                           sum_math=('math','sum'),median_math=('math','median'),
+                                           n=('nclass','count'))
+
+
+mpg.groupby(['manufacturer','drv'], as_index=False).agg(mean_cty=('cty','mean'))
+
+
+mpg.query('manufacturer == "chevrolet"').groupby(['drv']).agg(n=('drv','count'))
+
+
+mpg.query('category=="suv"').assign(total=(mpg['hwy']+mpg['cty'])/2).groupby('manufacturer').agg(mean_tot=('total','mean')).sort_values('mean_tot',ascending=False).head() #,asceding=False
+
+
+test1=pd.DataFrame({'id' :[1,2,3,4,5],'midterm':[60,80,70,90,85]})
+test2=pd.DataFrame({'id' : [1,2,3,4,5],'final':[70,83,65,95,80]})
+total=pd.merge(test2,test1,how='left',on='id')
+total
+
+
+name=pd.DataFrame({'nclass':[1,2,3,4,5],'teacher':['kim','lee','park','choi','jung']})
+name
+
+
+exam_new=pd.merge(exam,name,how='left',on='nclass')
+exam_new
+
+
+# 결측치,이상치 p177~

@@ -1,0 +1,39 @@
+# #241224
+# # 절대 경로
+# import os
+# import shutil
+# from os import mkdir
+#
+# path2="C:/" #문자열로 전체 경로를 작성해도 사용 가능
+# print(os.listdir(path2))
+# fileName="근로소득세_문제.txt"#근로 소득표 파일명
+# filePath=os.getcwd().replace("\\","\\\\")+"\\\\"+fileName
+# print("cwdPath",os.getcwd())
+# print("filePath",filePath)
+# # get current working dir 통한 절대 경로
+# with open(filePath,'r',encoding='UTF-8') as f:
+#     print(f.readline())
+#
+# # 상대 경로
+# # 상대 경로 : 현재 디렉터리(241223.py가 포함된 경로) 기준의 경로
+# with open("근로소득세_문제.txt",'r',encoding='UTF-8') as f:#./ 현재 폴더의 의미(생략가능)
+#     print(f.readline()) #현재 디렉터리에 있는 근로소득세_문제오픈
+#
+# with open("../근로소득세_문제.txt",'r',encoding='UTF-8') as f: #../상위 폴더 의미
+#     print(f.readline()) #현재 디렉터리의 상위 폴더에 있는 근로소득세_문제.txt오픈
+#
+# #os모듈을 이용해서 현재 디렉터리에 하위 폴더를 하나 만들고 근로소득세_문제.txt를
+# #코드를 통해 하위 폴더 내에 복사 붙여넣기 후 첫줄
+# # mkdir() :폴더 생성
+# # shutil.copy() (원본 파일,어디로 복사할지 경로): 파일복사 방법'
+# newName="new"
+# newDir=os.getcwd().replace("\\","\\\\")+"\\\\"+newName #새로운 폴더 경로
+# if os.path.exists(newDir): #폴더가 이미 존재하는 지 체크
+#     pass #이미 있으면 패쓰
+# else: #없으면
+#     os.mkdir(newDir) #폴더 생성
+# print(os.listdir()) #잘 생성 되었는 지 리스트로 출력해서 확인
+# shutil.copy(filePath,newDir) #새 폴더에 파일 복사
+
+#파이썬 페키지 폴더 만들면 기본적 파일 생성
+# __init__.py

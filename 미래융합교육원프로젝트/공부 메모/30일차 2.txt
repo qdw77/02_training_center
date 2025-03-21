@@ -1,0 +1,258 @@
+import random
+
+# from pyparsing import empty
+
+# 클래스로 호출 받음
+
+class Map:
+  def __init__(self,x,y):
+    self.character = None
+    self.map_size = [x, y]
+    # self.map_size = [17, 17]
+    self.map_info = [[]]
+    self.max_tick = 1000
+    self.current_tick = 0
+    self.enemy_list = []
+    self.initialize()
+
+  # character # 캐릭터
+  # map_size # 맵 가로 세로
+  # map_info # 현재맵정보,  [[]]
+  # max_tick 최대틱
+  # current_tick 현재틱
+  # enemy_list 적 리스트
+
+  # 물풍선 설치 및 이동 입력 받은 후 이동 가능 여부 및 물풍선 설치 여부 / 논리값 리턴
+
+  # 여긴 좌표 별로 저장 및 초기화
+  def initialize(self):
+    # 2중 리스트로 [[]]
+    # i,j(좌표)의 위치에
+    self.map_info = [[0 for i in range(self.map_size[0])]for j in range(self.map_size[0])]
+
+    # 상자 체력
+    # 1, 2, 3, -1 (체력)
+
+    # 4, 8, 12, 28
+    # 000 111 00 이진법
+
+    for i in range(self.map_size[0]): # y
+      for j in range(self.map_size[0]): # x
+        point_num=random.uniform(0,1) # 확률
+        if point_num > 0.3: # 70% 박스
+          if point_num <=0.37:
+            self.map_info[i][j] = 28 # 부서지지 않는 박스 -1
+          elif 0.37<point_num<=0.5:
+            self.map_info[i][j] = 12 # 박스 체력 3
+          elif 0.5<point_num<=0.7:
+            self.map_info[i][j] = 8 # 박스 체력 2
+          else:
+            self.map_info[i][j] = 4 # 박스 체력 1
+        else:
+          self.map_info[i][j]= 7
+
+    
+    for i in range(3):
+      for j in range(3):
+        self.map_info[(self.map_size[1]+1) // 2 - i][(self.map_size[0]+1)// 2 - j] = 0  # 중앙 고정 값(보스) [-11][-11]
+        self.map_info[(self.map_size[1] - 2) - i][(self.map_size[0] - 2) - j] = 0  # 오른쪽 모서리 아래 [-1][-1]
+        self.map_info[(self.map_size[1] - 2) - i][3 - j] = 0  # 왼쪽 모서리 아래 # [-1][-21]
+        self.map_info[3 - i][(self.map_size[1] - 2) - j] = 0  # 오른쪽 모서리 위 [-21][-1]
+        self.map_info[3 - i][3 - j] = 0  # 왼쪽 위 모서리 # [-21][-21]
+        self.map_info[(self.map_size[1] - 2) - i][(self.map_size[0]+1) // 2 - j] = 0  # 아래 중앙 # [-1][-11]
+        self.map_info[3 - i][(self.map_size[1]+1) // 2 - j] = 0  # 위 중앙 # [-21][-11]
+        self.map_info[(self.map_size[1]+1) // 2 - i][3 - j] = 0  # 왼쪽 중앙 # [-11][-21]
+        self.map_info[(self.map_size[1]+1) // 2 - i][(self.map_size[0] - 2) - j] = 0  # 오른쪽 중앙 # [-11][-1]
+    self.map_info[-(i+1)][-(j+1)]= 5
+    # 맵 외곽을 28로 부서지지 않는 것으로 매꾼다 (-1)
+    for i in range(self.map_size[0]):
+      for j in range(self.map_size[0]):
+        self.map_info[0][i] = 28  # 윗줄
+        self.map_info[-1][i] = 28  # 아랫줄
+        self.map_info[j][0] = 28  # 왼쪽줄
+        self.map_info[j][-1] = 28  # 오른쪽줄
+
+    # 각 구역 중앙 값
+    A_point = [[(self.map_size[1]+3) // 2 - i, (self.map_size[0]+3) // 2 - j]]  # 중앙 보스 [-10][-10]
+    B_point = [[-(i+1), (self.map_size[1]-1) - j]]  # 오른쪽 모서리 위 [-25][0]
+    C_point = [[-(i+1), (self.map_size[1]+3) // 2 - j]]  # 위 중앙 [-25][-10]
+    D_point = [[-(i+1),-(j+1)]]  # 왼쪽 위 모서리 # [-25][-25]
+    E_point = [[(self.map_size[1]+3) // 2 - i, -(j+1)]]  # 왼쪽 중앙 [-10][-25]
+    F_point = [[(self.map_size[1]+3) // 2 - i, (self.map_size[0]-1) - j]] # 오른쪽 중앙 [-10][0]
+    G_point = [[(self.map_size[1]-1) - j,-(j+1)]] # 왼쪽 모서리 아래 # [0][-25]
+    H_point = [[(self.map_size[1]-1) - i, (self.map_size[0]+3)// 2 - j]]  # 아래 중앙 [0][-10]
+    I_point = [[(self.map_size[1]-1) - i, (self.map_size[0]-1) - j]]  # 오른쪽 모서리 아래 [0][0]
+
+    # 다른 클래스에서 각 캐릭터 및 보스와 쫄의 좌표를 입력 받아서 입력
+
+    # for i in range(1):
+    #   for j in range(1):
+    #     self.map_info.append(random.(B_point,C_point,D_point,E_point,F_point,G_point,H_point,I_point))
+    # print(B_point)
+    # for i in range(self.map_size[0]):
+    #   for j in range(self.map_size[0]):
+    #     if self.map_info[i] == B_point[0][0] and self.map_info[j] == B_point[0][1] :
+    #       self.map_info[i][j] = 5
+    for i in range(self.map_size[1]):
+      for j in range(self.map_size[0]):
+        print(self.map_info[i][j], end="\t")
+      print()
+
+    #a= [[(self.map_size[0]+1) // 2 - i, 12]]
+    #[[6, 6], [12, 6], [18, 6]... ]
+
+
+
+
+    # character=Character.init() # 캐릭터 초기 좌표
+    # mob=Mob.init(self.boss,self.minion) # {보스 좌표: [], 쫄 좌표:  []} 좌표는 [x,y]
+    # box=Box.init() # {박스 체력들: []} # 박스 좌표 보내주고 박스 체력들 받아와서 그 값 별로 모양 다르게 해서 print
+    # self.current_tick = 0
+    # boss / minion < 보스와 쫄
+
+    # 여기 값들을 모아서 한곳에 넣고(map_info(현재 맵)) 내용을 랜덤으로 주는 건
+    # 각 class에 추가로 담을 것 같고 그걸 이 맵에서 받아올 것 같음
+    # 쫄들이 죽고 떨어지는 아이템 < 아이템 쪽에서 받고 맵으로 아이템 좌표 값으로 오는 걸까?
+
+    # Box.init({"box_info" = box_info})
+    # Character.init({"character_info"=character_info})
+    # Mob.init({"mob_info"=mob_info})
+
+m = Map(25,25)
+
+# # m = Map()
+# for y in Map().map_info:
+#   print(y)
+# m.inp_user_act()
+# print(m.user_input)
+
+class Character:
+  @classmethod
+  def init(cls, **kwargs):
+    pass # 캐릭터 정보를 받고 리턴
+
+
+class Box:
+  @classmethod
+  def init(cls, **kwargs):
+    pass # 박스 정보를 받고 리턴
+
+
+class Mob:
+  @classmethod
+  def init(cls,**kwargs):
+    pass # 몬스터 정보를 받고 리턴
+    # return (맵 좌표/ 캐릭터 인스턴스)
+
+
+
+    # self.character
+
+    # 9구역 나누고 빈값 만들고 self.map_info[][] = 0
+    # 랜덤으로 나머지 내용 저장 (잡몹,캐릭터) & 보스(중앙 고정)
+    # c_num= random.randint(4,5)
+
+    # 잡몹 넣고 4
+    # 캐릭터 인스턴스 5
+    # 보스 6
+    # 적 정보 전달 7
+    # 틱 current_tick = 0
+
+
+    # # 칸 30% 빈칸이랑 70% 박스로 채우기
+    # for i in range(25):
+    #   for j in range(25):
+    #
+    #
+    #     # 먼저 0~1
+    #     # 만약 그게 0.3 이하면 그대로 두고
+    #     # 0.3 초과면 랜덤으로 1~3 뽑아서
+    #     self.map_info[i][j] = Box(1)
+
+    # 6 12 18
+    # for 문으로 여러번 돌려서 빈 박스 제작
+    # self.map_info[12-1][12-1]
+    # 11 11 ~ 13 13
+
+    # 6 12 : 5 11 ~ 7 13
+
+
+    # 캐릭터랑 보스랑 잡몹 넣기
+
+    # 2. 맵에서 9개 구역에 3x3 구멍 뚫기
+    #  - 현재 맵 사이즈에 따라 비율로
+    #  - 좌표 9개 정하기
+    #  - 가운데에 보스 넣고 나머지 중 랜덤으로 뽑아서 캐릭터/잡몹
+    #
+    # 3. 캐릭터 인스턴스 생성
+    # 4. 보스 리스트 생성
+    # 현재틱 0틱 설정
+
+
+
+    # for i in range(25):
+    #   for j in range(25):
+    #
+    #     print()
+
+        # j,i 를 돌리고 그 안의 값들을 빈칸인지 아닌지 정하고 30%
+        # 빈칸이 아니면 박스
+        #
+
+        # pass
+
+    # 맵 초기상태로 설정
+    # 1. 25x25 각 칸마다
+    # 1) 빈칸인지 아닌지 정하고 (30% 확률?)
+    # 2) 빈칸이 아니면 체력 몇인 박스인지 (1~3 동일확률)
+    #
+    # 2. 맵에서 9개 구역에 3x3 구멍 뚫기
+    #  - 현재 맵 사이즈에 따라 비율로
+    #  - 좌표 9개 정하기
+    #  - 가운데에 보스 넣고 나머지 중 랜덤으로 뽑아서 캐릭터/잡몹
+    #
+    # 3. 캐릭터 인스턴스 생성
+    # 4. 보스 리스트 생성
+    # 현재틱 0틱 설정
+  #
+  #   pass
+
+  # def play(self):
+  #   # 이벤트 진행
+  #   # display
+  #   # while (게임 진행중)
+  #   # 현재틱 +1
+  #   # input 받기
+  #   # input 검사
+  #   # input에 따른 처리
+  #   #
+  #   # 캐릭터한테 정보전달
+  #
+  #   # 박스한테 정보전달
+  #   # 적한테 정보전달
+  #   #
+  #   # 화면 출력
+  #   pass
+  #
+  # def display(self):
+  #   # 현재맵 정보랑 캐릭터 상태, 적 체력 등 콘솔 출력
+  #   # 왼쪽부분에 맵 오른쪽에 상태, 정보 이거
+  #   # 캐릭터, 바닥, 박스, 아이템, 적, 보스, 물풍선, 물줄기, << 이것들이 겹쳤을때
+  #   # 기본: 흰색, 물풍선: 하늘색, 적이랑 보스는 빨간색, 박스/아이템 …
+  #   # 문자, 색깔
+  #   pass
+  #
+  # def game_state(self):
+  #   # 게임 진행 상황
+  #   #     if 적 리스트에서 체력 검사해서 싹다 죽었으면
+  #   #     return 클리어
+  #   #     if 캐릭터가 죽었으면
+  #   #     return 게임오버
+  #   #     if 틱이 최대틱 넘었으면
+  #   #     return 게임오버
+  #   #
+  #   # return 아직진행중
+  #   # 0이면 클리어
+  #   # 1이면 게임오버
+  #   # 2이면 진행중
+  #   pass

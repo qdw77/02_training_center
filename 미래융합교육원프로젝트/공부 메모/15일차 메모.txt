@@ -1,0 +1,304 @@
+천원단위 
+미만 이하로 처리
+부양가족 수 열에 정렬
+
+#20241212
+# p342
+
+# 스택,힙
+# 책에 나온 것으로는 파이썬 기본 자료형에는 문자열,숫자,불 형식이 있고 그 외에는 모두 객체 자료형이다.
+# 기본 자료형은 가볍고 정형화된 자료형이고 기본 자료형들이 차곡차곡 정리되어 있는 공간을 스택이라고 부른다
+# 객체 자료형운 무겁고 크기가 정형화 되어있지 않고 스택처런 정리할 수 없으므로 거대한 창고에 넣어두는 데 이걸 힙이라고 부른다.
+# 저장 위치를 (주소)레퍼런스
+# 메모리의 영역
+# 동적 메모리 할당 (C언어?)
+# 지역 변수를 스택 메모리 저장
+
+# 스택
+# 함수 호출과 반환 호출시 효율적
+# 함수가 종료되면 자동 종료
+
+# 힙
+# 크기가 크고 유연하지만 느림
+# 리스트,오브젝트 저장 / 관리
+# 안쓰이는 메모리를 관리,가비지 컬렉터로 종료
+# 오타 주의
+
+# 재귀호출
+# def flatten(data):
+#     output = []
+#
+#     for i in data:
+#         if type(i) is list:
+#             output+=i
+#         else:
+#             output.append(i)
+#     return output
+# ex=[[1,2,3],[4,[5,6]],7,[8,9]]
+# print("원본",ex)
+#
+# print("변환",flatten(ex))
+
+# # 네임연산자
+# def object_change(b):
+#     b=20
+# a=10
+# print(a)
+# object_change(a)
+# print(a)
+#
+# # 네임연산자
+# def object_change1(d):
+#     d.append(4)
+# c=[1,2,3]
+#
+# print(c)
+# object_change1(c)
+# print(c)
+#
+# # 대입연산지?
+# # p348
+# def object_change2(f):
+#     f=[4,5,6]
+# e=[1,2,3]
+# print(e)
+# object_change2(e)
+# print(e)
+#
+# # p352
+# numbers=[1,2,3,4,5,6]
+#
+# numbers=str(numbers)
+# print("::".join(numbers))
+
+# numbers =list(range(1,10+1))
+# print("#홀수만")
+# print(list(filter()))
+# print()
+#
+# print("#3이상, 7미만")
+# print(list(filter()))
+# print()
+#
+# print("#제곱해서 50미만 출력")
+
+# p344-355
+
+# if 원판이 2개 이상 >2개 옮기는 것
+#   덩어리 이동 from 시작기둥 to 보조 기둥 >임시 기둥 두개짜리 클리어
+#   이동 from 시작기둥 to 대상기둥
+#   덩어리 이동 from 보조기둥 to 대상기둥
+# 이동 form 시작기둥 to 대상기둥
+
+# 하노이 탑/3개의 원판/
+# 재귀함수/
+# h(n)=2*h(n)+1
+# n(몇개),a,b,c(시작,경유,도착):시작 대상 보조
+# a>b 시작 보조 대상
+# a>c
+# 맨 아래 뺴고 나머지 b>c보조 대상 시작
+
+# 예외처리
+# 예상치 못한 오류
+# 크게 두가지 오류>프로그램 시작 전 / 실행 중에 발생하는 오류
+# 구문 오류>실행되기 전 오류
+# 예외> 실행 중 발생 오류
+
+# 예외 조건 처리
+# 1.조건문을 사용하여 예외처리
+# x=input("x 메뉴 번호 입력하세요")
+# if x.isdigit():
+#     x=int(x)
+#
+# # 2.try except 구문을 이용하는 방식
+# try:
+#     # 실행하려는 코드
+#     y=int(input("y 메뉴 번호를 입력하세요."))
+# except:
+#     print("잘못되었다")
+#     # 예외가 발생했을 때 오류 메시지 대신 실행할 코드
+#     pass
+# 전체 코드를 try로 감싸서 except로 받아주면 터지는 대신 오류 메시지
+
+# # if / else대신 try & except로
+# list_input_a=["52","273","32","스파이","103"]
+# list_num =[]
+# for item in list_input_a:
+#     try:
+#         float(item)
+#         list_num.append(item)
+#     except:
+#         pass
+#
+# print("{} 내부에 있는 숫자는 ".format(list_input_a))
+# print("{}입니다.".format(list_num))
+#
+# # if / else로
+# list_input_a=["52","273","32","스파이","103"]
+# list_num =[]
+# for item in list_input_a:
+#     if item.isdigit():
+#         float(item)
+#         list_num.append(item)
+#     else:
+#         pass
+# print(list_num)
+
+# else 를 추가하면 예와가 발생하지 않았을 때 실행할 코드 넣는 공간
+
+# list_input_a=["52","273","32","스파이","103"]
+# list_num =[]
+# for item in list_input_a:
+#     try:
+#         float(item)
+#         list_num.append(item)
+#     except:
+#         print("{}는 오류남".format(item))
+#     else: #try내부를 문제없이 마치면 else 들어옴
+#         print("오류없이 끝")
+#     finally:
+#         # 무조껀 실행하는 코드
+#         print("아무튼 끝")
+#         pass
+# print(list_num)
+
+
+# try except 규칙
+# try는 단독 사용 불가 반드시 except나 finally 중 하나는 있어야 함
+# else는 반드시 except 뒤에 위치
+# 파일 객체 할떄 f=open("info.txt","w")
+# with open()
+# f.close()
+
+# import datetime as ddd
+# import random as rn
+
+
+
+# try:
+#     # f=open("info.txt","w")  #f라고 부르겠다 라는 같은 의미 > with open("info.txt","w") as f:
+#     # f = open("info.txt", "r")
+#     f = open("info2.txt", "w")
+#     print(f.mode)
+#     f.close()
+#     print(f.closed)
+# except Exception as e:
+#     # (BaseException)에 있고 이걸 토대로 추적?
+#     print(e)
+#
+#
+#
+# print("파일이 닫혔는지 확인")
+# print(f.closed)
+# if f.closed:
+#     print("~~~~~~~")
+# else:
+#     f.close()
+# 빨간색 m 매서드 close 닫는 행동/ p 프로파티 closed 닫힌 건지 확인
+# f는 파일 객체의 식별자
+
+# # p374
+# try:
+#     file = open("info2.txt","w")
+#     예외.발생()
+# except:
+#     print("오류가 발생")
+# finally:
+#     file.close()
+# # 일부러 오류 발생
+#
+# while True:
+#     print("1")
+#     try:
+#         print("2")
+#         break
+#         print(3)
+#     except:
+#         print("exc")
+#     finally:
+#         # 여기에 f.close 를 넣어주면 좋다 이유는 반드시 실행되는 것이기 떄문
+#         print("final")
+#     print("함수 마지막 줄")
+#
+# def test():
+#     print("1")
+#     try:
+#         print("2")
+#         return
+#         print(3)
+#     except:
+#         print("exc")
+#     finally:
+#         # 여기에 f.close 를 넣어주면 좋다 이유는 반드시 실행되는 것이기 떄문
+#         print("final")
+#     print("함수 마지막 줄")
+# test()
+# # 구문 오류와 예외
+# # 구문 오류는 실행 전에 발생되는 오류
+# # 예외는 실행 중 발생되는 오류
+#
+# # try/except로 예외가 발생하지 않도록
+# numbers = [52,273,32,103,90,10,275]
+# print("# (1)요소 내부에 있는 값 찾기")
+# print("- {}는 {} 위치에 있습니다".format(52, numbers.index(52)))
+# print()
+#
+# print("# (2)요소 내부에 없는 값 찾기")
+# numbers = 10000
+# try:
+#     print("- {}는 {}위치에 있습니다.".format(number.numbers.index(number)))
+# except:
+#     print("- 리스트 내부에 없는 값입니다.")
+# print()
+#
+# print("----- 정상적으로 종료되었습니다. -----")
+
+# output=10+"개" > 예외
+# int("안녕하세요") #> 예외
+# cursor.close) > 구문 오류
+# [1,2,3,4,5][10] > 예외
+
+# 이터레이터로 가상의 100명/세액계산
+# 이터레이터/
+
+# lista=[]
+# def x(**kwargs):
+#     return kwargs
+
+# a=x(name='박민환',age='30',permoth='5000')
+# # 범위를 정해서 랜덤
+# # 연령에 따라서 가산점은 나중
+# # 10명의 사람 사람1~
+# # 결측치/이상치
+# print(a)
+# lista.append(a)
+
+# 세금
+# 국민연금(4.5%)
+# 건강보험(3.54%)
+# >요양보험 (12.95%)
+# 고용보험(0.9%)
+# 근로소득세(간이세액)
+# 지방소득세(10%)
+
+import random
+# f=open("근로소득세_문제.txt","r",encoding='UTF-8')
+# print(f.readline())
+# all=f.readlines()
+# for i in all:
+#     print(i)
+# 프로젝트 폴더에 txt파일을 옮겨 놓고
+# open에서 encoding='UTF-8'로 지정> 한글파일 읽기
+
+fg=open("프로젝트(근로).txt","r", encoding='UTF-8')
+all2=fg.readlines()
+for i2 in all2:
+    print(i2)
+pp=list("사람1")
+# 반복문으로 10명의 사람을 우선 뽑고 그 다음 그 안에 랜덤으로 넣고 계산식으로 세금 부분 제작
+
+
+
+
+
+
