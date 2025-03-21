@@ -1,0 +1,341 @@
+import random
+class Map:
+  def __init__(self,x,y):
+    self.character = None
+    self.map_size = [x, y]
+    # self.map_size = [17, 17]
+    self.map_info = [[]]
+    self.max_tick = 1000
+    self.current_tick = 0
+    self.enemy_list = []
+    self.initialize()
+  def initialize(self):
+    self.map_info = [[0 for i in range(self.map_size[0])] for j in range(self.map_size[1])]  # 맵 사이즈
+
+    # 박스&빈 공간
+    for i in range(self.map_size[1]):  # y
+      for j in range(self.map_size[0]):  # x
+        point_num = random.uniform(0, 1)  # 확률
+        if point_num > 0.3:  # 70% 박스
+          if point_num <= 0.37:
+            self.map_info[i][j] = 28  # 부서지지 않는 박스 -1
+          elif 0.37 < point_num <= 0.5:
+            self.map_info[i][j] = 12  # 박스 체력 3
+          elif 0.5 < point_num <= 0.7:
+            self.map_info[i][j] = 8  # 박스 체력 2
+        else:
+          self.map_info[i][j] = 4  # 박스 체력 1
+      else:  # 아니면 빈 공간
+        self.map_info[i][j] = 0
+
+
+    # 구역 9개
+    for i in range(3):
+      for j in range(3):
+        self.map_info[(self.map_size[1] // 2) - 1 + j][(self.map_size[0] // 2) - 1 + i] = 0  # 중앙 고정 값(보스) [13][13]
+        self.map_info[(self.map_size[1] - 4) + j][(self.map_size[1] - 4) + i] = 0  # 오른쪽 모서리 아래 [23][23]
+        self.map_info[(self.map_size[1] - 4) + j][i + 1] = 0  # 왼쪽 모서리 아래 # [23][3]
+        self.map_info[j + 1][(self.map_size[1] - 4) + i] = 0  # 오른쪽 모서리 위 [3][23]
+        self.map_info[j + 1][i + 1] = 0  # 왼쪽 위 모서리 # [3][3]
+        self.map_info[(self.map_size[1] - 4) + j][(self.map_size[0] // 2) - 1 + i] = 0  # 아래 중앙 # [23][13]
+        self.map_info[j + 1][(self.map_size[0] // 2) - 1 + i] = 0  # 위 중앙 # [3][13]
+        self.map_info[(self.map_size[0] // 2) - 1 + j][i + 1] = 0  # 왼쪽 중앙 # [13][3]
+        self.map_info[(self.map_size[0] // 2) - 1 + j][(self.map_size[1] - 4) + i] = 0  # 오른쪽 중앙 # [13][23]
+
+    # 맵 외곽은 부서지지 않는 박스
+    for i in range(self.map_size[0]):
+      for j in range(self.map_size[0]):
+        self.map_info[0][i] = 28  # 윗줄
+        self.map_info[-1][i] = 28  # 아랫줄
+        self.map_info[j][0] = 28  # 왼쪽줄
+        self.map_info[j][-1] = 28  # 오른쪽줄
+
+    # 각 구역 중앙 값 25기준
+    A_point = [(self.map_size[1] // 2) - 1, (self.map_size[0] // 2) - 1]  # 중앙 보스 [11][11]
+    B_point = [2, self.map_size[0] - 3]  # 오른쪽 모서리 위 # [2][22]
+    C_point = [2, self.map_size[0] // 2]  # 위 중앙 [2][12]
+    D_point = [2, 2]  # 왼쪽 모서리 위 [2][2]
+    E_point = [self.map_size[1] // 2, 2]  # 왼쪽 중앙 [12][2]
+    F_point = [self.map_size[1] - 3, 2]  # 왼쪽 모서리 아래 [22][2]
+    G_point = [self.map_size[1] // 2, self.map_size[0] - 3]  # 오른쪽 중앙 [12][22]
+    H_point = [self.map_size[1] - 3, self.map_size[0] // 2]  # 아래 중앙 [22][12]
+    I_point = [self.map_size[1] - 3, self.map_size[0] - 3]  # 오른쪽 아래 모서리 # [22][22]
+
+    # 보스 3*3
+    for i in range(3):
+      for j in range(3):
+        self.map_info[A_point[0] + j][A_point[1] + i] = 33  # 임시 보스 값
+
+    point_all = [B_point, C_point, D_point, E_point, F_point, G_point, H_point, I_point]
+    random.shuffle(point_all)
+    all_info = random.sample(point_all, 6)  # 6 대신 캐릭터 수 + 잡몹 수
+
+    # 쫄과 캐릭터 위치 랜덤 입력
+    for i in range(self.map_size[0]):
+      for j in range(self.map_size[1]):
+        km_point = random.sample(range(6), 6)  # 둘다 캐릭터 수 + 잡몹 수
+        for p in km_point:
+          if self.map_info[i][j] == self.map_info[all_info[p][0]][all_info[p][1]]:
+            if p <= 4:  # 잡몹 수 -1 (0부터 시작)
+              self.map_info[all_info[p][0]][all_info[p][1]] = 44  # 잡몹 값 (임시)
+            else:  # 캐릭터
+              self.map_info[all_info[p][0]][all_info[p][1]] = 66  # 캐릭터 값 (임시)
+
+    # 화면출력
+
+
+    def display(self):
+      for Y in range(C.map_size[0]):
+        show = ""
+        for X in range(C.map_size[1]):
+          if [X, Y] == [self.char_stat["x"], self.char_stat["y"]]:  # 플레이어 좌표 받아오기
+            show += "\t\033[38;2;190;0;0mP\033[0m"  # 빨간색 "P"
+          elif [X, Y] == 44:  # 플레이어랑 물줄기 겹쳤을경우
+            show += "\t\033[38;2;178;255;0mP\033[0m"  # 하늘색"P"
+          elif [X, Y] == 55:  # 플레이어랑 쫄이랑 겹쳤을경우
+            show += "\t\033[38;2;230;50;50mP\033[0m"  # 연한 빨간색"P"
+
+
+
+
+          elif [X, Y] == [5,5]:
+            show += "\033[95m\t쫄\033[0m"  # 쫄 보라색
+          elif [X, Y] ==556:  # 쫄몹이랑 아이템이랑 겹쳤을때
+            show += "\t\033[38;2;102;0;88m쫄\033[0m"  # 연보라색 쫄
+          elif [X, Y] == 57:  # 쫄몹이랑 물줄기랑 겹쳤을때
+            show += "\t\033[38;2;178;255;0m쫄\033[0m"  # 하늘색 쫄
+
+
+          elif [X, Y] == [2,2 ]:
+            show += "\t\033[95mB\033[0m"  # 보스 보라색
+          elif self.is_bomb == 0:
+            show += "\t\033[96m○\033[0m"  # 물풍선 하늘색
+          elif self.is_water == 1:
+            show += "\t\033[96m●\033[0m"  # 물줄기 하늘색
+
+
+          elif self.box_id(Pos(X, Y)) == 7:
+            show += "\t\033[38;2;93;93;93m\033[0m"
+          elif self.box_id(Pos(X, Y)) == 1:
+            show += "\t\033[38;2;255;180;180m■\033[0m"
+          elif self.box_id(Pos(X, Y)) == 2:
+            show += "\t\033[38;2;175;72;72m■\033[0m"
+          elif self.box_id(Pos(X, Y)) == 3:
+            show += "\t\033[38;2;49;0;0m■\033[0m"  #
+          elif self.item_id == 1:
+            show += "\t\033[33mI\033[0m"  # 아이템 노란색
+          else:
+            show += "\t■"
+
+        if Y == 0:
+          show += f"\t\t현재맵정보 몇틱?: {self.current_tick} /남은틱:{self.max_tick}"  # 현재 진행틱 상황
+        elif Y == 2:
+          show += f"\t\tPlayer Health: {1}"  # 플레이어 체력
+
+        elif Y == 3:
+          show += f"\t\tBoss Health: {2}"  # 보스체력
+
+        elif Y == 6:
+          show += f"\t\tItme List : [{"1"}],[{"2"}],[{"3"}],[{"4"}]"  # 아이템 리스트
+
+        print(show)  # 화면 출력
+
+
+    # 입력
+    # 및
+    # 이동가능여부, 충돌여부
+    # 논리값
+    # 리턴
+
+
+    # 유저 행동 선택 입력받기
+    def inp_user_act(self):
+      tmp_tick = 0
+      bomb_count = 0
+      directions = []
+      install_bomb = False
+
+      while (tmp_tick != 1):
+        _inp = input("입력>>")
+        # 이동 # 시작이 wasd 중 하나 여야하고, 총 입력 길이가 0보다 크고 케릭터의 이동 가능한 크기보다 같거나 작아야함
+        if _inp:
+          if _inp[0] in "wasd" and 0 < len(_inp) <= self.char_stat["speed"]:
+            # 입력 값의 모든 요소 확인
+            for ele in _inp:
+              if ele == "w":
+                directions.append(ele)
+              elif ele == "a":
+                directions.append(ele)
+              elif ele == "s":
+                directions.append(ele)
+              elif ele == "d":
+                directions.append(ele)
+              else:
+                # print("오류메시지~~~")
+                directions.clear()  # 초기화
+                break  # 다시 입력받으러 감
+
+
+
+
+          # 물풍선 설치
+          elif _inp[0] == "q":
+            if bomb_count <= self.char_stat["b_count"] and install_bomb != True:
+              install_bomb = True
+
+              tmp_tick = 0
+              bomb_count += 1
+              continue
+
+
+            else:
+              continue
+
+
+          # 이동 안함
+          elif _inp[0] == "e":
+            tmp_tick = 1
+
+
+          else:
+            # print("오류메시지~~~")
+            tmp_tick = 0
+            directions.clear()
+            install_bomb = False
+            continue
+
+          tmp_tick = 1
+
+
+        else:
+          continue
+
+      Map.char_info['bomb'] = install_bomb
+      return directions
+
+
+    # 이동가능여부
+    def is_movable(self, direction):  # is_moveable(inp_user_act()[0])
+      # 반환 값 저장 리스트
+      result = []
+
+      # 케릭터 정보 불러오기
+      x = self.char_stat["x"]
+      y = self.char_stat["y"]
+
+      # 이동가능 칸 데이터
+      # items = [32, 64, 96, 128, 160, 192, 224]
+      # boxes = [4, 8, 12, 28]
+      # bombs = [1, 2]
+      # monsters = [x,y]
+      movable_list = [0, 32, 64, 96, 128, 160, 192, 224, 1]
+
+      # 입력값 확인
+      for act in direction:
+        # 방향 값 일 경우 해당 방향 진행가능 여부 체크 후 T/F 값 반환
+
+        if act == "w" and self.map_info[y - 1][x] in movable_list:
+          result.append(True)
+
+
+        # 왼쪽으로 이동
+        elif act == "a" and self.map_info[y][x - 1] == movable_list:
+          result.append(True)
+
+
+        # 아래로 이동
+        elif act == "s" and self.map_info[y + 1][x] == movable_list:
+          result.append(True)
+
+
+        # 오른쪽로 이동
+        elif act == "d" and self.map_info[y][x + 1] == movable_list:
+          result.append(True)
+
+
+        # 이동 불가
+        else:
+          result.append(False)
+
+      Map.char_info["movecheck"] = result
+
+
+    # 충돌판정
+    def is_crushed(self):
+      x = self.char_stat["x"]
+      y = self.char_stat["y"]
+      items = [32, 64, 96, 128, 160, 192, 224]
+      boxes = [4, 8, 12, 28]
+      bombs = [1, 2]
+      # monsters = [x,y]
+
+      # 아이템과 충돌
+      if self.map_info[y][x] in items:
+        return 1
+
+
+      # 물줄기와 충돌
+      elif self.map_info[y][x] == bombs[0]:
+        return 2
+
+
+      # 몬스터와 충돌 ( 몬스터의 X,Y 좌표와 같으면 충돌 )
+      # elif x = monsters[0] and y = monsters[1]:
+      #     return 3
+
+      elif self.map_info[y][x] == 0:
+        return 0
+
+
+    def update(self):
+      self.char_stat = Character.init(2, 2, "A")
+
+
+    @classmethod
+    def send_info(cls):
+      return cls.char_info
+
+
+    # 000 000 00
+    # 128 64 32 16 8 4 2 1
+
+
+    # 아이템 경우의 수 ( 000 제외 )
+    # 001, 010, 011, 100, 101, 110, 111
+    # 32, 64, 96, 128, 160, 192, 224
+
+
+    # 박스 경우의 수 ( 000 제외 )
+    # 001, 010, 011, 111
+    # 4, 8, 12, 28
+
+
+    # 물풍선 경우의 수 ( 00 제외 )
+    # 01, 10
+    # 1, 2
+
+
+    m = Map()
+    m.update()
+    m.is_movable(m.inp_user_act())
+
+    print(Map.char_info)
+
+    # 각 인덱스 값
+    # 000 000 00
+    # 128 64 32 16 8 4 2 1
+
+
+    # 아이템 경우의 수 ( 000 제외 )
+    # 001, 010, 011, 100, 101, 110, 111
+    # 32, 64, 96, 128, 160, 192, 224
+
+
+    # 박스 경우의 수 ( 000 제외 )
+    # 001, 010, 011, 111
+    # 4, 8, 12, 28
+
+
+    # 물풍선 경우의 수 ( 00 제외 )
+    # 01, 10
+    # 1, 2

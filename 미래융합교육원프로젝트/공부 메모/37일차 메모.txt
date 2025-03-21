@@ -1,0 +1,70 @@
+git 설치> 깃 허브 
+
+파이참 
+html 메모장 가능 , 서브라임 텍스트 
+(파이참도 가능하지만 자바 스크립트가 막혀 있음 현재는무료버젼이기 때문에 따로 설치 필요)
+
+실행
+Tools > build System 맨 밑 new
+
+Side Bar - 사이드바 생성
+Tool menu(도구 메뉴)의 view -> Side Bar 클릭
+출처: https://webclub.tistory.com/323 [Web Club:티스토리]
+
+크롬 설정
+https://tospringtree.tistory.com/20
+
+w3c
+표준
+
+정보통신접근성(seo)
+
+https://www.w3schools.com/
+w3schools < 샘플 설명 + 연습 가능
+(언어 상관 없이 모두)
+HTML Element Reference 
+태그별 설명
+HTML 에 대한 개요 등
+style > css
+script 
+
+ssl 인증서
+https://m.blog.naver.com/wit_dgt/221622519259
+프로토콜
+
+우선 프론트엔드 > 백엔드로 등의 수단으로 이용
+
+w3schools
+https://www.w3schools.com/tags/att_src.asp
+
+Exercises < 예제
+https://www.w3schools.com/html/default.asp
+
+1번 html 파일 문서는 현재 문서에 하이퍼링크 3개를 matplot사이트 처럼 리스트 만들어서 2,3,4파일의 특정 앵커 위치로 이동 시킨다
+
+2번 html 파일 주제1 간단한 설명,이미지
+3번 html 파일 주제2 간단한 설명,이미지
+4번 html 파일 주제3 간단한 설명,이미지
+
+무료 이미지,동영상 사이트 많이 알아두기(실습 때 필요)
+
+20250116 위키백과 카피 확대해서 1자로 나오도록 
+후보1 메인쿤 > https://ko.wikipedia.org/wiki/%EB%A9%94%EC%9D%B8%EC%BF%A4 
+
+후보2 모어닝게코 > https://ko.wikipedia.org/wiki/%EB%A7%A4%EB%81%88%EB%B9%84%EB%8A%98%EB%8F%84%EB%A7%88%EB%B1%80%EB%B6%99%EC%9D%B4
+
+후보3 등각류 > https://ko.wikipedia.org/wiki/%EB%93%B1%EA%B0%81%EB%A5%98
+
+후보3 크레스티드 게코 > https://ko.wikipedia.org/wiki/%EB%B3%8F%EB%8F%84%EB%A7%88%EB%B1%80%EB%B6%99%EC%9D%B4
+
+후보4 비어디 드래곤 > https://ko.wikipedia.org/wiki/%ED%84%B1%EC%88%98%EC%97%BC%EB%8F%84%EB%A7%88%EB%B1%80
+
+후보5 구피 > https://ko.wikipedia.org/wiki/%EA%B5%AC%ED%94%BC_(%EC%96%B4%EB%A5%98)
+
+후보6 베타 > https://ko.wikipedia.org/wiki/%EB%B2%A0%ED%83%80_(%EC%96%B4%EB%A5%98)
+
+후보7 눈표범 > https://ko.wikipedia.org/wiki/%EB%88%88%ED%91%9C%EB%B2%94
+
+후보8 친칠라 > https://ko.wikipedia.org/wiki/%EC%B9%9C%EC%B9%A0%EB%9D%BC
+
+후보9 안데스산고양이 > https://ko.wikipedia.org/wiki/%EC%95%88%EB%8D%B0%EC%8A%A4%EC%82%B0%EA%B3%A0%EC%96%91%EC%9D%B4

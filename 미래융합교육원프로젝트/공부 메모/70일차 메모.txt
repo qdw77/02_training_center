@@ -1,0 +1,323 @@
+db 쿼리
+테이블 명
+
+테이블 
+최초 테이블 코드
+최초 테이블 생성 쿼리
+
+CREATE TABLE IF NOT EXISTS 
+
+
+ID, 발주 코드,작성 일자,내/외부 여부,작성자명,작성자 직책,작성자 연락처, 작성자 이메일, 관리자 이름, 관리자 직책, 관리자 이메일, 관리자 연락처,완제품 명, 재료비,인건비,경비,단가,현 재고,거래 수량,총 가격,부가세, 거래처 코드,사업자 번호,거래처 명, 거래처 종류,거래처 주소, 거래처 내 담당자, 거래처 내 담당자 이메일, 거래처 내 담당자 연락처, 납기일,수정 일자 가 있고 빈값이 아니여야 하는 부분은 id,발주 코드(나중에 코드로 자동으로 입력),작성 일자,내/외 여부,작성자명,거래처 코드,완제품 명,거래 수량 정도가 not null일 것  같음
+
+창고
+
+CREATE TABLE IF NOT EXISTS order_form (order_id int AUTO_INCREMENT PRIMARY KEY, order_code VARCHAR(20) NOT NULL, CHAR(100), 사업자번호 CHAR(100), 거래처코드 CHAR(100), 거래처종류 CHAR(100), 사업자주소 CHAR(250), 담당자 CHAR(100), 국가 CHAR(50), 전화번호 CHAR(100), 이메일 CHAR(100), 요구사항 CHAR(250));
+material_cost INT NOT NULL,
+personnel_expenses INT  NOT NULL,
+expenses INT NOT NULL,
+stock INT ,
+
+account_manager 
+
+순 이익,국가,판매 실적 코드,전체 예산,완제품 코드
+storage VARCHAR(50)
+sledding VARCHAR(50)
+
+CREATE TABLE IF NOT EXISTS 'order_form'( 
+order_id INT  AUTO_INCREMENT PRIMARY KEY, 
+order_code VARCHAR(20) NOT NULL,
+internal_external VARCHAR(20) NOT NULL,
+creator_name VARCHAR(20) NOT NULL,
+creator_position VARCHAR(30),
+creator_phone VARCHAR(30),
+creator_email VARCHAR(50),
+administrator_name VARCHAR(20) NOT NULL,
+administrator_position VARCHAR(30),
+administrator_phone VARCHAR(30),
+administrator_email VARCHAR(50),
+product_name VARCHAR(100) NOT NULL,
+storage VARCHAR(50),
+material_cost INT NOT NULL,
+personnel_expenses INT  NOT NULL,
+expenses INT NOT NULL,
+stock INT,
+transaction_quantity INT,
+total_price INT,
+order_vat INT,
+NetProfit INT,
+account_manager VARCHAR(20) NOT NULL,
+manager_phone VARCHAR(30) NOT NULL,
+manager_email VARCHAR(50) NOT NULL,
+delete_date DATETIME,
+delivery_date DATETIME,
+modified_date DATETIME);
+
+발주서 
+발주서 아이디,코드,내/외 여부,작성자 이름,직책,전화번호,이메일,관리자 이름,직책,전화번호,이메일,완제품 이름,단가, 저장소, 재료비,인건비,경비,재고,거래 수량,총 가격,부가세,거래처 코드, 거래처 이름, 거래처 주소,거래처 담당자 이름, 전화 번호, 이메일, 
+
+검색 조건엔 발주 코드,완제품 코드, 완제품 명, 거래처 코드, 관리자 이름, 납기일, 작성 일자, 수정 일자가 있고 조회 버튼을 누르면 {sign: 실패시 0 또는 성공시 1 값, data: [[조회시 값]]}을 리턴해줘야 하는 데 어떻게 해야할까?
+
+def f30301{
+	
+	bdm(여기에 sql문)
+	
+
+    def customer(self):
+        self.DataBase.connection_DB()
+
+
+        tables=self.DataBase.query(f'SELECT * FROM order_form')
+SELECT * FROM order_form
+
+
+{"code": 30301,"args": 검색 혹은 등록 등 서버에 넘겨주는 것}
+{"sign": 실패시 0,성공시 1, "data": [[],[]]}
+
+def build_query(conditions):
+    query = """
+        SELECT 발주코드, 완제품코드, 완제품명, 거래처코드, 관리자이름, 납기일, 작성일자, 수정일자
+        FROM your_table
+        WHERE 1=1
+    """
+    
+    query_conditions = []
+
+    # 조건에 맞는 검색 필터 추가
+    if "발주코드" in conditions:
+        query += " AND 발주코드 = %s"
+        query_conditions.append(conditions["발주코드"])
+    if "완제품명" in conditions:
+        query += " AND 완제품명 LIKE %s"
+        query_conditions.append(f"%{conditions['완제품명']}%")
+    if "거래처코드" in conditions:
+        query += " AND 거래처코드 = %s"
+        query_conditions.append(conditions["거래처코드"])
+    if "관리자이름" in conditions:
+        query += " AND 관리자이름 LIKE %s"
+        query_conditions.append(f"%{conditions['관리자이름']}%")
+    if "납기일 시작" in conditions:
+        query += " AND 납기일 >= %s"
+        query_conditions.append(conditions["납기일 시작"])
+    if "납기일 끝" in conditions:
+        query += " AND 납기일 <= %s"
+        query_conditions.append(conditions["납기일 끝"])
+    if "작성일자 시작" in conditions:
+        query += " AND 작성일자 >= %s"
+        query_conditions.append(conditions["작성일자 시작"])
+    if "작성일자 끝" in conditions:
+        query += " AND 작성일자 <= %s"
+        query_conditions.append(conditions["작성일자 끝"])
+    if "수정일자 시작" in conditions:
+        query += " AND 수정일자 >= %s"
+        query_conditions.append(conditions["수정일자 시작"])
+    if "수정일자 끝" in conditions:
+        query += " AND 수정일자 <= %s"
+        query_conditions.append(conditions["수정일자 끝"])
+    
+    return query, query_conditions
+
+def get_search_conditions():
+    conditions = {}
+    
+    # 발주 코드
+    order_code = self.allOrdering_combobox.get()
+    if order_code:
+        conditions["order_code"] = order_code
+    
+    # 완제품 명
+    product_name = self.allproduction_combobox.get()
+    if product_name:
+        conditions["product_name"] = product_name
+    
+    # 거래처 코드
+    correspondent_code = self.allCorrespondent_combobox.get()
+    if correspondent_code:
+        conditions["account_code"] = correspondent_code
+    
+    # 관리자
+    manager_name = self.entryd.get()
+    if manager_name:
+        conditions["administrator_name"] = manager_name
+    
+    # 납기일
+    delivery_date_start = self.date_entry4.get()
+    delivery_date_end = self.date_entry5.get()
+    if delivery_date_start:
+        conditions["delivery_date_start"] = delivery_date_start
+    if delivery_date_end:
+        conditions["delivery_date_end"] = delivery_date_end
+    
+    # 작성일자
+    creation_date_start = self.creation_date_start.get()
+    creation_date_end = self.creation_date_end.get()
+    if creation_date_start:
+        conditions["created_date_start"] = creation_date_start
+    if creation_date_end:
+        conditions["created_date_end"] = creation_date_end
+    
+    # 수정일자
+    modified_date_start = self.modified_date_start.get()
+    modified_date_end = self.modified_date_end.get()
+    if modified_date_start:
+        conditions["modified_date_start"] = modified_date_start
+    if modified_date_end:
+        conditions["modified_date_end"] = modified_date_end
+    
+    return conditions
+
+
+def build_query(conditions):
+    query = """
+        SELECT order_id, order_code, internal_external, creator_name, creator_position, creator_phone, creator_email, 
+               administrator_name, administrator_position, administrator_phone, administrator_email, 
+               product_name, unit_price, storage, material_cost, personnel_expenses, expenses, stock, 
+               transaction_quantity, total_price, order_vat, account_code, account_name, manager_phone, 
+               manager_email, account_type, account_address, account_manager, sledding, delivery_date, modified_date
+        FROM order_form
+        WHERE 1=1
+    """
+    
+    query_conditions = []
+
+    # 조건에 맞는 검색 필터 추가
+    if "order_code" in conditions:
+        query += " AND order_code = %s"
+        query_conditions.append(conditions["order_code"])
+    if "product_name" in conditions:
+        query += " AND product_name LIKE %s"
+        query_conditions.append(f"%{conditions['product_name']}%")
+    if "account_code" in conditions:
+        query += " AND account_code = %s"
+        query_conditions.append(conditions["account_code"])
+    if "administrator_name" in conditions:
+        query += " AND administrator_name LIKE %s"
+        query_conditions.append(f"%{conditions['administrator_name']}%")
+    if "delivery_date_start" in conditions:
+        query += " AND delivery_date >= %s"
+        query_conditions.append(conditions["delivery_date_start"])
+    if "delivery_date_end" in conditions:
+        query += " AND delivery_date <= %s"
+        query_conditions.append(conditions["delivery_date_end"])
+    if "created_date_start" in conditions:
+        query += " AND created_date >= %s"
+        query_conditions.append(conditions["created_date_start"])
+    if "created_date_end" in conditions:
+        query += " AND created_date <= %s"
+        query_conditions.append(conditions["created_date_end"])
+    if "modified_date_start" in conditions:
+        query += " AND modified_date >= %s"
+        query_conditions.append(conditions["modified_date_start"])
+    if "modified_date_end" in conditions:
+        query += " AND modified_date <= %s"
+        query_conditions.append(conditions["modified_date_end"])
+    
+    return query, query_conditions
+{"code":코드명,"arge":서버 조건}
+{"sign":0 or 1 ,"data":[[나온 값]]}
+
+지금 조회 버튼
+        self.btn_search = tk.Button(self.topright_Frame, text="조회",command=self.select_action)
+        self.btn_search.grid(row=0, column=3, padx=5, pady=5, sticky="e") 
+> 누르면 조건에 따라서
+    def select_action(self):
+        print()
+
+        # DB에서 쿼리 실행
+        self.DataBase.connection_DB()  # DB 연결
+        # 조건값 가져오기
+        self.order_code = self.allOrdering_combobox.get()
+        print(self.order_code)
+        self.product_name = self.allproduction_combobox.get()
+        self.correspondent_code = self.allCorrespondent_combobox.get()
+        administrator = self.entryd.get()
+        delivery_date_start = self.date_entry4.get_date() if self.date_entry4.get_date() else None
+        delivery_date_end = self.date_entry5.get_date() if self.date_entry5.get_date() else None
+        creation_date_start = self.creation_date_start.get_date() if self.creation_date_start.get_date() else None
+        creation_date_end = self.creation_date_end.get_date() if self.creation_date_end.get_date() else None
+        modified_date_start = self.modified_date_start.get_date() if self.modified_date_start.get_date() else None
+        modified_date_end = self.modified_date_end.get_date() if self.modified_date_end.get_date() else None
+
+        # 기본 SQL 쿼리
+        sql_query = "SELECT * FROM test_data.order_form WHERE 1=1"
+
+        # 조건에 따라 SQL WHERE 절 추가
+        if self.order_code:
+            sql_query += f" AND order_code LIKE '%{self.order_code}%'"
+        if self.product_name:
+            sql_query += f" AND product_name LIKE '%{self.product_name}%'"
+        if self.correspondent_code:
+            sql_query += f" AND account_code LIKE '%{self.correspondent_code}%'"
+        if administrator:
+            sql_query += f" AND administrator_name LIKE '%{administrator}%'"
+        if delivery_date_start:
+            sql_query += f" AND delivery_date >= '{delivery_date_start}'"
+        if delivery_date_end:
+            sql_query += f" AND delivery_date <= '{delivery_date_end}'"
+        if creation_date_start:
+            sql_query += f" AND created_date >= '{creation_date_start}'"
+        if creation_date_end:
+            sql_query += f" AND created_date <= '{creation_date_end}'"
+        if modified_date_start:
+            sql_query += f" AND modified_date >= '{modified_date_start}'"
+        if modified_date_end:
+            sql_query += f" AND modified_date <= '{modified_date_end}'"
+
+        # SQL 쿼리 출력 (디버그용)
+        print(sql_query)
+
+        tables = self.DataBase.query(sql_query)  # 쿼리 실행
+
+        # 결과 처리 (테이블 위젯에 데이터 표시)
+        self.someTable = tablewidget.TableWidget(self.bottom_Frame,
+                                                 data=tables,  # 쿼리 결과 데이터를 테이블에 넣기
+                                                 col_name=["작성 일자", "발주 코드", "내/외부", "작성자 명", "관리자", "완제품 명", "총 예산",
+                                                           "단가", "현 재고", "거래 수량", "총 가격", "부가세", "거래처 코드", "거래처 명",
+                                                           "거래처 종류",
+                                                           "거래처 담당자", "납기일", "수정일자"],  # 열 이름
+                                                 cols=18,
+                                                 editable=[False, False, False, False, False, False, False, False,
+                                                           False, False, False, False, False,
+                                                           False, False, False, False, False],  # 열의 수정 가능 여부
+                                                 width=1300,  # 테이블 너비
+                                                 height=350)  # 테이블 높이
+        self.someTable.pack()
+send = {
+    “code”: 90101,
+    “args”: {
+       작성일자_시작:입력된 값
+    }
+}
+
+
+def 총 2개로 하나는 서버, 하나는 클라이언트
+클라에서 조회 버튼 시 {"code":f코드명(쿼리용 함수),"args":{서버로 데이터 보냄}}로 조건 보내주고 서버에서 값 받아서 클라로 전달 후 출력
+
+@staticmethod
+def f90101(**kwargs): #딕셔너리로 받아옴
+   standard_code = kwargs.get("작업표준서코드")
+
+
+   # 쿼리 실행 (결과는 cursor fetchall() 한 결과임)
+   data = dbm.query("SELECT SOP_Code, product_code, product_name, writter FROM erp_db.SOP WHERE SOP_Code = %(id)s", {
+       "id": standard_code
+   })
+  
+   # 쿼리 실패했을 경우
+   # 코드 작성 안해도 raise만 해주면 서버측에서는 {"sign":0, "data":None} 리턴되도록 함
+   if data is None:
+       raise Exception
+
+
+   # 현재 data에는 2d tuple이 들어있지만 json dump 하면 list형태로 변환됨
+   # []로 인덱스 접근은 그대로
+   result = {
+       "sign": 1,
+       "data": data
+   }
+   return result
+
+오늘까지 해야하는 것 조회,수정,삭제, 조회
+조건 포함 
+
+sql_test=''

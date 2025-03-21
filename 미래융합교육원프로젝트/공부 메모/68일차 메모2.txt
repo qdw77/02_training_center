@@ -1,0 +1,416 @@
+import tkinter as tk
+from tkinter import ttk
+import tkinter.messagebox as msgbox
+from tkinter import Toplevel
+import tablewidget
+from color import Color
+# tkcalendar 달력 선택 패키지 설치 필수
+from tkcalendar import DateEntry  # 날짜 선택을 위한 모듈 추가
+from tablewidget import TableWidget
+# class Color:
+#     GRAY = "#E3E3E3" # 도구모음 배경panel
+#     BLACK = "#000000" # 폰트 색상
+#     WHITE = "#FFFFFF" # 바탕 색상
+#     BUTTON = "#5ED4FF" # 로고 로그인버튼 시각화
+#     FOCUS = "#9DB4CF" # 활성화 focus상태
+#     VISUALIZE1 = "#A9C5D2" # 시각화
+#     VISUALIZE2 = "#C79797" # 시각화
+
+class SampleFrame(tk.Frame):
+    def __init__(self, root):
+        super().__init__(root, width=1300, height=700)
+        self.root = root
+
+        # frame 생성
+        self.topleft_Frame = tk.Frame(self, width=950, height=350,bg=Color.GRAY)  # 왼쪽 위 구역
+        self.topright_Frame = tk.Frame(self, width=350, height=350, bg=Color.GRAY)  # 오른쪽 위 구역
+        self.bottom_Frame = tk.Frame(self, width=1300, height=350, bg=Color.GRAY) # 아래 구역
+
+        self.line = tk.Frame(self.topright_Frame, width=1, height=350, bg="black")
+        self.line.pack(side="left", fill="y")
+
+        # frame 크기 자동 축소 방지
+        self.topleft_Frame.grid_propagate(False)
+        self.topleft_Frame.pack_propagate(False)
+        self.topright_Frame.grid_propagate(False)
+        self.topright_Frame.pack_propagate(False)
+        self.bottom_Frame.grid_propagate(False)
+        self.bottom_Frame.pack_propagate(False)
+
+        # frame 배치
+        self.topleft_Frame.grid(row=0, column=0)
+        self.topright_Frame.grid(row=0, column=1)
+        self.bottom_Frame.grid(row=1, column=0, columnspan=2)
+
+
+        # 발주서 입력 필드 생성
+        self.create_order_form()
+        test_data = [[f"Data {r + 1}{chr(65 + c)}" for c in range(18)] for r in range(15)]  # 임의의 데이터
+        self.someTable = tablewidget.TableWidget(self.bottom_Frame,
+                                                 data=test_data, # 데이터
+                                                 col_name=["작성 일자", "발주 코드","내/외부","작성자 명","관리자","완제품 명","총 예산","단가","현 재고","거래 수량",
+                                                           "총 가격", "부가세","거래처 코드","거래처 명","거래처 종류","거래처 담당자","납기일","수정일자"],  # 열 이름(순서대로, 데이터 열 개수와 맞게)
+                                                 # col_width=[120, 80, 100, 150],  # 열 너비(순서대로, 데이터 열 개수와 맞게)
+                                                 # col_width 생략 시 자동 분배
+                                                 # col_align=["left", "center", "right"],
+                                                 cols=18,
+                                                 editable=[False,False,False,False,False,False,False,False,False,
+                                                           False,False,False,False,False,False,False,False,False ],
+                                                 # 열 갯수에 맞게 col_align, editable
+                                                 width=1300,  # 테이블 그려질 너비
+                                                 height=350)  # 테이블 그려질 높이
+
+        self.someTable.pack()
+
+    # 선택한 칸에 엔터를 눌러도 수정 불가능하고 대신 입력했던 내용들이 topleft_Frame 여기에 나오도록 바꾸고 대신 수정 버튼을 누르면 topleft_Frame 부분들이 입력할 수 있게 바뀌며 수정 버튼은 생성 버튼을 눌렀을 땐 사라짐(내용이 없거나)
+
+    def create_order_form(self): # 등록
+
+        # 정렬 맞추기 위해 columnconfigure 추가
+        self.topleft_Frame.columnconfigure(2, weight=1, uniform="equal")  # 두 번째 열을 동일 비율로 분배
+        self.topleft_Frame.columnconfigure(3, weight=1, uniform="equal")  # 세 번째 열을 동일 비율로 분배
+        self.topleft_Frame.columnconfigure(4, weight=1, uniform="equal")  # 추가 열에 대한 공간 분배
+        self.topleft_Frame.columnconfigure(5, weight=1, uniform="equal")  # 추가 열에 대한 공간 분배
+
+        # # 행 간격 최소화
+        # self.topleft_Frame.grid_rowconfigure(0, minsize=0)
+        # self.topleft_Frame.grid_rowconfigure(1, minsize=0)
+
+        # 작성일자 > 발주서 코드 > 내/외> 작성자에 대한 > 완제품 코드 >
+        self.order_label = tk.Label(self.topleft_Frame, text="작성 일자")
+        self.order_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        self.order_date = DateEntry(self.topleft_Frame, width=22, background="#e3e3e3", foreground="white", date_pattern="yyyy-mm-dd")
+        self.order_date.grid(row=0, column=1, padx=5, pady=5)
+
+        self.ordercode_label = tk.Label(self.topleft_Frame, text="발주 코드")
+        self.ordercode_label.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+        self.order_entry = tk.Entry(self.topleft_Frame, width=25)
+        self.order_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        self.inout_label = tk.Label(self.topleft_Frame, text="내/외부")
+        self.inout_label.grid(row=2, column=0, padx=5, pady=5, sticky="w")
+        self.inout_entry = tk.Entry(self.topleft_Frame, width=25)
+        self.inout_entry.grid(row=2, column=1, padx=5, pady=5)
+
+        self.order_author = tk.Label(self.topleft_Frame, text="작성자 명")
+        self.order_author.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+        self.author_entry = tk.Entry(self.topleft_Frame, width=25)
+        self.author_entry.grid(row=3, column=1, padx=5, pady=5)
+
+        self.author_position_label = tk.Label(self.topleft_Frame, text="작성자 직책")
+        self.author_position_label.grid(row=4, column=0, padx=5, pady=5, sticky="w")
+        self.author_position_antry = tk.Entry(self.topleft_Frame, width=25)
+        self.author_position_antry.grid(row=4, column=1, padx=5, pady=5)
+
+        self.author_phone_label = tk.Label(self.topleft_Frame, text="작성자 연락처")
+        self.author_phone_label.grid(row=5, column=0, padx=5, pady=5, sticky="w")
+        self.author_phone_entry = tk.Entry(self.topleft_Frame, width=25)
+        self.author_phone_entry.grid(row=5, column=1, padx=5, pady=5)
+
+        self.author_email_label = tk.Label(self.topleft_Frame, text="작성자 이메일")
+        self.author_email_label.grid(row=6, column=0, padx=5, pady=5, sticky="w")
+        self.author_email_entry = tk.Entry(self.topleft_Frame, width=25)
+        self.author_email_entry.grid(row=6, column=1, padx=5, pady=5)
+
+        self.manager_label = tk.Label(self.topleft_Frame, text="관리자")
+        self.manager_label.grid(row=7, column=0, padx=5, pady=5, sticky="w")
+        self.manager_entry = tk.Entry(self.topleft_Frame, width=25)
+        self.manager_entry.grid(row=7, column=1, padx=5, pady=5)
+
+        self.manager_position_label = tk.Label(self.topleft_Frame, text="관리자 직책")
+        self.manager_position_label.grid(row=8, column=0, padx=5, pady=5, sticky="w")
+        self.manager_position_entry = tk.Entry(self.topleft_Frame, width=25)
+        self.manager_position_entry.grid(row=8, column=1, padx=5, pady=5)
+
+        self.manager_phone_label = tk.Label(self.topleft_Frame, text="관리자 연락처")
+        self.manager_phone_label.grid(row=9, column=0, padx=5, pady=5, sticky="w")
+        self.manager_phone_entry = tk.Entry(self.topleft_Frame, width=25)
+        self.manager_phone_entry.grid(row=9, column=1, padx=5, pady=5)
+
+        self.manager_email_label = tk.Label(self.topleft_Frame, text="관리자 이메일")
+        self.manager_email_label.grid(row=10, column=0, padx=5, pady=5, sticky="w")
+        self.manager_email_entry = tk.Entry(self.topleft_Frame, width=25)
+        self.manager_email_entry.grid(row=10, column=1, padx=5, pady=5)
+
+        self.product_label = tk.Label(self.topleft_Frame, text="완제품 명")
+        self.product_label.grid(row=0, column=2, padx=5, pady=5, sticky="w")
+        self.product_entry=tk.Entry(self.topleft_Frame,width=25)
+        self.product_entry.grid(row=0,column=3,padx=5,pady=5)
+
+        self.namebudget = tk.Label(self.topleft_Frame, text="예산:")
+        self.namebudget.grid(row=1, column=2, padx=5, pady=5, sticky="w")
+
+        self.getbudget = tk.Label(self.topleft_Frame, text="전체 예산", width=20, height=1)
+        self.getbudget.grid(row=1, column=3, padx=5, pady=5, sticky="w")
+
+        self.btnbudget = tk.Button(self.topleft_Frame, text="확인", command=self.open_budget_window)
+        self.btnbudget.grid(row=1, column=3, padx=5, pady=5, sticky="e")
+
+        self.unitprice_label = tk.Label(self.topleft_Frame, text="단가")
+        self.unitprice_label.grid(row=2, column=2, padx=5, pady=5, sticky="w")
+        self.unitprice_entry = tk.Entry(self.topleft_Frame)
+        self.unitprice_entry.grid(row=2, column=3, padx=5, pady=5)
+
+
+        self.inventory_label = tk.Label(self.topleft_Frame, text="현 재고")
+        self.inventory_label.grid(row=3, column=2, padx=5, pady=5, sticky="w")
+        self.inventory_entry = tk.Entry(self.topleft_Frame)
+        self.inventory_entry.grid(row=3, column=3, padx=5, pady=5)
+
+        self.quantity_label = tk.Label(self.topleft_Frame, text="거래 수량")
+        self.quantity_label.grid(row=4, column=2, padx=5, pady=5, sticky="w")
+        self.quantity_entry = tk.Entry(self.topleft_Frame)
+        self.quantity_entry.grid(row=4, column=3, padx=5, pady=5)
+
+        self.total_label = tk.Label(self.topleft_Frame, text="총 가격")
+        self.total_label.grid(row=5, column=2, padx=5, pady=5, sticky="w")
+        self.total_entry = tk.Entry(self.topleft_Frame)
+        self.total_entry.grid(row=5, column=3, padx=5, pady=5)
+
+        self.VAT_label = tk.Label(self.topleft_Frame, text="부가세")
+        self.VAT_label.grid(row=6, column=2, padx=5, pady=5, sticky="w")
+        self.VAT_antry = tk.Entry(self.topleft_Frame)
+        self.VAT_antry.grid(row=6, column=3, padx=5, pady=5)
+
+        self.correspondent_label = tk.Label(self.topleft_Frame, text="거래처 코드")
+        self.correspondent_label.grid(row=0, column=4, padx=5, pady=5, sticky="w")
+        self.getCorrespondent=tk.StringVar()
+        self.correspondent_combobox = ttk.Combobox(self.topleft_Frame, textvariable=self.getCorrespondent)
+        self.correspondent_combobox.grid(row=0, column=5, padx=5, pady=5)
+
+        self.business_label = tk.Label(self.topleft_Frame, text="사업자 번호")
+        self.business_label.grid(row=1, column=4, padx=5, pady=5, sticky="w")
+        self.business_entry = tk.Entry(self.topleft_Frame)
+        self.business_entry.grid(row=1, column=5, padx=5, pady=5)
+
+        self.correspondent_name_label = tk.Label(self.topleft_Frame, text="거래처 명")
+        self.correspondent_name_label.grid(row=2, column=4, padx=5, pady=5, sticky="w")
+        self.correspondent_name_entry = tk.Entry(self.topleft_Frame)
+        self.correspondent_name_entry.grid(row=2, column=5, padx=5, pady=5)
+
+        self.type_label = tk.Label(self.topleft_Frame, text="거래처 종류")
+        self.type_label.grid(row=3, column=4, padx=5, pady=5, sticky="w")
+
+        self.type_entry = tk.Entry(self.topleft_Frame)
+        self.type_entry.grid(row=3, column=5, padx=5, pady=5)
+
+        self.address_label = tk.Label(self.topleft_Frame, text="거래처 주소(국가)")
+        self.address_label.grid(row=4, column=4, padx=5, pady=5, sticky="w")
+
+        self.address_entry = tk.Entry(self.topleft_Frame)
+        self.address_entry.grid(row=4, column=5, padx=5, pady=5)
+
+        self.account_manager_label = tk.Label(self.topleft_Frame, text="거래처 담당자")
+        self.account_manager_label.grid(row=5, column=4, padx=5, pady=5, sticky="w")
+        self.account_manager_entry = tk.Entry(self.topleft_Frame)
+        self.account_manager_entry.grid(row=5, column=5, padx=5, pady=5)
+
+        self.account_phone_labe = tk.Label(self.topleft_Frame, text="거래처 담당자 연락처")
+        self.account_phone_labe.grid(row=6, column=4, padx=5, pady=5, sticky="w")
+        self.account_phone_entry = tk.Entry(self.topleft_Frame)
+        self.account_phone_entry.grid(row=6, column=5, padx=5, pady=5)
+
+        self.account_email_label = tk.Label(self.topleft_Frame, text="거래처 담당자 이메일")
+        self.account_email_label.grid(row=7, column=4, padx=5, pady=5, sticky="w")
+        self.account_email_entry = tk.Entry(self.topleft_Frame)
+        self.account_email_entry.grid(row=7, column=5, padx=5, pady=5)
+
+        self.deadline_label = tk.Label(self.topleft_Frame, text="납기일")
+        self.deadline_label.grid(row=8, column=4, padx=5, pady=5, sticky="w")
+        self.deadline_entry = DateEntry(self.topleft_Frame, width=22, background="#e3e3e3", foreground="white",date_pattern="yyyy-mm-dd")
+        self.deadline_entry.grid(row=8, column=5, padx=5, pady=5)
+
+        self.modification_label = tk.Label(self.topleft_Frame, text="수정 일자")
+        self.modification_label.grid(row=9, column=4, padx=5, pady=5, sticky="w")
+        self.modification_entry = DateEntry(self.topleft_Frame, width=22, background="#e3e3e3", foreground="white",date_pattern="yyyy-mm-dd")
+        self.modification_entry.grid(row=9, column=5, padx=5, pady=5)
+
+        # 왼쪽 위
+        self.labela = tk.Label(self.topright_Frame, text="발주 코드")
+        self.labela.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+
+        self.allOrdering = tk.StringVar()
+        self.allOrdering_combobox = ttk.Combobox(self.topright_Frame, textvariable=self.allOrdering)
+        self.allOrdering_combobox.grid(row=0, column=1, padx=5, pady=5, sticky="w")
+
+        self.labelb = tk.Label(self.topright_Frame, text="완제품 코드")
+        self.labelb.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+
+        self.allproduct_code = tk.StringVar()
+        self.allproductcode_combobox = ttk.Combobox(self.topright_Frame, textvariable=self.allproduct_code)
+        self.allproductcode_combobox.grid(row=1, column=1, padx=5, pady=5, sticky="w")
+
+        self.labelc = tk.Label(self.topright_Frame, text="완제품 명")
+        self.labelc.grid(row=2, column=0, padx=5, pady=5, sticky="w")
+
+        self.allproduction = tk.StringVar()
+        self.allproduction_combobox = ttk.Combobox(self.topright_Frame, textvariable=self.allproduction)
+        self.allproduction_combobox.grid(row=2, column=1, padx=5, pady=5, sticky="w")
+
+        self.labeld = tk.Label(self.topright_Frame, text="거래처 코드")
+        self.labeld.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+
+        self.allCorrespondent = tk.StringVar()
+        self.allCorrespondent_combobox = ttk.Combobox(self.topright_Frame, textvariable=self.allCorrespondent)
+        self.allCorrespondent_combobox.grid(row=3, column=1, padx=5, pady=5, sticky="w")
+
+        self.labele = tk.Label(self.topright_Frame, text="관리자")
+        self.labele.grid(row=4, column=0, padx=5, pady=5, sticky="w")
+        self.entryd = tk.Entry(self.topright_Frame)
+        self.entryd.grid(row=4, column=1, padx=5, pady=5, sticky="w")
+
+        # 왼쪽 위
+        self.labelf = tk.Label(self.topright_Frame, text="납기일")
+        self.labelf.grid(row=5, column=0, padx=5, pady=5, sticky="w")
+
+        # DateEntry에 대한 열 크기 조정
+        self.topright_Frame.columnconfigure(1, weight=2, uniform="equal")  # column 1에 비례적으로 공간 분배
+        self.topright_Frame.columnconfigure(2, weight=2, uniform="equal")  # column 2에도 동일하게 적용
+
+        self.date_entry4 = DateEntry(self.topright_Frame, width=10, background="#e3e3e3", foreground="white",date_pattern="yyyy-mm-dd")
+        self.date_entry4.grid(row=5, column=1, padx=(5, 5), pady=6, sticky="nsew")  # sticky="nsew"로 모든 방향에 맞게 채우기
+
+        self.date_entry5 = DateEntry(self.topright_Frame, width=10, background="#e3e3e3", foreground="white",date_pattern="yyyy-mm-dd")
+        self.date_entry5.grid(row=5, column=2, padx=5, pady=6, sticky="nsew")  # sticky="nsew"로 모든 방향에 맞게 채우기
+
+        self.labelf = tk.Label(self.topright_Frame, text="작성일자")
+        self.labelf.grid(row=6, column=0, padx=5, pady=5, sticky="w")
+
+        self.date_entry6 = DateEntry(self.topright_Frame, width=22, background="#e3e3e3", foreground="white",date_pattern="yyyy-mm-dd")
+        self.date_entry6.grid(row=6, column=1, padx=5, pady=5, sticky="w")
+
+        self.date_entry7 = DateEntry(self.topright_Frame, width=22, background="#e3e3e3", foreground="white",date_pattern="yyyy-mm-dd")
+        self.date_entry7.grid(row=6, column=2, padx=5, pady=5, sticky="w")
+
+        self.topright_Frame.columnconfigure(3, weight=1, uniform="equal")
+
+        self.btn_search = tk.Button(self.topright_Frame, text="조회",command=self.select_action)
+        self.btn_search.grid(row=0, column=3, padx=5, pady=5, sticky="e")
+
+        self.btn_create = tk.Button(self.topright_Frame, text="생성", command=self.create_action)
+        self.btn_create.grid(row=1, column=3, padx=5, pady=5, sticky="e")
+
+        # 생성일땐 안 나오게 지정/조회일 때,수정일때만 나오도록
+        self.btn_update = tk.Button(self.topright_Frame, text="수정", command=self.update_action)
+        self.btn_update.grid(row=2, column=3, padx=5, pady=5, sticky="e")
+
+        # 생성과 등록 모두가 사용
+        self.btn_save = tk.Button(self.topright_Frame, text="저장", command=self.save_action)
+        self.btn_save.grid(row=3, column=3, padx=5, pady=5, sticky="e")
+
+        self.btn_delete = tk.Button(self.topright_Frame, text="삭제",command=self.delete_action)
+        self.btn_delete.grid(row=4, column=3, padx=5, pady=5, sticky="e" )
+
+        # 상태 추적을 위한 변수
+        self.mode = None  # 현재 모드를 추적 (None, 'create', 'update')
+
+    # 새 창에서 저장된 예산 위에서 확인 버튼을 다시 누르면 입력된 값 그대로 불러오기
+    def open_budget_window(self):
+        # 예산 세부 정보 창을 생성
+        self.budget_window = tk.Toplevel(self.root)
+        self.budget_window.title("예산 세부 정보")
+        self.budget_window.geometry("400x150")
+
+
+# Color.FOCUS 이게 행,열 내부 색상 ,칸을 선택하면 거기에 칸 선택한게 색상으로 표시되고 엔터로 눌러야 입력 가능하게 바뀌며 다시 창을 열였을 때도 그 값이 유지되게
+# 처음엔 저장버튼이 안보이도록 설정 > 생성,수정 버튼을 눌러야 보이게 설정
+# 저장 버튼과 생성 버튼, 수정 버튼과 저장 버튼 각각 생성과 수정할 때 보이고 일반적일 땐 조회,생성,수정만 보이도록
+
+    # 등록 부분
+    def get_Creation(self):
+        write_date=self.order_date.get() # 작성 일자
+
+        order_code=self.order_entry.get() # 발주 코드
+        inout_info=self.inout_entry.get() # 내/외부 여부
+
+        author_name=self.author_entry.get() # 작성자 이름
+        author_position=self.author_position_antry.get() # 작성자 직책
+        author_phone=self.author_phone_entry.get() # 작성자 번화 번호
+        author_email=self.author_email_entry.get() # 작성자 이메일
+
+        manager_name=self.manager_entry.get() # 관리자 이름
+        manager_position=self.manager_position_entry.get() # 관리자 직책
+        manager_phone=self.manager_phone_entry.get() # 관리자 전화 번호
+        manager_email=self.manager_email_entry.get() # 관리자 이메일
+
+        product_name=self.product_entry.get() #완제품 명
+        # 예산 부분은 나중에
+        unit_price=self.unitprice_entry.get() # 단가
+        current_inventory=self.inventory_entry.get() # 현재 재고
+        transaction_quantity=self.quantity_entry.get() #거래 수량
+        total_price=self.total_entry.get() # 총 가격
+        surtax_order=self.VAT_antry.get() # 부가세
+
+        # 거래처 코드도 우선 패쓰
+        business_number=self.business_entry.get() # 사업자 번호
+        correspondent_name=self.correspondent_name_entry.get() # 거래처 명
+        customer_type=self.type_entry.get() # 거래처 종류
+        customer_address=self.address_entry.get() # 거래처 주소
+        account_manager=self.account_manager_entry.get()# 거래처 담장자 이름
+        account_phone=self.account_phone_entry.get() # 거래처 담당자 전화 번호
+        account_email=self.account_email_entry.get() # 거래처 담당자 이메일
+        deadline=self.deadline_entry.get() # 납기일
+        modification_date=self.modification_entry.get() # 수정 일자
+
+    def select_check(self): # 조회
+        pass
+
+
+
+    def create_action(self):
+        # 생성 버튼 클릭 시 처리
+        print("생성 버튼 클릭")
+        self.mode = 'create'
+        self.btn_update.grid_forget()  # 수정 버튼 숨기기
+
+    def update_action(self):
+        # 수정 버튼 클릭 시 처리
+        print("수정 버튼 클릭")
+        self.mode = 'update'
+        self.btn_create.grid_forget()  # 수정 버튼 숨기기
+
+    def select_action(self):
+        # db 조회 select
+        pass
+
+    def delete_action(self):
+        # db 삭제 delete
+        pass
+
+    def save_action(self):
+        # 저장 버튼 클릭 시 처리
+        if self.mode == 'create':
+            print("생성 모드에서 저장 버튼 클릭")
+            self.insert_order() # db
+            self.btn_update.grid()  # 저장 후 수정 버튼 다시 보이기
+            self.btn_update.grid(row=2, column=3, padx=5, pady=5, sticky="e")
+
+        elif self.mode == 'update':
+            print("수정 모드에서 저장 버튼 클릭")
+            self.update_order() # db
+            self.btn_create.grid()  # 저장 후 생성 버튼 다시 보이기
+            self.btn_create.grid(row=1, column=3, padx=5, pady=5, sticky="e")
+
+    def insert_order(self):
+        # db 생성 INSERT
+        pass
+
+    def update_order(self):
+        # db 수정 update
+        pass
+
+    def select_order(self):
+        # db 조회 select
+        pass
+    def delete_order(self):
+        # db 삭제 delete
+        pass
+
+if __name__ == "__main__":
+    r = tk.Tk()
+    r.geometry("1600x900")
+    r.config(bg="white")
+    fr = SampleFrame(r)
+    fr.place(x=300, y=130)
+    r.mainloop()
+

@@ -1,0 +1,231 @@
+계룡건설
+
+문화 행사
+
+import tkinter as tk
+from tkinter import messagebox
+import pymysql
+
+# MySQL 연결 설정
+connection = pymysql.connect(
+    host='localhost',         # MySQL 서버 주소 (localhost로 로컬 환경에서 연결)
+    user='root',              # MySQL 사용자 이름 ('root' 계정 사용)
+    password='0000',          # MySQL 사용자 비밀번호 (예시로 '0000' 사용)
+    database='test_20250218',  # 사용하려는 데이터베이스 이름 (test_20250218)
+    port=3306                 # MySQL 기본 포트 번호 3306 사용
+)
+
+cursor = connection.cursor()  # SQL 쿼리를 실행할 수 있는 커서 객체 생성
+
+root = tk.Tk()  # Tkinter 윈도우 객체 생성
+root.title("Book Database Management")  # 윈도우 제목 설정
+
+# 테이블이 존재하는지 확인하는 함수
+def table_exists(table_name):
+    cursor.execute(f"SHOW TABLES LIKE '{table_name}'")  # 주어진 테이블 이름으로 테이블이 존재하는지 확인
+    return cursor.fetchone() is not None  # 테이블이 존재하면 True, 없으면 False 반환 fetchone < 고유한 결과
+
+# 데이터가 이미 존재하는지 확인하는 함수 (책 이름 기준으로 중복 체크)
+def data_exists(table_name, book_name):
+    cursor.execute(f"SELECT * FROM {table_name} WHERE book_name = '{book_name}'")  # 주어진 책 이름으로 데이터가 있는지 확인
+    return cursor.fetchone() is not None  # 해당 책 이름의 데이터가 있으면 True, 없으면 False 반환
+
+# 테이블을 생성하는 함수 (책 이름을 PRIMARY KEY로 설정)
+def create_table_if_not_exists(table_name, create_table_sql):
+    if table_exists(table_name):  # 테이블이 이미 존재하는지 확인
+        messagebox.showinfo("Info", f"Table {table_name} already exists.")  # 테이블이 존재하면 알림
+    else:
+        cursor.execute(create_table_sql)  # 테이블이 존재하지 않으면 생성
+        messagebox.showinfo("Info", f"Table {table_name} created successfully.")  # 테이블 생성 성공 알림
+
+# 데이터를 삽입하거나 수정하는 함수 (책 이름을 기준으로 중복 검사 후 처리)
+def insert_or_update_data(table_name, data, operation="insert"):
+    try:
+        # 책 이름이 이미 존재하는지 확인
+        if data_exists(table_name, data["book_name"]):
+            messagebox.showwarning("Warning", f"Book with name {data['book_name']} already exists.")  # 중복된 책 이름이 있을 경우 경고 메시지
+            return
+
+        # 삽입 또는 수정 쿼리 생성
+        if operation == "insert":  # 삽입일 경우
+            columns = ', '.join(data.keys())  # 데이터 딕셔너리의 키(컬럼명) 나열
+            values = ', '.join([f"'{value}'" for value in data.values()])  # 데이터 값들을 쿼리 형식에 맞게 변환
+            query = f"INSERT INTO {table_name} ({columns}) VALUES ({values})"  # INSERT 쿼리 생성
+        elif operation == "update":  # 수정일 경우
+            set_clause = ', '.join([f"{col} = '{val}'" for col, val in data.items()])  # 수정할 필드와 값을 나열
+            query = f"UPDATE {table_name} SET {set_clause} WHERE book_name = '{data['book_name']}'"  # UPDATE 쿼리 생성
+
+        cursor.execute(query)  # 쿼리 실행
+        connection.commit()  # 데이터베이스에 변경 사항 저장
+        messagebox.showinfo("Info", f"Data {operation}ed successfully into {table_name}.")  # 삽입 또는 수정 성공 알림
+    except pymysql.MySQLError as e:
+        messagebox.showerror("Error", f"Error: {e}")  # SQL 에러가 발생하면 에러 메시지 출력
+
+# 데이터를 조회하는 함수 (특정 조건에 맞는 데이터 선택)
+def fetch_data(table_name, columns="*", condition=None):
+    query = f"SELECT {columns} FROM {table_name}"  # 주어진 테이블에서 필요한 컬럼을 조회하는 쿼리 생성
+    if condition:  # 조건이 있으면 WHERE 절 추가
+        query += f" WHERE {condition}"
+    
+    cursor.execute(query)  # 쿼리 실행
+    result = cursor.fetchall()  # 결과를 모두 가져옴
+    display_data(result)  # 조회 결과를 화면에 표시
+
+# 조회된 데이터를 화면에 표시하는 함수
+def display_data(data):
+    result_window = tk.Toplevel(root)  # 새로운 윈도우 창 생성
+    result_window.title("Data Results")  # 창 제목 설정
+    for i, row in enumerate(data):  # 조회된 데이터를 행 단위로 처리
+        for j, value in enumerate(row):  # 각 행의 데이터를 열 단위로 처리
+            tk.Label(result_window, text=value).grid(row=i, column=j)  # 결과를 레이블로 표시
+
+# 테이블을 삭제하는 함수
+def drop_table(table_name):
+    # 테이블이 존재하는지 확인
+    cursor.execute(f"SHOW TABLES LIKE '{table_name}'")  # 테이블이 존재하는지 확인
+    result = cursor.fetchone()  # 결과를 가져옴
+
+    if result:  # 테이블이 존재하면
+        cursor.execute(f"DROP TABLE {table_name}")  # 테이블 삭제
+        connection.commit()  # 변경 사항을 데이터베이스에 반영
+        messagebox.showinfo("Info", f"Table {table_name} deleted successfully.")  # 삭제 성공 메시지
+    else:  # 테이블이 존재하지 않으면
+        messagebox.showwarning("Warning", f"Table {table_name} does not exist.")  # 테이블 없음 경고 메시지
+
+# GUI에서 버튼 클릭 시 실행되는 함수들
+def create_table():
+    table_name = table_name_entry.get()  # 입력한 테이블 이름 가져오기
+    create_table_sql = create_table_sql_entry.get()  # 입력한 SQL 구문 가져오기
+    if not create_table_sql:  # SQL 구문이 비어 있으면 경고 메시지 표시
+        messagebox.showwarning("Warning", "Please enter a valid CREATE TABLE SQL statement.")
+        return
+    create_table_if_not_exists(table_name, create_table_sql)  # 테이블이 없다면 생성
+
+def insert_data():
+    table_name = table_name_entry.get()  # 입력한 테이블 이름 가져오기
+    data = {
+        "book_name": book_name_entry.get(),  # 입력한 책 이름
+        "publisher": publisher_entry.get(),  # 입력한 출판사 이름
+        "author": author_entry.get()         # 입력한 작가 이름
+    }
+    insert_or_update_data(table_name, data, operation="insert")  # 데이터 삽입 함수 호출
+
+def fetch_data_from_table():
+    table_name = table_name_entry.get()  # 입력한 테이블 이름 가져오기
+    fetch_data(table_name)  # 데이터 조회 함수 호출
+
+def delete_table():
+    table_name = table_name_entry.get()  # 입력한 테이블 이름 가져오기
+    drop_table(table_name)  # 테이블 삭제 함수 호출
+
+# Tkinter 레이아웃 생성
+tk.Label(root, text="Table Name").grid(row=0, column=0)  # 테이블 이름 입력 필드 라벨
+table_name_entry = tk.Entry(root)  # 테이블 이름 입력 필드
+table_name_entry.grid(row=0, column=1)
+
+tk.Label(root, text="Create Table SQL").grid(row=1, column=0)  # CREATE TABLE SQL 입력 필드 라벨
+create_table_sql_entry = tk.Entry(root, width=50)  # CREATE TABLE SQL 입력 필드
+create_table_sql_entry.grid(row=1, column=1)  # 테이블 생성 SQL 입력 필드 크기 확장
+
+tk.Label(root, text="Book Name").grid(row=2, column=0)  # 책 이름 입력 필드 라벨
+book_name_entry = tk.Entry(root)  # 책 이름 입력 필드
+book_name_entry.grid(row=2, column=1)
+
+tk.Label(root, text="Publisher").grid(row=3, column=0)  # 출판사 입력 필드 라벨
+publisher_entry = tk.Entry(root)  # 출판사 입력 필드
+publisher_entry.grid(row=3, column=1)
+
+tk.Label(root, text="Author").grid(row=4, column=0)  # 작가 입력 필드 라벨
+author_entry = tk.Entry(root)  # 작가 입력 필드
+author_entry.grid(row=4, column=1)
+
+# 각 기능을 수행할 버튼 생성
+create_table_button = tk.Button(root, text="Create Table", command=create_table)  # 테이블 생성 버튼
+create_table_button.grid(row=5, column=0)
+
+insert_data_button = tk.Button(root, text="Insert Data", command=insert_data)  # 데이터 삽입 버튼
+insert_data_button.grid(row=5, column=1)
+
+fetch_data_button = tk.Button(root, text="Fetch Data", command=fetch_data_from_table)  # 데이터 조회 버튼
+fetch_data_button.grid(row=6, column=0)
+
+delete_table_button = tk.Button(root, text="Delete Table", command=delete_table)  # 테이블 삭제 버튼
+delete_table_button.grid(row=6, column=1)
+
+root.mainloop()  # Tkinter 메인 루프 실행
+변수 설명 (주석 포함)
+e (예외 객체)
+
+e는 try-except 구문에서 발생한 예외 객체입니다. pymysql.MySQLError가 발생하면, 이 객체는 오류 메시지와 관련된 정보를 담고 있습니다. 이를 통해 예외 상황에 대해 사용자에게 에러 메시지를 보여줍니다.
+columns
+
+columns는 INSERT 또는 UPDATE 쿼리에서 데이터베이스 테이블의 컬럼(필드) 이름을 나열한 것입니다. 예를 들어, 데이터가 { 'book_name': 'Book Title', 'author': 'Author Name' }일 때 columns는 'book_name, author'로 변환됩니다. 이 변수는 쿼리에서 해당 컬럼에 데이터를 삽입하거나 수정하는 데 사용됩니다.
+condition
+
+condition은 SELECT 쿼리에서 WHERE 조건을 설정하는 데 사용됩니다. 예를 들어, 특정 책을 검색하려면 condition = "book_name = 'Book Title'"을 설정할 수 있습니다. 이 변수는 쿼리의 WHERE절을 추가하는 데 사용됩니다.
+col 및 val
+
+col은 UPDATE 쿼리에서 수정하려는 컬럼의 이름을 나타내며, val은 해당 컬럼에 입력될 새로운 값을 나타냅니다. 예를 들어, 책의 작가를 수정하려면 col = 'author'와 val = 'New Author'처럼 사용됩니다.
+f"{col} = '{val}'"는 UPDATE 쿼리에서 여러 컬럼을 수정할 때 각각의 필드와 값을 연결하는 데 사용됩니다.
+전체 흐름:
+테이블 생성: 사용자가 입력한 SQL 구문을 통해 테이블을 생성합니다. 이미 테이블이 존재하면 알림을 표시합니다.
+데이터 삽입 및 수정: 책 이름을 기준으로 중복 여부를 확인 후, 데이터를 삽입하거나 수정합니다.
+데이터 조회: 특정 테이블에서 조건에 맞는 데이터를 조회하여 화면에 표시합니다.
+테이블 삭제: 테이블이 존재하는지 확인하고, 존재하면 삭제합니다.
+
+주로 태도를 봄 
+실수하더라도 어떻게 말하냐에 따라 달라짐
+입사 지원은 평균 6.4개 / 면접은 평균 2회 정도 이후 채용
+
+연봉이 우선 전산공학은 개인성장이 중요 / 보통 하반기에 지원자가 많음 / 채용 규모 확인 필수 / 학점은 상관없고 자격증은 관련 자격증 2개 이상,어학은 있으면 좋음 
+
+경험/활동/교육
+ _교육이수내역 > 새일자리센터 과정 추가
+
+역량 수준> 더 자세하게 어디서 뭘 획득했고 무엇을 했는 지(인스타 그램 등)
+
+향후 목표
+앞서 하는 중인 것들(앞으로의 목표를 위해서 지금까지 한 것들) > 앞으로의 목표
+
+제작 순서 
+데이터 이름/ 테이블 이름으로 검색 가능하게 
+
+표로 만듦
+
+데이터 추가 / 데이터 수정 / 데이터 삭제
+각각 데이터 입력(칼럼별로 따로 데이터 입력 받음)
+
+# # 리스트 박스 위젯
+# listbox=tk.Listbox(root) #여러 항목을 선택할 수 있는 리스트 박스
+# listbox.pack()
+#
+# for item in ['항목1','항목2','항목3']:
+#   listbox.insert(tk.END,item)
+#
+# def show_selected_item():
+#   selected_item=listbox.get(listbox.curselection())
+#   label.config(text=f"선택된 항목:{selected_item}")
+#
+# button=tk.Button(root,text="선택 항목 보기",command=show_selected_item)
+# button.pack()
+
+
+# text_box=tk.Text(root,height=5,width=30)
+# text_box.pack()
+#
+# def show_text():
+#   text_content=text_box.get("1.0","end-1c") #텍스트 박스의 값을
+#   # 텍스트 박스의 값을 가져온다
+#   # get(start,end)메서드
+#   # start: 텍스트를 가져오고자 하는 시작 위치
+#   # end: 텍스트를 가져오고자 하는 끝 위치
+#   # 위 두 매개변수를 통해  text 위젯에서 인덱스 형태로 위치 값을 가져온다
+#   # 1.0 1번째 줄의 0번째 문자를 의미
+#   # end-1c: 마지막 줄의 마지막 문자 앞을 의미
+#   label.config(text=f"입력된 텍스트:\n{text_content}")
+#
+# button=tk.Button(root,text="text보기",command=show_text)
+# button.pack()
+
+
+내일은 서버클라이언트 진도

@@ -1,0 +1,80 @@
+import socket
+import numpy
+from queue import Queue
+from _thread import *
+import cv2
+
+encolosure_queue = Queue()
+
+# 클라이언트와 연결된 스레드 함수
+def threaded(client_socket, addr, queue):
+    print("connected ", addr[0])
+    while True:
+        try:
+            data = client_socket.recv(1024)
+            if not data:
+                print("disconnected")
+                break
+            stringData = queue.get()
+            client_socket.send(str(len(stringData)).ljust(16).encode())
+            client_socket.send(stringData)
+        except ConnectionResetError as e:
+            print('disconnected')
+            break
+    client_socket.close()
+
+# 웹캠 또는 비디오 파일에서 프레임을 캡처하여 전송하는 함수
+def webcam(queue):
+    global count
+    video_path = "~~~~~~~~.mp4"  # 실제 비디오 파일 경로로 변경하세요.
+    capture = cv2.VideoCapture(video_path)  # 비디오 파일을 사용할 경우 경로 설정
+
+    # 웹캠을 사용할 경우
+    # capture = cv2.VideoCapture(0)  # 카메라 인덱스를 0, 1 등으로 설정
+
+    while True:
+        ret, frame = capture.read()
+        if ret == False:
+            continue
+
+        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
+        result, imgencode = cv2.imencode('.jpg', frame, encode_param)
+
+        data = numpy.array(imgencode)
+        stringData = data.tobytes()  # numpy의 tostring()을 tobytes()로 변경
+
+        if count == 0:
+            print(stringData)
+        count = 1
+
+        queue.put(stringData)  # 대기열에 프레임 저장
+
+        cv2.imshow('server', frame)  # 서버 측에서 비디오를 보여줌
+        key = cv2.waitKey(1)
+        if key == 27:  # ESC 키를 눌러서 종료
+            break
+
+    capture.release()
+    cv2.destroyAllWindows()
+
+# 서버 설정
+HOST = 'localhost'
+PORT = 9989
+
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server_socket.bind((HOST, PORT))
+server_socket.listen()
+
+print('Server started')
+
+# 웹캠 또는 비디오 스트리밍을 위한 스레드 시작
+start_new_thread(webcam, (encolosure_queue,))
+
+# 클라이언트 연결을 기다리며, 연결되면 새로운 스레드를 생성하여 데이터 전송
+while True:
+    print('Waiting for client connection...')
+    client_socket, addr = server_socket.accept()
+    start_new_thread(threaded, (client_socket, addr, encolosure_queue))
+
+server_socket.close()

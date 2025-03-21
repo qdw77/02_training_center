@@ -1,0 +1,55 @@
+# thread_250220
+import threading
+# 1개의 메인 스레드는 흐름에 따라 실행 (직접 돌리는 건 아님 호출만 함)
+import time
+counter=0
+
+# 스레드 자체의 락
+lock=threading.Lock()
+
+# 함수는 th1/2 받음
+def increment(threadname):
+  global counter
+  lock.acquire()
+  try:
+    for a in range(100):
+      time.sleep(0.01)
+      counter+=1
+      print(f"{threadname} count {counter}")
+  finally:
+    # 락 해제
+    lock.release()
+
+# 서브 스레드 > 타겟 함수
+thread1=threading.Thread(target=increment,args=('th1',)) # 서브 스레드1
+thread2=threading.Thread(target=increment,args=('th2',)) # 서브 스레드2
+
+# thread1.daemon=True # 일반적으로 이 둘을 살리면 서브 스레드가 안나옴
+# thread2.daemon=True #
+
+# 스레드에 불붙임
+thread1.start()
+thread2.start()
+
+thread1.join() # 둘을 살리면 print(f"count: {counter}")이게 마지막으로 나옴
+
+
+# 코드상 가장 마지막인데 1번으로 옴
+# > 메인 스레드로 실행되는 부분
+print(f"count: {counter}")
+
+thread2.join() #
+print("2스레드 모두 join 끝")
+
+# 프로세스의 종료: 메인 스레드의 종료 < 기본 값 / 서브 스레드가 작업이 마친 상태가 아니라면 서브스레드 작업을 마치고 프로세스가 닫힘
+# 데몬(daemon): 서브 스레드를 데몬으로 설정하면 메인 스레드 종료시 프로세스 종료
+# join() : thread1.join() => 스레드 1이 마칠 떄까지 기다린다
+
+# sub thread가 1개 있다
+# 위 서브 스레드는 for문으로 1~10000까지 카운트를 올린는 함수쪽에 연결)
+# 데몬+join X => 데몬 스레드의 종료 여부에 상관없이 메인 스레드 종료 시점에 프로세스 종료
+# 데몬+join O => 메인 스레드가 데몬 스레드가 할일 전부 마칠 떄 까지 기다린다
+
+# 서브 + join X => 메인 스레드가 서브 스레드를 기다리진 않지만 프로세스를 종료하지 않는다
+# 서브 + join O => 메인 스레드가 서브 스레드의 직업 완료를 기다려주고 그 후에 메인 스레드가 진행
+# a>b 사이드로 보냄 / 변환

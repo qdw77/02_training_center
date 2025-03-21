@@ -1,0 +1,69 @@
+판매 오더(판매 주문서)는 없어지고 대신 발주서
+ 
+
+> 판매 실적 
+
+	판매한 내역 전체 출력(삭제 내역 포함)
+
+
+> 발주서 
+
+	발주서 생성, 조회 수정  
+
+프레임 나누기
+
+판매 실적 조회
+발주서 생성 조회 수정
+
+PK 
+TK.프레임
+
+프레임 사이즈
+tk.geometry
+1300 * 700
+
+자식 클래스 
+전환 프레임
+
+
+import tkinter as tk
+
+class SalesPerformance(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent)  # 부모 위젯을 받아서 Frame을 생성
+        self.pack(fill="both", expand=True)  # 프레임 크기를 부모 위젯에 맞춤
+
+        # 1. 상단 프레임 (제목 영역)
+        self.top_frame = tk.Frame(self, bg="lightblue", height=50)
+        self.top_frame.pack(fill="x", side="top")
+
+        # 2. 왼쪽 프레임 (메뉴 or 리스트)
+        self.left_frame = tk.Frame(self, bg="lightgray", width=200)
+        self.left_frame.pack(fill="y", side="left")
+
+        # 3. 메인 콘텐츠 프레임
+        self.main_frame = tk.Frame(self, bg="white")
+        self.main_frame.pack(fill="both", expand=True, side="right")
+
+        # 라벨 추가 (예제)
+        tk.Label(self.top_frame, text="Sales Performance", font=("Arial", 16), bg="lightblue").pack(pady=10)
+        tk.Label(self.left_frame, text="Menu", font=("Arial", 12), bg="lightgray").pack(pady=10)
+        tk.Label(self.main_frame, text="Main Content", font=("Arial", 12), bg="white").pack(pady=10)
+
+
+# Tkinter 실행
+root = tk.Tk()
+root.geometry("600x400")  # 창 크기 설정
+app = SalesPerformance(root)  # 프레임 객체 생성
+root.mainloop()
+
+        self.label5 = tk.Label(self.topleft_Frame, text="test5", font=("Arial", 12), fg="white", bg="red")
+        self.label5.grid(row=4, column=0, padx=10, pady=5)
+        self.entry5 = tk.Entry(self.topleft_Frame, width=30)
+        self.entry5.grid(row=4, column=1, padx=10, pady=5)
+
+발주서를 판매 오더 대신으로 작성하고 
+
+전표 번호
+https://erp.bizone.co.kr/
+공급가액

@@ -1,0 +1,429 @@
+#p177
+#데이터 정체
+
+# 결측치
+# 누락 값
+
+# 이상치
+# np.nan
+import pandas as pd
+import numpy as np
+df = pd.DataFrame({'sex' :['M','F',np.nan,'M','F'],'score' :[5,4,3,4,np.nan]})
+df
+# nan 비어있다
+# df['score'] + 1 # score + 1 > 한 열을 뜯어내서 모든 값에 +1 / nan은 결측치이기 때문에 그대로
+
+# 한줄 데이터 > 시리즈
+
+pd.isna(df) # nan만 True
+pd.isna(df).sum() # 각 열의 nan 합계 (빈도)
+
+df.dropna(subset='score') #결측치가 있는 행 제거 (subset=열이름)
+
+df.dropna(subset=['score','sex'])
+
+df.dropna() # 모든 열에 결측치가 있는 행 제거
+
+# 결측치 대체
+exam=pd.read_csv('exam.csv')
+exam.loc[[2,7,14],['math']]=np.nan # 2,7,14행의 math에 NaN 할당 / df.loc() < 데이터 위치 지정
+exam
+
+exam['math'].mean()
+
+exam['math']=exam['math'].fillna(55) # 55로 대체
+
+exam['math']
+
+# 데이터 수집 과정에서 오류가 발생할 수 있다?
+# 실제 데이터에는 대부분 이상치가 들어가 있다? > 
+# 오류 이유는 특정 키워드를 가지고 관련 자료들을 긁어오면 
+# 다운로드,드레그 등(일반인) 혹은 자동화를 걸쳐서 자동화로 긁어오는 과정 중에 생김
+# 맵 > 캐릭터 > 아이템 > 캐릭터 > 맵
+import pandas as pd
+import numpy as np
+df=pd.DataFrame({'sex' : [1,2,1,3,2,1],'score':[5,4,3,4,2,6]})
+df
+
+df['sex'].value_counts().sort_index()
+
+df['score'].value_counts().sort_index()
+
+df['sex']=np.where(df['sex']==3,np.nan,df['sex'])
+df
+
+df['score']=np.where(df['score']>5,np.nan,df['score'])
+df
+
+df.dropna(subset=['sex','score']).groupby('sex').agg(mean_score=('score','mean')) 
+# dropna 결측치 행 제거/gropby 열 기준으로 데이터를 그룹화한다
+# /agg(새로운 열 이름=()) 평균을 구하고 새로운 이름의 열로 구성한다
+
+# p 190
+# 극단적인 값(극단치)
+# 정규분표표
+import pandas as pd
+mpg=pd.read_csv('mpg.csv')
+
+import seaborn as sns
+sns.boxplot(data=mpg,y='hwy')
+
+pct25=mpg['hwy'].quantile(.25)
+pct25
+
+pct75=mpg['hwy'].quantile(.75)
+pct75
+
+# iar 그림
+iqr=pct75-pct25
+iqr
+
+pct25-1.5*iqr # 하한
+
+pct75+1.5*iqr # 상한
+
+mpg['hwy']=np.where((mpg['hwy']<4.5) | (mpg['hwy'] > 40.5), np.nan, mpg['hwy'])
+mpg['hwy'].isna().sum()
+np.int64(3)
+mpg
+
+mpg.dropna(subset = 'hwy').groupby('drv').agg(mean_hwy=('hwy','mean'))
+
+import pandas as pd
+mpg=pd.read_csv('mpg.csv')
+import seaborn as sns
+sns.scatterplot(data=mpg,x='displ',y='hwy')
+
+import seaborn as sns
+sns.scatterplot(data=mpg,x='displ',y='hwy').set(xlim=[3,6])
+
+import seaborn as sns
+sns.scatterplot(data=mpg,x='displ',y='hwy').set(xlim=[3,6],ylim=[10,30])
+
+# drv 별로 표식 색 다르게
+sns.scatterplot(data=mpg,x='displ',y='hwy',hue='drv')
+
+import matplotlib.pyplot as plt
+plt.rcParams.update({'figure.dpi':'150'})
+# figure.figsize / font.size / font.family 코드 설정 변경 등
+
+df_mpg = mpg.groupby('drv').agg(mean_hwy=('hwy','mean'))
+df_mpg
+
+df_mpg=mpg.groupby('drv',as_index=False).agg(mean_hwy=('hwy','mean'))
+df_mpg
+
+sns.barplot(data=df_mpg,x='drv',y='mean_hwy')
+
+# 시계열 데이터 time series data
+economics=pd.read_csv('economics.csv')
+economics.head()
+
+sns.lineplot(data=economics,x='date',y='unemploy')
+
+economics.info
+# date 문자열
+
+economics['date2']=pd.to_datetime(economics['date'])
+economics
+# 데이터타임 변화 > date2
+
+economics['date2'].dt.year
+
+economics['year']=economics['date2'].dt.year
+economics
+
+raw_welfare=pd.read_spss('Koweps_hpwc14_2019_beta2.sav')
+
+welfare=raw_welfare.copy() # 복사
+
+welfare # 앞부분/뒷부분 출력
+welfare.shape # 행/열 개수 출력
+
+welfare.info() # 변수 속성 출력
+
+welfare.describe() # 요약 통계량
+
+welfare=welfare.rename(
+    columns={'h14_g3' : 'sex',
+             'h14_g4' : 'birth',
+             'h14_g10' : 'marriage_type',
+             'h14_g11' : 'religion',
+             'p1402_8aq1' : 'income',
+             'h14_eco9' : 'code_job',
+             'h14_reg7' : 'code_region'})
+
+welfare
+welfare['birth']
+
+welfare['sex'].dtypes
+
+welfare['sex'].value_counts()
+
+welfare['sex']=np.where(welfare['sex']==9,np.nan,welfare['sex'])
+welfare['sex'].isna().sum()
+
+welfare['sex']=np.where(welfare['sex']==1,'male','female')
+welfare['sex'].value_counts()
+
+sns.countplot(data = welfare, x='sex')
+
+welfare['income'].dtypes
+
+welfare['income'].describe()
+
+sns.histplot(data=welfare,x='income')
+
+welfare['income'].describe()
+
+welfare['income'].isna().sum()
+
+sex_income=welfare.dropna(subset='income').groupby('sex', as_index = False).agg(mean_income = ('income','mean'))
+sex_income
+
+sns.barplot(data=sex_income,x='sex',y='mean_income')
+
+welfare = welfare.assign(age= 2019 - welfare['birth']+1) # 2019기준
+welfare['age'].describe()
+welfare['age'].head()
+
+welfare = welfare.assign(ageg=np.where(welfare['age'] < 30,'young',np.where(welfare['age'] <= 59,'middle','old')))
+welfare['ageg'].value_counts()
+
+sns.countplot(data=welfare,x='ageg')
+
+ageg_income=welfare.dropna(subset='income').groupby('ageg',as_index=False).agg(mean_income=('income','mean'))
+ageg_income
+
+sns.barplot(data=ageg_income,x='ageg',y='mean_income')
+
+sns.barplot(data=ageg_income,x='ageg',y='mean_income',order=['young','middle','old'])
+
+sex_income=welfare.dropna(subset='income').groupby(['ageg','sex'], as_index = False).agg(mean_income=('income','mean'))
+sex_income
+
+sns.barplot(data=sex_income,x='ageg',y='mean_income',hue='sex',order=['young','middle','old'])
+
+sex_age=welfare.dropna(subset='income').groupby(['age','sex'], as_index=False).agg(mean_income=('income','mean'))
+sex_age.head()
+
+sns.lineplot(data = sex_age,x='age',y='mean_income',hue='sex')
+
+welfare['code_job'].dtypes
+
+welfare['code_job'].value_counts()
+
+list_job=pd.read_excel('Koweps_Codebook_2019.xlsx',sheet_name='직종코드')
+list_job.head()
+
+list_job.shape
+
+welfare=welfare.merge(list_job,how='left',on='code_job')
+
+welfare.dropna(subset='code_job')[['code_job','job']].head()
+
+job_income=welfare.dropna(subset=['job','income']).groupby('job',as_index=False).agg(mean_income=('income','mean'))
+job_income.head()
+
+top10=job_income.sort_values('mean_income',ascending=False).head(10)
+top10
+
+import matplotlib.pyplot as plt
+plt.rcParams.update({'font.family':'Malgun Gothic'})
+
+sns.barplot(data=top10,y='job',x='mean_income')
+
+# bottom10=job_income.sort_values('mean_income').head(10)
+# bottom10 # 하위
+
+#255~257p
+job_male = welfare.dropna(subset='job').query('sex == "male"').groupby('job',as_index=False).agg(n=('job','count')).sort_values('n',ascending=False).head(10)
+job_male
+
+job_female = welfare.dropna(subset='job').query('sex == "female"').groupby('job',as_index=False).agg(n=('job','count')).sort_values('n',ascending=False).head(10)
+job_female
+
+sns.barplot(data = job_male,y='job',x='n').set(xlim=[0,500])
+
+sns.barplot(data = job_female,y='job',x='n').set(xlim=[0,500])
+
+# p559
+welfare['religion'].dtypes
+
+welfare['religion'].value_counts()
+
+welfare['religion']=np.where(welfare['religion']==1,'yes','no')
+welfare['religion'].value_counts()
+
+sns.countplot(data=welfare,x='religion')
+
+welfare['marriage_type'].dtypes
+
+welfare['marriage_type'].value_counts()
+
+welfare['marriage']=np.where(welfare['marriage_type']==1,'marriage',np.where(welfare['marriage_type']==3,'divorce','etc'))
+
+n_divorce=welfare.groupby('marriage',as_index=False).agg(n=('marriage','count'))
+n_divorce
+
+sns.barplot(data=n_divorce,x='marriage',y='n')
+
+rel_div = welfare.query('marriage != "etc"').groupby('religion',as_index=False)['marriage'].value_counts(normalize=True)
+rel_div
+
+rel_div = rel_div.query('marriage=="divorce"').assign(proportion = rel_div['proportion']*100).round(1)
+rel_div
+
+sns.barplot(data=rel_div,x='religion',y='proportion')
+
+age_div=welfare.query('marriage != "etc"').groupby('ageg', as_index=False)['marriage'].value_counts(normalize=True)
+age_div
+
+welfare.query('marriage != "etc"').groupby('ageg',as_index=False)['marriage'].value_counts()
+
+age_div=age_div.query('ageg != "young" & marriage == "divorce"').assign(proportion = age_div['proportion']*100).round(1)
+age_div
+
+sns.barplot(data=age_div,x='ageg',y='proportion')
+
+age_rel_div=welfare.query('marriage != "etc" & ageg != "young"').groupby(['ageg','religion'],as_index=False)['marriage'].value_counts(normalize=True)
+age_rel_div
+
+age_rel_div=age_rel_div.query('marriage =="divorce"').assign(proportion=age_rel_div['proportion']*100).round(1)
+age_rel_div
+
+sns.barplot(data=age_rel_div,x='ageg',y='proportion',hue='religion')
+
+# p383
+import pandas as pd
+df_raw = pd.read_csv('exam.csv')
+df=df_raw.head(10)
+df
+
+df['nclass']
+
+df[['nclass']]
+
+df['nclass'] == 1
+
+df[df['nclass']==1]
+
+df[df['math'] >= 80]
+
+df[df['math']>80]
+df['math']
+
+df[(df['nclass']==1)&(df['math']>=50)]
+
+df[(df['math']<50) | (df['english']<50)]
+
+# 열 2개 이상 추출하면 df구조 유지하지만 
+# 열 1개만 추출하면 시리즈 자료 형태로 변환 됨
+df['id']
+# 시리즈 형태가 아닌 df형태 유지하려면 []에 감싼다
+df[['id']]
+df.id #프로퍼티명처럼 col을 . 찍고 조회(추출)가능
+df['math'].mean()
+df.math.mean()
+
+# df.loc[] # 인덱스틀 통해 데이터프레임의 행과 열
+df=pd.DataFrame({'var1':[1,2,3],'var2':[4,5,6]})
+df
+
+# df.loc[] # 인덱스틀 통해 데이터프레임의 행과 열
+df=pd.DataFrame({'var1':[1,2,3],'var2':[4,5,6]},index=['kim','lee','park'])
+# df.loc['kim'] # index명으로 kim 추출
+df.loc[['kim']] 
+
+df.loc[['kim','park']] # index명으로 둘 추출
+
+df.loc['lee','var1'] # 행(index명)과 열로 특정 포인트 추출
+
+df.loc[['kim','lee'],'var2']
+
+# df.loc[,'vor1'] # 행 추출 기준 필수 입력
+
+df.loc[:'var1']
+
+df=df_raw.copy()
+df
+
+df.loc[0] # 인덱스 명이 아닌 idx 번호를 통한 추출
+
+df.loc[[0,3,5]] # 행
+
+# df.loc[:3] 슬라이싱 방식
+
+df.loc[df['nclass']==1]
+
+df.loc[df['math'] >=60]
+
+df.loc[df['math']>80,:]
+
+df.loc[df['math']>80,'math'] # 열 지정 안하면 모든 열 나온다
+# 모든 열 나오게 하는 법 1. 열 지정 안하기 2. 열 칸에 :
+# 행칸과 열칸에 구분 지점은 ,
+
+df.query('math>50')
+df[df['math']>50]
+df.loc[df['math']>50]
+# 위 3가지는 같은 추출 구문
+# df[df['math']>50,'math'] # 오류 df[]방식은 열
+df.loc[df['math']>50,"math"] # loc은 행,열 구조라 문제 없음
+
+# 399
+# df.iloc[0]
+# df.iloc[[0]]
+# df.iloc[[2]]
+# df.iloc[[2,3,5]]
+df.iloc[1:5] # 5 미만
+
+df.loc[1:5] # 5 이하
+
+df_label=pd.DataFrame({'var1':[1,2,3],'var2':[4,5,6]},index=['kim','lee','park'])
+df_label
+
+df_label.iloc[0]
+
+df.iloc[:,1] # 모든 행의 두번쨰 열
+df
+df.iloc[:,[1,3]]
+df.iloc[0:3,[1,3]]
+
+# p410
+# 스칼라(스케일러/scalar)
+# 엔디멘션
+# 가장 직은 데이터 단위
+
+# p413리스트~p421딕셔너리
+
+# p422 시리즈
+# pd.Series()
+x=pd.Series([1,2,3],index=['kim','lee','park'])
+x # 시리즈
+x.loc['kim']
+
+# p 427 데이터 프레임
+
+# 나머지는 나중에 돌아와서 할 예정
+
+# 프론트 엔드
+# 백엔드
+# 안드로이드,ios개발
+# 사용자와 상호작용
+# 프론트 엔드
+# html(구조제작) > css(꾸미기) > js(자바 스크립트/움직임)
+# http 프로토콜 / w3c
+# 프론트 엔드를 마치고 나서 데이터베이스 등 백엔드
+# AI > 분야 / 생명 공학,생산품(품질검증qa,qc),소프트웨어()
+# 아임웹/cafe24(호스팅,쇼핑몰,서버,pg) 
+# < 프론트엔드 대신?, 요즘은 cafe24가 달라졌지만 과거엔 프론트엔드 대신 사이트 만들 수 있었다고 함
+# AI 가 프론트 엔드 대신 들어갈 가능성이 큼
+# 프론트 엔드(가장 먼저 사라질 가능성이 큼) , 백엔드,  웹 , erp(개별화 때문에) , em
+# 프론트 엔드 / 백엔드 < 연봉이 낮음 / 이직(원치 않는)가능성 높고 발전 가능성이 적음
+# 개발 분야가 아닌 산업의 파이썬 
+# 앱 
+# 배울때 어려운 게 밖에 나갈 떄 경쟁력 있음 / 영상처리 / 엔비디아
+# AI 수준 / 90% 영상 데이터/ gpv/ cuda
+# AI 발전하면서 gpv가 많이 필요해서 엔비디아 주가 상승
+# 비전공자 iot 가능

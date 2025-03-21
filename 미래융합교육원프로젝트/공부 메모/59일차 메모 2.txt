@@ -1,0 +1,41 @@
+#채팅 정보
+Table: chat_log
+Columns:
+user_name varchar(20) PK # 유저 이름 
+chat_logcol text # 유저가 남긴 메세지
+sender varchar(45) # 보낸 사람
+receiver varchar(45) # 받는 사람
+time_chat datetime # 언제 채팅 보냈는 지
+
+Table: user
+Columns:
+user_name varchar(20) PK  # 유저 이름
+user_password varchar(45) # 비번
+user_ip varchar(100) # ip주소
+user_socket varchar(200) # 소켓 
+user_memory varchar(200) # 메모리 주소(선택 사항 )
+
+Table: user_log (로그 인 아웃 정보)
+Columns:
+user_name varchar(20) PK  #유저 이름
+user_login datetime # 로그인 시간
+user_logout datetime # 로그 아웃 시간
+
+exe
+
+jupyter lab
+
+cd SocketSample < 경로 지정 SocketSample(폴더 명)
+
+pyinstaller --onefile --windowed client_server.py < pyinstaller --onefile (파일 하나만) --windowed client_server.py(클라이언트 파일.py <
+ 
+아이콘 변경
+pyinstaller --onefile --windowed --icon=python_title.ico client_server.py
+위에 dist 파일 내부 exe 파일 생성 
+아이콘 변환 https://convertio.co/kr/download/ea90004199e13539e61473b80817b17c0064f6/
+ctrl + alt + delete > 작업 관리자 > Windows 탐색기 우클릭 재시작 > 작은 아이콘 변경 완료
+
+파이썬 재설치> tkinter 오류로 인해서 exe 파일 불가
+삭제법 > https://codedragon.tistory.com/11801
+파이참 삭제 후 설치 이후에도 안돼면 파일 경로 변경 AppData(숨김 파일) > Local > Programs > Python > Python313 > tcl > tcl8.6 & tk8.6 두개 복사 후 Python313\Lib에 붙여넣기
+

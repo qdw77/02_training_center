@@ -1,0 +1,306 @@
+import tkinter as tk
+from tkinter import ttk
+import sqlite3
+
+class SampleFrame(tk.Frame):
+    def __init__(self, root):
+        super().__init__(root, width=1300, height=700)
+        self.root = root
+
+        # DB 연결
+        self.conn = sqlite3.connect("database.db")  # 실제 DB 파일 경로 사용
+        self.cur = self.conn.cursor()
+
+        # 거래처 명 (콤보박스)
+        self.label_client_name = tk.Label(self, text="거래처 명")
+        self.label_client_name.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+
+        self.client_name_var = tk.StringVar()
+        self.client_name_combobox = ttk.Combobox(self, textvariable=self.client_name_var)
+        self.client_name_combobox.grid(row=0, column=1, padx=5, pady=5)
+        self.client_name_combobox.bind("<KeyRelease>", self.search_client_name)  # 입력 시 검색
+
+        # 거래처 코드 (콤보박스)
+        self.label_client_code = tk.Label(self, text="거래처 코드")
+        self.label_client_code.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+
+        self.client_code_var = tk.StringVar()
+        self.client_code_combobox = ttk.Combobox(self, textvariable=self.client_code_var)
+        self.client_code_combobox.grid(row=1, column=1, padx=5, pady=5)
+        self.client_code_combobox.bind("<KeyRelease>", self.search_client_code)
+
+        # 자동 채우기 필드
+        self.label_manager = tk.Label(self, text="거래처 담당자")
+        self.label_manager.grid(row=2, column=0, padx=5, pady=5, sticky="w")
+        self.entry_manager = tk.Entry(self)
+        self.entry_manager.grid(row=2, column=1, padx=5, pady=5)
+
+        self.label_contact = tk.Label(self, text="거래처 담당자 연락처")
+        self.label_contact.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+        self.entry_contact = tk.Entry(self)
+        self.entry_contact.grid(row=3, column=1, padx=5, pady=5)
+
+        # 콤보박스 선택 시 자동 채우기
+        self.client_name_combobox.bind("<<ComboboxSelected>>", self.fill_client_details)
+        self.client_code_combobox.bind("<<ComboboxSelected>>", self.fill_client_details)
+
+    def search_client_name(self, event):
+        """ 거래처 명 검색 후 콤보박스 업데이트 """
+        user_input = self.client_name_var.get()
+        self.cur.execute("SELECT name FROM clients WHERE name LIKE ?", ('%' + user_input + '%',))
+        results = [row[0] for row in self.cur.fetchall()]
+        self.client_name_combobox["values"] = results
+
+    def search_client_code(self, event):
+        """ 거래처 코드 검색 후 콤보박스 업데이트 """
+        user_input = self.client_code_var.get()
+        self.cur.execute("SELECT code FROM clients WHERE code LIKE ?", ('%' + user_input + '%',))
+        results = [row[0] for row in self.cur.fetchall()]
+        self.client_code_combobox["values"] = results
+
+    def fill_client_details(self, event):
+        """ 선택한 거래처 정보로 자동 채우기 """
+        selected_name = self.client_name_var.get()
+        selected_code = self.client_code_var.get()
+
+        self.cur.execute("SELECT name, code, manager, contact FROM clients WHERE name=? OR code=?", (selected_name, selected_code))
+        result = self.cur.fetchone()
+
+        if result:
+            self.client_name_var.set(result[0])  # 거래처 명
+            self.client_code_var.set(result[1])  # 거래처 코드
+            self.entry_manager.delete(0, tk.END)
+            self.entry_manager.insert(0, result[2])  # 담당자
+            self.entry_contact.delete(0, tk.END)
+            self.entry_contact.insert(0, result[3])  # 담당자 연락처
+
+if __name__ == "__main__":
+    r = tk.Tk()
+    r.geometry("800x600")
+    fr = SampleFrame(r)
+    fr.pack()
+    r.mainloop()
+
+> 버튼으로 
+
+        self.labelf = tk.Label(self.topright_Frame, text="조회")
+        self.labelf.grid(row=0, column=3, padx=5, pady=5, sticky="e")
+
+        self.labelg = tk.Label(self.topright_Frame, text="생성")
+        self.labelg.grid(row=1, column=3, padx=5, pady=5, sticky="e")
+
+        self.labelh = tk.Label(self.topright_Frame, text="수정")
+        self.labelh.grid(row=2, column=3, padx=5, pady=5, sticky="e")
+
+        self.labeli = tk.Label(self.topright_Frame, text="저장")
+        self.labeli.grid(row=3, column=3, padx=5, pady=5, sticky="e")
+
+        self.labelj = tk.Label(self.topright_Frame, text="삭제")
+        self.labelj.grid(row=4, column=3, padx=5, pady=5, sticky="e")
+
+
+import tkinter as tk
+from tkinter import ttk
+from tkcalendar import DateEntry  # DateEntry 사용 시 필요
+
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        self.title("Table Example")
+        self.geometry("800x600")
+
+        # 상단 왼쪽 프레임 (입력 폼)
+        self.topleft_Frame = tk.Frame(self, width=400, height=200, bg="lightgray")
+        self.topleft_Frame.pack(side="top", fill="x", padx=10, pady=10)
+
+        self.Creation_label = tk.Label(self.topleft_Frame, text="작성 일자")
+        self.Creation_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+
+        self.date_entry1 = DateEntry(self.topleft_Frame, width=22, background="#e3e3e3", foreground="white", date_pattern="yyyy-mm-dd")
+        self.date_entry1.grid(row=0, column=1, padx=5, pady=5)
+
+        self.name_label = tk.Label(self.topleft_Frame, text="이름")
+        self.name_label.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+
+        self.name_entry = tk.Entry(self.topleft_Frame, width=25)
+        self.name_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        self.age_label = tk.Label(self.topleft_Frame, text="나이")
+        self.age_label.grid(row=2, column=0, padx=5, pady=5, sticky="w")
+
+        self.age_entry = tk.Entry(self.topleft_Frame, width=25)
+        self.age_entry.grid(row=2, column=1, padx=5, pady=5)
+
+        self.address_label = tk.Label(self.topleft_Frame, text="주소")
+        self.address_label.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+
+        self.address_entry = tk.Entry(self.topleft_Frame, width=25)
+        self.address_entry.grid(row=3, column=1, padx=5, pady=5)
+
+        # 버튼 추가
+        self.button_create = tk.Button(self.topleft_Frame, text="생성", command=self.add_to_table)
+        self.button_create.grid(row=4, column=0, padx=5, pady=5, sticky="w")
+
+        self.button_save = tk.Button(self.topleft_Frame, text="저장", command=self.add_to_table)
+        self.button_save.grid(row=4, column=1, padx=5, pady=5, sticky="w")
+
+        # 하단 프레임 (표)
+        self.bottom_Frame = tk.Frame(self, width=800, height=350, bg="green")
+        self.bottom_Frame.pack(side="bottom", fill="both", expand=True, padx=10, pady=10)
+
+        # 표 (Treeview)
+        self.tree = ttk.Treeview(self.bottom_Frame, columns=("ID", "이름", "나이", "주소"), show="headings")
+        self.tree.grid(row=0, column=0, sticky="nsew")
+
+        self.tree.heading("ID", text="ID")
+        self.tree.heading("이름", text="이름")
+        self.tree.heading("나이", text="나이")
+        self.tree.heading("주소", text="주소")
+
+        self.tree.column("ID", width=100, anchor="center")
+        self.tree.column("이름", width=200, anchor="center")
+        self.tree.column("나이", width=100, anchor="center")
+        self.tree.column("주소", width=300, anchor="center")
+
+        # 스크롤바 추가
+        self.scrollbar = ttk.Scrollbar(self.bottom_Frame, orient="vertical", command=self.tree.yview)
+        self.scrollbar.grid(row=0, column=1, sticky="ns")
+        self.tree.configure(yscroll=self.scrollbar.set)
+
+        # ID 카운터
+        self.record_id = 1
+
+    def get_form_data(self):
+        """ 입력된 값 가져오기 """
+        date = self.date_entry1.get()
+        name = self.name_entry.get()
+        age = self.age_entry.get()
+        address = self.address_entry.get()
+        return date, name, age, address
+
+    def add_to_table(self):
+        """ 표에 데이터 추가 """
+        date, name, age, address = self.get_form_data()
+
+        # 빈 값이 있는지 확인
+        if not all([date, name, age, address]):
+            print("⚠️ 모든 항목을 입력하세요!")
+            return
+
+        # 표에 데이터 추가
+        self.tree.insert("", "end", values=(self.record_id, name, age, address))
+        self.record_id += 1  # ID 증가
+
+        # 입력 필드 초기화
+        self.name_entry.delete(0, tk.END)
+        self.age_entry.delete(0, tk.END)
+        self.address_entry.delete(0, tk.END)
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
+
+import tkinter as tk
+from tkinter import ttk
+from tkcalendar import DateEntry
+
+class SampleFrame(tk.Frame):
+    def __init__(self, root):
+        super().__init__(root, width=1300, height=700)
+        self.root = root
+
+        # frame 생성
+        self.topleft_Frame = tk.Frame(self, width=950, height=350, bg="#FFFFFF")  # 왼쪽 위 구역
+        self.topright_Frame = tk.Frame(self, width=350, height=350, bg="#E3E3E3")  # 오른쪽 위 구역
+        self.bottom_Frame = tk.Frame(self, width=1300, height=350, bg="green")  # 아래 구역
+
+        self.line = tk.Frame(self.topright_Frame, width=1, height=350, bg="black")
+        self.line.pack(side="left", fill="y")
+
+        # frame 크기 자동 축소 방지
+        self.topleft_Frame.grid_propagate(False)
+        self.topleft_Frame.pack_propagate(False)
+        self.topright_Frame.grid_propagate(False)
+        self.topright_Frame.pack_propagate(False)
+        self.bottom_Frame.grid_propagate(False)
+        self.bottom_Frame.pack_propagate(False)
+
+        # frame 배치
+        self.topleft_Frame.grid(row=0, column=0)
+        self.topright_Frame.grid(row=0, column=1)
+        self.bottom_Frame.grid(row=1, column=0, columnspan=2)
+
+        # 발주서 입력 필드 생성
+        self.create_order_form()
+
+    def create_order_form(self):
+        # 작성일자 > 발주서 코드 > 내/외> 작성자에 대한 > 완제품 코드 > 
+        self.Creation_label = tk.Label(self.topleft_Frame, text="작성 일자")
+        self.Creation_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        self.date_entry1 = DateEntry(self.topleft_Frame, width=22, background="#e3e3e3", foreground="white", date_pattern="yyyy-mm-dd")
+        self.date_entry1.grid(row=0, column=1, padx=5, pady=5)
+
+        self.label2 = tk.Label(self.topleft_Frame, text="발주 코드")
+        self.label2.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+
+        self.entry2 = tk.Entry(self.topleft_Frame, width=25)
+        self.entry2.grid(row=1, column=1, padx=5, pady=5)
+
+        self.label3 = tk.Label(self.topleft_Frame, text="내/외부")
+        self.label3.grid(row=2, column=0, padx=5, pady=5, sticky="w")
+
+        self.entry3 = tk.Entry(self.topleft_Frame, width=25)
+        self.entry3.grid(row=2, column=1, padx=5, pady=5)
+
+        self.label4 = tk.Label(self.topleft_Frame, text="작성자 명")
+        self.label4.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+
+        self.entry4 = tk.Entry(self.topleft_Frame, width=25)
+        self.entry4.grid(row=3, column=1, padx=5, pady=5)
+
+        self.label12 = tk.Label(self.topleft_Frame, text="완제품 코드")
+        self.label12.grid(row=0, column=2, padx=5, pady=5, sticky="w")
+
+        self.getproduction = tk.StringVar()
+        self.production_combobox = ttk.Combobox(self.topleft_Frame, textvariable=self.getproduction)
+        self.production_combobox.grid(row=0, column=3, padx=5, pady=5)
+
+        # 왼쪽 위 항목에 대한 추가 항목들
+        self.label13 = tk.Label(self.topleft_Frame, text="예산")
+        self.label13.grid(row=1, column=2, padx=5, pady=5, sticky="w")
+        self.entry13 = tk.Entry(self.topleft_Frame, width=25)
+        self.entry13.grid(row=1, column=3, padx=5, pady=5)
+
+        # 'bottom_Frame'에 표시할 테이블 생성
+        self.create_table()
+
+    def create_table(self):
+        # bottom_Frame에 표 형태로 데이터 표시
+        # 첫 번째 행(헤더)
+        headers = ["작성 일자", "발주 코드", "내/외부", "작성자 명", "완제품 코드", "예산"]
+        for i, header in enumerate(headers):
+            label = tk.Label(self.bottom_Frame, text=header, relief="solid", width=20)
+            label.grid(row=0, column=i, padx=5, pady=5)
+
+        # 두 번째 행(입력된 값)
+        values = [
+            self.date_entry1.get(),
+            self.entry2.get(),
+            self.entry3.get(),
+            self.entry4.get(),
+            self.getproduction.get(),
+            self.entry13.get()
+        ]
+        for i, value in enumerate(values):
+            label = tk.Label(self.bottom_Frame, text=value, relief="solid", width=20)
+            label.grid(row=1, column=i, padx=5, pady=5)
+
+if __name__ == "__main__":
+    r = tk.Tk()
+    r.geometry("1600x900")
+    r.config(bg="white")
+    fr = SampleFrame(r)
+    fr.place(x=300, y=130)
+    r.mainloop()
+

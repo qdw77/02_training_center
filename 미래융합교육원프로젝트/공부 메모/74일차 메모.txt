@@ -1,0 +1,80 @@
+Sales_Performance 수정 / order_form 수정 
+
+    def f30401(**kwargs):
+        columns = [
+            'performance_id', 'order_code', 'internal_external', 'creator_name', 'creator_position', 'creator_phone',
+            'creator_email', 'administrator_name', 'administrator_position', 'administrator_phone',
+            'administrator_email',
+            'product_code', 'product_name', 'unit_price', 'stock', 'transaction_quantity', 'total_price', 'order_vat',
+            'NetProfit', 'account_code', 'business_number', 'account_name', 'account_type', 'account_address',
+            'account_manager',
+            'manager_phone', 'manager_email', 'sledding', 'delivery_date', 'creation_date', 'modified_date'
+        ]
+
+        sql_query = f"SELECT {', '.join(columns)} FROM erp_db.sales_performance"
+        valid_columns = set(columns)
+        filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_columns}  # 필터링된 kwargs 확인
+
+        print("filtered_kwargs:", filtered_kwargs)
+
+        conditions = []  # 조건 리스트 초기화
+        start_value, end_value = None, None  # 날짜 변수 초기화
+
+        for key, value in filtered_kwargs.items():
+            print("select: 초반 for문", key, value)
+            if value is not None:
+                column_name = key  # 기본적으로 key를 column_name으로 설정
+                # 날짜 처리 (start와 관련된 처리)
+                if "start" in key:
+                    start_value = value
+                    column_name = key.replace('_start', '')  # '_start'를 제거하여 실제 컬럼명 추출
+                    if start_value:
+                        current_date = datetime.datetime.now().strftime('%Y-%m-%d')
+                        if start_value != current_date:  # 오늘 날짜가 아니면 조건 추가
+                            conditions.append(f"{column_name} >= '{start_value} 00:00:00'")
+                            print('conditions: start 처리', conditions)
+
+                # 날짜 처리 (end와 관련된 처리)
+                elif "end" in key:
+                    end_value = value
+                    column_name = key.replace('_end', '')  # '_end'를 제거하여 실제 컬럼명 추출
+                    if end_value:
+                        if start_value == end_value:
+                            continue
+                        conditions.append(f"{column_name} <= '{end_value} 23:59:59'")
+                        print('conditions end처리:', conditions)
+
+                # 일반적인 값 비교 처리
+                elif isinstance(value, str):  # 문자열일 때 LIKE 조건
+                    conditions.append(f"{column_name} LIKE '%{value}%'")
+                    print('conditions: 문자열임', conditions)
+                else:  # 문자열이 아닐 때 (정확한 값 비교)
+                    conditions.append(f"{column_name} = '{value}'")
+                    print('conditions 문자열 아님:', conditions)
+
+        if conditions:
+            sql_query += " WHERE " + " AND ".join(conditions)
+
+        print("최종 쿼리:", sql_query)
+
+        # DB 쿼리 실행 (dbm.query)
+        result = dbm.query(sql_query)
+        print("쿼리 실행 결과:", result)
+
+        if result is not None:
+            result = [
+                tuple(item.strftime('%Y-%m-%d') if isinstance(item, datetime.datetime) else item for item in row)
+                for row in result
+            ]
+            sign = 1
+        else:
+            print("오류:", result)
+            sign = 0
+
+        recv = {
+            "sign": sign,
+            "data": result if result else []  # 결과가 없으면 빈 리스트 반환
+        }
+        print("최종 반환:", recv)
+
+        return recv

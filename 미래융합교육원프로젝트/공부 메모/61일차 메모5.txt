@@ -1,0 +1,47 @@
+import socket
+from itertools import count
+
+import numpy as np
+import cv2
+
+from video_server import client_socket
+
+
+def recvall(sock,count):
+    buf=b''
+    while count:
+        newbuf=sock.recv(count)
+        if not newbuf: return None
+        buf+=newbuf
+        count=len(newbuf)
+    return buf
+
+HOST='localhost'
+PORT=9998
+
+client_socket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+
+client_socket.connect((HOST,PORT))
+
+count=0
+
+while True:
+    massage='1'
+    client_socket.send(massage.encode())
+    length=recvall(client_socket,16)
+    stringData=recvall(client_socket,int(length))
+    data=np.frombuffer(stringData,dtype='uint8')
+
+    if count ==0 :
+        print()
+
+        for i in data:
+            count +=1
+            print(i,'i')
+            print(count,":c\n")
+
+        decimg=cv2.imencode(data,1)
+        cv2.imshow('client',decimg)
+        key=cv2.waitKey(1)
+
+client_socket.colse()

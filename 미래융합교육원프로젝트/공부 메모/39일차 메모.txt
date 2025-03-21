@@ -1,0 +1,54 @@
+<!-- 					<input type="text" list="Clist">마리
+					<datalist id="Clist">
+						<option value="1">
+						<option value="2">
+						<option value="3">
+						<option value="4">
+					</datalist> -->
+
+<!-- 			항목 3가지 이상, 자유주제에 대한 설문 페이지 제작
+			시멘틱 구조 블록 태그
+			header
+			footer
+			section
+
+			라디오 버튼+체크박스+콤보 박스 외 input textarea
+
+			버튼은 이미지 버튼으로 구현 	
+
+			반려 동물 / 식물
+			체크박스 어떤 반려 동물 / 식물(기르고 있는지/키우고 싶은지)
+			두가지로 나뉘는 게 나을 듯 , 1번은 기르고 있는 사람, 2번은 키우고 싶은 사람
+			textarea (사유, 현재 어떤가)
+			콤보박스 몇 마리
+			라디오 버튼 만족도
+			이미지 버튼(마지막 종류)
+			작성자명 등 작성
+
+			header - 반려 동물 및 반려 식물(제목)
+			section - 1. 키우고 있는가/없는가
+					  1-1. (체크박스(여러 종류 가능))기르고 있다면 어떤 반려동물 > 고양이,강아지,물고기,새,파충류,기타(label로 추가 작성 가능하게) + (콤보박스)몇 마리
+					  1-2. (라디오 버튼)키우는 중 만족도
+					  
+					  2-1. (체크박스(여러 종류 가능))키우고 싶다면 어떤 반려동물 > 고양이,강아지,물고기,새,파충류,기타(label로 추가 작성 가능하게) + (콤보박스)몇 마리
+					  2-2. (라디오 버튼) 얼마나 기르고 싶은 가(선호도)
+
+					  3. (fieldset) 작성자 명,나이대 등 
+
+					  4. 이미지 버튼  -->
+
+founction 
+
+https://getbootstrap.com/ < 무료 css 링크
+
+nav > header (list로 나이키 맨 위에 )
+섹션(100%)에게는 아티클 3개
+테두리가 생겨서 이미지가 바뀐다(박스 크기는 변하지 않음)
+
+section 내 article 3개로 구성 
+article hover 가상 셀렉션 효과 마우스 올라갈 때
+1.이미지 변경-(background-image:url('')
+2.큰 containar 테두리 생성 1px solid
+3. 크기 변경은 없음
+
+https://www.adidas.co.kr/kids-outlet

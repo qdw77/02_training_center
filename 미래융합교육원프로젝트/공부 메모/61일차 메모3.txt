@@ -1,0 +1,308 @@
+# 2025.02.21
+import socketserver
+import threading
+
+import pymysql
+from datetime import datetime
+
+# DB 접속 정보
+# DB_HOST = 'localhost'
+# DB_USER = 'root'
+# DB_PASSWORD = '0000'  # 비밀번호를 본인의 환경에 맞게 수정
+# DB_NAME = 'test_messenger'
+# DB_PORT = 3306
+
+# MySQL 서버와 연결
+# def get_db_connection():
+#     return pymysql.connect(
+#         host=DB_HOST,
+#         user=DB_USER,
+#         password=DB_PASSWORD,
+#         database=DB_NAME,
+#         port=DB_PORT,
+#         charset='utf8mb4'  # 문자셋 설정
+#     )
+
+# 테이블 생성 함수 (각각의 테이블 생성 쿼리를 실행)
+# def create_chat_log_table(cursor):
+#     create_chat_log_sql = 'DROP TABLE IF EXISTS `chat_log`; CREATE TABLE `chat_log` (' \
+#                           '`user_name` varchar(20) NOT NULL, `chat_history` varchar(255) NOT NULL, ' \
+#                           '`sender` varchar(45) DEFAULT NULL, `recipient` varchar(45) DEFAULT NULL, ' \
+#                           '`time_chat` datetime NOT NULL, PRIMARY KEY (`user_name`, `time_chat`)) ' \
+#                           'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;'
+#     cursor.execute(create_chat_log_sql)
+#
+# def create_user_table(cursor):
+#     create_user_sql = 'DROP TABLE IF EXISTS `user`; CREATE TABLE `user` (' \
+#                       '`user_name` varchar(20) NOT NULL, `user_password` varchar(45) NOT NULL, ' \
+#                       '`user_ip` varchar(100) DEFAULT NULL, `user_socket` varchar(200) DEFAULT NULL, ' \
+#                       '`user_memory` varchar(200) DEFAULT NULL, `user_Admin` tinyint(1) DEFAULT "0", ' \
+#                       'PRIMARY KEY (`user_name`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;'
+#     cursor.execute(create_user_sql)
+#
+# def create_user_log_table(cursor):
+#     create_user_log_sql = 'DROP TABLE IF EXISTS `user_log`; CREATE TABLE `user_log` (' \
+#                           '`user_name` varchar(20) NOT NULL, `user_login` datetime NOT NULL, ' \
+#                           '`user_logout` datetime DEFAULT NULL, PRIMARY KEY (`user_name`, `user_login`)) ' \
+#                           'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;'
+#     cursor.execute(create_user_log_sql)
+#
+# # 메인 함수
+# def main():
+#     # DB 연결
+#     connection = pymysql.connect(
+#         host=DB_HOST,
+#         user=DB_USER,
+#         password=DB_PASSWORD,
+#         port=DB_PORT,
+#         charset='utf8mb4'
+#     )
+#     cursor = connection.cursor()
+#
+#     # 데이터베이스가 존재하지 않으면 생성
+#     cursor.execute(f'CREATE DATABASE IF NOT EXISTS {DB_NAME}')
+#     cursor.execute(f'USE {DB_NAME}')  # 데이터베이스 사용
+#
+#     # 테이블 생성
+#     create_chat_log_table(cursor)
+#     create_user_table(cursor)
+#     create_user_log_table(cursor)
+#
+#     # 커밋하여 테이블 생성 반영
+#     connection.commit()
+#
+#     print('테이블 생성 완료!')
+#
+#     # cursor.close()
+#     # connection.close()
+#
+# main()
+# 오류가 있어서 닫아 놓음
+
+connection = pymysql.connect(
+    host='192.168.0.18',  # 접속하려는 주소 ip 지정
+    user='root',  # 해당 ip에 mysql 서버 계정
+    password='0000',  # 해당 계정의 pw
+    database='test_messenger',  # 접속하려는 DB이름
+    port=3306  # 포트 번호
+)
+
+cursor = connection.cursor()
+
+HOST = '192.168.0.18'
+PORT = 9900
+lock = threading.Lock()  # 동기화 진행 스레드 (락 생성)
+
+
+class User_Manager:
+    def __init__(self):
+        self.users = {}
+
+    def adduser(self, username, password, conn, addr):
+        cursor.execute("SELECT user_name, user_password FROM user WHERE user_name = %s", (username,))
+        check_IdPw = cursor.fetchone()
+        if check_IdPw == None:
+            lock.acquire()
+            self.users[username] = {'conn': conn, 'addr': addr}
+            self.UserLogin(username, password, addr)
+            lock.release()
+            self.sendMessageToAll('[%s] 신규 접속' % username)
+
+        else:
+            name,pw=check_IdPw
+            if name == username:
+                if pw == password:
+                    lock.acquire()
+                    self.users[username] = {'conn': conn, 'addr': addr}
+                    self.UserLogin(username, password, addr)
+                    lock.release()
+                    self.sendMessageToAll('[%s] 접속' % username)
+                else:
+                    conn.send("비밀번호가 틀립니다. 다시 시도해주세요.".encode())
+                    return None
+
+        print('대화 참여 수 [%d]' % len(self.users))  # 개화 참여 수 출력
+        return username
+
+    def removeUser(self, username):
+        if username not in self.users:
+            return
+        lock.acquire()
+        try:
+            # 가장 최근 로그인 기록을 찾아 로그아웃 시간을 업데이트
+            cursor.execute("SELECT user_login FROM user_log WHERE user_name = %s AND user_logout IS NULL ORDER BY user_login DESC LIMIT 1", (username,))
+            result = cursor.fetchone()
+
+            if result:
+                # 해당 로그인 기록에 대한 로그아웃 시간 업데이트
+                time_logout = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                cursor.execute("UPDATE user_log SET user_logout = %s WHERE user_name = %s AND user_login = %s", (time_logout, username, result[0]))
+                connection.commit()
+        finally:
+            lock.release()
+
+        self.sendMessageToAll('[%s] 접속해제' % username)
+        print('대화 참여자 수 [%d]' % len(self.users))
+
+    def UserLogin(self, username, password, addr):
+        try:
+            time_login = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 로그인 시간 기록
+            cursor.execute("INSERT INTO user (user_name, user_password) VALUES (%s, %s)",(username, password))  # 사용자 아이디, 비밀번호 DB에 저장
+            cursor.execute("INSERT INTO user_log (user_name, user_login) VALUES (%s, %s)",(username, time_login))  # 로그인 시간 DB에 저장
+
+            # 만약 사용자가 'admin'이라면 user_Admin 값을 1로 설정하여 어드민으로 지정
+            if username == 'admin':
+                cursor.execute("UPDATE user SET user_Admin = 1 WHERE user_name = %s", (username,))  # admin 사용자 어드민으로 설정
+                print(f"어드민 {username}로 설정됨")
+
+            connection.commit()  # 커밋하여 반영
+        except pymysql.MySQLError as e:
+            print(f"Error while inserting user login data: {e}")  # DB 오류 시 출력
+            connection.rollback()  # 롤백하여 이전 상태로 되돌림
+
+    def messageHandler(self, username, msg, password):
+        if msg.strip().startswith('/w'):
+            # self. 유저 귓말
+            self.whisper_user(username,msg)
+            return
+
+        if username =='admin':
+            if msg.strip().startswith('/kick'):  # 강퇴
+                # self. 강퇴
+                self.kick_user(username, msg)
+                return -1
+
+            if msg.strip().startswith('/ban'):
+                self.ban_user(username, msg)
+                return
+
+        if msg[0] != '/':
+            self.sendMessageToAll("[%s] %s" % (username, msg))
+            self.save_msg(username,msg)
+            return
+
+        if msg.strip() == '/quit':
+            self.removeUser(username)
+            return -1
+
+    def sendMessageToAll(self, msg):
+        print(threading.active_count())
+        for user_info in self.users.values():
+            if isinstance(user_info, dict) and 'conn' in user_info:
+                conn = user_info['conn']
+                conn.send(msg.encode())  # conn이 존재하는 경우에만 send 호출
+
+    def save_msg(self,username,msg): # 메세지 로그 저장
+        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute("INSERT INTO chat_log(user_name,chat_history,time_chat) VALUES (%s, %s, %s)",(username,msg,time))
+        connection.commit()
+
+    def whisper_user(self,username,msg):  # 귓말
+        print(f"Handling whisper message: {msg}")  # 디버깅: 메시지 출력
+        print(threading.active_count())
+        whisper=msg.strip().split(' ', 2)
+        print(whisper)
+        if len(whisper)<3:
+            return
+        sender_msg=whisper[1] # 받는 사람
+        whisper_msg=whisper[2] # 내용
+
+        if sender_msg not in self.users:
+            return
+
+        receiver_info = self.users.get(sender_msg)
+        sender_info = self.users.get(username)
+
+        # receiver와 sender가 'conn'을 포함한 딕셔너리인지 확인
+        if isinstance(receiver_info, dict) and 'conn' in receiver_info:
+            receiver_info['conn'].send(f"<<<{username}: {whisper_msg}".encode())
+        if isinstance(sender_info, dict) and 'conn' in sender_info:
+            sender_info['conn'].send(f">>>{sender_msg}: {whisper_msg}".encode())
+
+        self.whisper_save(username, sender_msg, whisper_msg)  # 귓말 DB에 저장
+
+
+    def whisper_save(self,username,sender_msg,whisper_msg):
+        time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute("INSERT INTO chat_log(user_name,chat_history,sender,recipient,time_chat) VALUES (%s, %s, %s, %s, %s)",(username,whisper_msg,sender_msg,username,time))
+        connection.commit()
+
+
+    def kick_user(self, username, msg):
+        kick_username = msg.strip().split(' ', 1)[1]  # 강퇴할 사용자 이름
+        if kick_username in self.users:
+            self.removeUser(kick_username)  # 해당 사용자 강퇴
+            self.sendMessageToAll(f"[{kick_username}] 강퇴됨.")  # 강퇴 메시지 전송
+        else:
+            self.users[username]['conn'].send(f"존재하지 않는 사용자 [{kick_username}]입니다.".encode())  # 사용자 없음 메시지 전송
+
+    def ban_user(self, username, msg):
+        ban_username = msg.strip().split(' ',1)[1]
+        if ban_username in self.users:
+            self.sendMessageToAll(f"[{ban_username}] 채팅 금지 되었습니다.")
+        else:
+            self.users[username]['conn'].send(f"존재하지 않는 사용자 [{ban_username}]입니다.".encode())
+
+
+class myTcpHandler(socketserver.BaseRequestHandler):
+    userman = User_Manager()
+
+    def handle(self):
+        print(self, '')
+        print('client[%s]연결' % self.client_address[0])
+        username = None  # username 초기화
+        try:
+            username,password= self.registerUsername()  # 이름 등록
+            print(username, ':username')
+            msg = self.request.recv(1024)
+            print(self.request)
+            print(self.client_address)
+            print(self.server)
+            while msg:
+                print(msg.decode())
+                if self.userman.messageHandler(username, msg.decode(),password) == -1:
+                    self.request.close()
+                    break
+                msg = self.request.recv(1024)
+        except Exception as e:
+            print(e)
+
+        if username:
+            print(f"[{self.client_address[0]}] 접속 종료")
+            self.userman.removeUser(username)
+        else:
+            print("사용자 이름 없음")
+
+    def registerUsername(self):
+        while True:
+            self.request.send('ID'.encode())
+            username = self.request.recv(1024)
+            self.request.send('PW'.encode())
+            password = self.request.recv(1024)
+
+            username = username.decode().strip()
+            password = password.decode().strip()
+            if self.userman.adduser(username, password, self.request, self.client_address):
+                return username, password
+
+
+
+class ChatingServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    pass
+
+
+def runServer():
+    try:
+        server = ChatingServer((HOST, PORT),myTcpHandler)
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("서버 종료")
+        server.shutdown()
+        server.server_close()
+        # 연결 종료
+        cursor.close()
+        connection.close()
+
+runServer()
+# pass
+

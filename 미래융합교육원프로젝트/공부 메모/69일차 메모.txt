@@ -1,0 +1,121 @@
+거래처 코드 > 
+콤보 박스 내부 select 
+> 형식,어떻게 불러올 건지
+> 'SELECT {customer_code} FROM orders' 
+> 클릭시 불러오게? values ? 에 들어가도록 해야함  
+
+딕셔너리 형태로 해서 str로 서버에 전달 > str 형태를 딕셔너리로 받아옴
+
+우선 코드가 있는 지 확인 > 'SELECT {거래처 코드} FROM 거래처 테이블'  > 코드 확인 후 전 내용 삭제 후 자동 채움 > 'SELECT {},{},{},{},{}  FROM 거래처 테이블' , {발주서 코드: 내용값}  business_entry.delete(0, tk.END).....> 
+
+self.콤보박스["values"]=db의 결과
+
+f"SELECT business_number, correspondent_name, customer_type, customer_address, account_manager, account_phone, account_email FROM customers WHERE customer_code = '{customer_code}'"
+
+
+    order_id INT AUTO_INCREMENT PRIMARY KEY,  -- 주문서 고유 ID
+    creation_date DATE NOT NULL,  -- 작성일자
+    order_code VARCHAR(50) NOT NULL,  -- 발주 코드
+    internal_external VARCHAR(20) NOT NULL,  -- 내/외부
+    creator_name VARCHAR(20) NOT NULL,  -- 작성자 명
+    creator_position VARCHAR(30),  -- 작성자 직책
+    creator_contact VARCHAR(50),  -- 작성자 연락처
+    creator_email VARCHAR(30),  -- 작성자 이메일
+    manager_name VARCHAR(20),  -- 관리자 이름
+    manager_position VARCHAR(50),  -- 관리자 직책
+    manager_phone VARCHAR(30),  -- 관리자 연락처
+    manager_email VARCHAR(30),  -- 관리자 이메일
+    product_name VARCHAR(100) NOT NULL,  -- 완제품 명
+    budget DECIMAL(15, 2),  -- 예산
+    unit_price DECIMAL(15, 2),  -- 단가
+    stock DECIMAL(15, 2),  -- 현 재고
+    transaction_quantity INT,  -- 거래 수량
+    total_price DECIMAL(15, 2),  -- 총 가격
+    vat DECIMAL(15, 2),  -- 부가세
+    account_code VARCHAR(50) NOT NULL,  -- 거래처 코드
+    business_number VARCHAR(50),  -- 사업자 번호
+    account_name VARCHAR(100),  -- 거래처 명
+    account_type VARCHAR(50),  -- 거래처 종류
+    account_address VARCHAR(200),  -- 거래처 주소(국가)
+    manager_contact VARCHAR(50),  -- 거래처 담당자 연락처
+    manager_email VARCHAR(100),  -- 거래처 담당자 이메일
+    delivery_date DATETIME,  -- 납기일
+    modified_date DATETIME  -- 수정 일자
+
+from datetime import datetime
+
+def generate_order_code(self):
+    # 현재 날짜를 기준으로 YYYYMMDD 형식으로 가져오기
+    current_date = datetime.now().strftime('%Y%m%d')
+    
+    # 기존에 발주 코드에서 가장 높은 순번을 찾기
+    last_order_code = self.DataBase.query(f"SELECT order_code FROM orders WHERE order_code LIKE 'ORD-{current_date}%' ORDER BY order_code DESC LIMIT 1")
+    
+    if last_order_code:
+        # 기존 코드에서 숫자 부분을 추출하고 1 증가시킴
+        last_number = int(last_order_code[0][0].split('-')[-1])
+        new_number = last_number + 1
+    else:
+        # 첫 번째 주문이라면 001로 시작
+        new_number = 1
+    
+    # 발주 코드 생성
+    order_code = f"ORD-{current_date}-{new_number:03d}"
+    return order_code
+
+def in_date(self):
+    self.DataBase.connection_DB()
+
+    # 작성 일자 자동으로 현재 날짜와 시간 가져오기
+    write_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # 예: '2025-03-10 14:30:00'
+
+    # 발주 코드 자동 생성
+    order_code = self.generate_order_code()
+
+    inout_info = self.inout_entry.get()  # 내/외부 여부 (입력 필수)
+    
+    # 나머지 값 처리
+    author_name = self.author_entry.get()  # 작성자 이름
+    author_position = self.author_position_antry.get()  # 작성자 직책
+    author_phone = self.author_phone_entry.get()  # 작성자 전화 번호
+    author_email = self.author_email_entry.get()  # 작성자 이메일
+
+    # 나머지 정보들 ...
+
+    # NULL 처리: 값이 비어 있으면 NULL로 설정
+    if not inout_info:
+        inout_info = 'NULL'
+
+    if not author_name:
+        author_name = 'NULL'
+    if not author_position:
+        author_position = 'NULL'
+    if not author_phone:
+        author_phone = 'NULL'
+    if not author_email:
+        author_email = 'NULL'
+
+    # 쿼리 실행
+    query = f"""
+    INSERT INTO orders 
+    (order_code, creation_date, inout_info, author_name, author_position, author_phone, author_email, 
+    manager_name, manager_position, manager_phone, manager_email, product_name, unit_price, current_inventory, 
+    transaction_quantity, total_price, surtax_order, business_number, correspondent_name, customer_type, 
+    customer_address, account_manager, account_phone, account_email, deadline)
+    VALUES 
+    ('{order_code}', '{write_date}', {inout_info}, {author_name}, {author_position}, {author_phone}, 
+    {author_email}, {manager_name}, {manager_position}, {manager_phone}, {manager_email}, {product_name}, 
+    {unit_price}, {current_inventory}, {transaction_quantity}, {total_price}, {surtax_order}, 
+    {business_number}, {correspondent_name}, {customer_type}, {customer_address}, {account_manager}, 
+    {account_phone}, {account_email}, {deadline})
+    """
+
+    result = self.DataBase.query(query)
+
+    if result:
+        messagebox.showinfo("성공", "데이터가 성공적으로 저장되었습니다.")
+    else:
+        messagebox.showerror("실패", "데이터 저장에 실패하였습니다.")
+
+딕셔너리로 db에 저장? / 딕셔너리는 왜 필요하고 어떻게 insert를 해야할까...?
+

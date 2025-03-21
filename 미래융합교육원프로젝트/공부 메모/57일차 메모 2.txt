@@ -1,0 +1,494 @@
+# # 20250218
+# #GUI.py
+# # https://docs.python.org/3/library/tkinter.html < 표준 파이썬
+#
+# # import tkinter as tk
+# #
+# # root=tk.Tk()
+# # root.title("sample")
+# # label=tk.Label(root,text="test",font=("Arial",20))
+# # label.pack()
+# #
+# # def change_test():
+# #   label.config(text="click")
+# #
+# # button=tk.Button(root, text='클릭',command=change_test,font=("Arial",15))
+# # button.pack(pady=20)
+# # root.mainloop()
+#
+# # tkinter 은 파이썬에서 gui 애플리케이션을 만들기 위한 표준 라이브러리
+# # tkinter에서 제공하는 컨트롤
+# # tkinter에서 이벤트 바인딩 연결방법
+# # 멀티스레드 / 이벤트 처리 방법
+#
+# # tkinter를 이용한 UI 개발 첫 단계 : 메인프레임(메인윈도우,toplevel) 생성 tk.TK()
+# # 위젯 생성: 버튼,레이블,텍스트박스,콤보박스,슬라이더 등 여러 컨트롤 생성 tk.Button()
+# # 이벤트 처리: 사용자의 입력 행위에 따라 발생하는 이벤트 핸들러/이벤트 리스너/ 이벤트 바인딩 함수 호출 처리
+# # 메인 루프 구동 특성 이해: 스레드를 잡아놓는다 / 메인 스레드를 배치시켜줘야 한다. / 프로세스 일꾼
+#
+# import tkinter as tk
+#
+# from uri_template import expand
+#
+# root=tk.Tk() # root는 변수 이름
+# root.title("123")
+#
+# # tkinter로 개발하는 GUI프로세스는 1개당 1개의 mainloop()가 있어야 함
+# # 메인 프레임 생성
+#
+# label=tk.Label(root,text="기본라벨")
+# # label위젯의 생성
+# # 배치를 따로 해야한다
+# label.pack() # pack을 통한 화면에 위젯 배치
+# def on_button_click():
+#   label.config(text="클릭되었음")
+# button=tk.Button(root,text='클릭',command=on_button_click) # command에는 함수를 바인딩 해준다(함수 호출 x)
+# button.pack()
+#
+# ent=tk.Entry(root)
+# ent.pack()
+#
+# def show_entry():
+#   user_input=ent.get()
+#   label.config(text=f"입력된 텍스트:{user_input}")
+#
+# button=tk.Button(root,text="입력값 보기",command=show_entry)
+# button.pack()
+# # entry: 사용자 입력창
+#
+# text_box=tk.Text(root,height=5,width=30)
+# text_box.pack()
+#
+# def show_text():
+#   text_content=text_box.get("1.0","end-1c") #텍스트 박스의 값을
+#   # 텍스트 박스의 값을 가져온다
+#   # get(start,end)메서드
+#   # start: 텍스트를 가져오고자 하는 시작 위치
+#   # end: 텍스트를 가져오고자 하는 끝 위치
+#   # 위 두 매개변수를 통해  text 위젯에서 인덱스 형태로 위치 값을 가져온다
+#   # 1.0 1번째 줄의 0번째 문자를 의미
+#   # end-1c: 마지막 줄의 마지막 문자 앞을 의미
+#   label.config(text=f"입력된 텍스트:\n{text_content}")
+#
+# button=tk.Button(root,text="text보기",command=show_text)
+# button.pack()
+#
+# # checkbutton 위젯
+# check_var=tk.BooleanVar() # BooleanVar는 T/F 값으로 체크 박스의 상태 관리
+# checkbutton = tk.Checkbutton(root,text="true",variable=check_var)
+# # variable: check_var라는 boolvar 변수 연동
+# checkbutton.pack()
+#
+# def check_status():
+#   if check_var.get():
+#     label.config(text="체크박스 선택됨")
+#   else:
+#     label.config(text="선택 풀림")
+#
+# button=tk.Button(root,text="TF변환체크",command=check_status)
+# button.pack()
+#
+# select_option=tk.StringVar() # 선택 값을 지정할 변수 선언
+#
+# def show_radio_selection():
+#   label.config(text=f"라디오 선택 옵션:{select_option.get()}")
+#
+# radiobutton1=tk.Radiobutton(root,text="옵션1",variable=select_option,value="옵션1")
+# radiobutton1.pack()
+#
+# radiobutton2=tk.Radiobutton(root,text="옵션2",variable=select_option,value="옵션2")
+# radiobutton2.pack()
+# # radiobutton 1과 2의 variable에는 똑같이 selected option이라는 tk.StringVar가 연결되어 있다
+# # 이것이 의미하는 것은 라디오 버튼 1과 2는 하나의 '그룹화'되어 있다는 의미
+# # 라디오 버튼: 여러 옵션 중 하나를 선택할 수 있는 라디오 버튼 그룹
+#
+#
+# button=tk.Button(root,text='선택확인',command=show_radio_selection)
+# button.pack()
+#
+# # 리스트 박스 위젯
+# listbox=tk.Listbox(root) #여러 항목을 선택할 수 있는 리스트 박스
+# listbox.pack()
+#
+# for item in ['항목1','항목2','항목3']:
+#   listbox.insert(tk.END,item)
+#
+# def show_selected_item():
+#   selected_item=listbox.get(listbox.curselection())
+#   label.config(text=f"선택된 항목:{selected_item}")
+#
+# button=tk.Button(root,text="선택 항목 보기",command=show_selected_item)
+# button.pack()
+#
+# # scale 위젯
+# # 사용자가 슬라이더를 조작하여 값을 선택하는 위젯
+# scale=tk.Scale(root,from_=0,to=100,orient=tk.HORIZONTAL)
+# scale.pack()
+#
+# def show_scale_value():
+#   value=scale.get() #슬라이더가 어떤 값인지
+#   label.config(text=f"슬라이더 값:{value}")
+#
+# button=tk.Button(root,text="슬라이더 값 확인",command=show_scale_value)
+# button.pack()
+#
+#
+# spinbox=tk.Spinbox(root,from_=1,to=10) #1~10 사이의 값 선택 가능한 스핀 박스 생성
+# spinbox.pack()
+#
+# def show_spinbox_value():
+#   value=spinbox.get()
+#   label.config(text=f"spinbox값:{value}")
+#
+# button=tk.Button(root,text="spinbox 값보기",command=show_spinbox_value)
+# button.pack()
+#
+# # 스크롤바 위젯 생성
+# # 스크롤바는 텍스트나 리스트 박스에 내용이 width height 넘어갈 때 처리
+# scrollbar=tk.Scrollbar(root)
+# scrollbar.pack(side=tk.RIGHT,fill=tk.Y) # 스크롤바를 오른쪽에 세로로 배치
+#
+# listbox=tk.Listbox(root,yscrollcommand=scrollbar.set)
+# # 리스트 박스의 생성 및 스크롤바와 바인딩
+# listbox.pack(side=tk.LEFT,fill=tk.BOTH,expand=True)
+# # 리스트 박스를 왼쪽에 배치하고 크기(fill) 조정
+# for i in range(50): # 50개 항목 리스트 박스에 추가
+#   listbox.insert(tk.END,f"항목{item}")
+#
+# scrollbar.config(command=listbox.yview)
+# # 스크롤바와 리스트박스를 바인딩해서 스크롤 가능하게 연결
+#
+#
+# # menu 위젯
+# # 메뉴 위젯은 애플리케이션 메뉴 만들 떄 사용, 상단 메뉴바, 컨텍스트 메뉴 등
+#
+# def new_file():
+#   label.config(text='새 파일 생성')
+#
+# def save_file():
+#   label.config(text="파일 저장")
+#
+# def open_file():
+#   label.config(text="파일 열기")
+#
+#
+# menu_bar=tk.Menu(root) # 메뉴바 위젯 생성
+#
+# file_menu=tk.Menu(menu_bar,tearoff=0) # 파일 메뉴 생성(tearoff=0 : 분리되는
+# # tearoff=1 메뉴의 상단에 작은 점선 라인 생성
+# # 점선 라인 클릭시 메뉴 분리(떼어내기) 가능
+#
+# # tearoff =0
+# # 메뉴에서 점선 사라짐 메뉴 분리 안됨
+# # 항상 한곳에서 사용하도록 강제
+# file_menu.add_command(label="새로만들기",command=new_file) # 새로 만들기 메뉴바
+# file_menu.add_command(label="열기",command=open_file) # 열기 추가
+# file_menu.add_command(label="저장",command=save_file) # 저장 추가
+# menu_bar.add_cascade(label="파일",menu=file_menu) # 파일 메뉴를 메뉴바에 추가
+#
+# root.config(menu=menu_bar) # 메뉴 바를 루트 창(메인창)에 설정
+#
+#
+# # Toplevel 탑 레벨은 새로운 창을 생성하는 위젯
+# # 메인창 외에 추가적인 대화 상자나 새창을 띄울 떄 사용
+#
+# def open_new_window():
+#   # 보기엔 아닌 것 같아도 root에 소속
+#   new_window=tk.Toplevel(root)
+#   new_window.title("새 창")
+#   new_window.geometry("200x150")
+#   label_in_new_window=tk.Label(new_window,text="새창 라벨")
+#   label_in_new_window.pack()
+#
+# button = tk.Button(root,text="새 창 열기",command=open_new_window)
+# button.pack()
+#
+#
+# # canvas 위젯
+# # 캔버스 위젯은 그림을 그리거나 도형 그리거나 그래픽 작업에 사용
+#
+# canvas = tk.Canvas(root,width=400,height=300,bg='white')
+# canvas.pack()
+#
+# canvas.create_rectangle(50,50,150,150,fill='blue')
+# canvas.create_oval(200,50,300,150,fill='red')
+# canvas.create_line(50,200,350,200,fill='green',width=3)
+#
+#
+# # message 위젯
+# # 메세지 위젯은 긴 텍스트를 자동으로 줄바꿈 해주는 위젯
+# # 일반적인 label 위젯과 비슷하지만 긴 텍스트 처리에 적합하다
+# message=tk.Message(root,text="자동 줄바꿈이 되는 텍스트 123123입니다. 긴 텍스트 처리에 적합하다ㅏㅏㅏㅏㅏ",width=300)
+# message.pack()
+#
+#
+# root.mainloop() # main 루프는 가장 마지막 코드에 작성
+
+# import tkinter as tk
+# from tkinter import ttk
+# # tk 및 ttk는 다름
+#
+# root=tk.Tk()
+# root.title("ttk 버튼")
+# def on_button_click():
+#   print("button clicked")
+#
+# button=ttk.Button(root,text="click",command=on_button_click)
+# button.pack(padx=10,pady=10)
+# root.mainloop()
+
+
+# 1. pack()으로 물리적 선언 구조 순으로 레이아웃에 올리는 방법 [간단한 static방식을 배치)
+#   pack 배치의 매개변수 side: top/bottom/left/right 으로 위젯 위치 지정 가능
+#   pack 배치의 매개변수 fill: 위젯이 부모 컨테이너에서 차지할 공간 확장 방법 설정으로 NONE/X/Y/BOTH 방향성으로 확장 가능
+#   pack 배치의 매개변수 expand: 부모 컨테이너에서 남은 공간을 위젯이 확장할 수 있도록 설정하는 옵션으로 True 또는 False
+#   pack 배치의 매개변수 padx/pady: 수평여백과 수직 여백 속성이고 값으로 숫자를 대입한다
+#   pack 배치의 매개변수 anchor: 위젯 내 텍스트나 내용이 위치할 위치 지정 속성으로 center/n/s/w/e 지정 가능
+#   pack 배치의 매개변수 borderwidth: 테두리 두께로 숫자 지정
+#   pack 배치의 매개변수 width/height: 너비 높이 숫자 지정
+#   pack 배치의 매개변수 relief: 테두리 모양 속성으로 solid/flat/sunken 등 값으로 사용
+
+# 2. grid() 위젯을 행과 열로 구성된 격자에 배치시키는ㄴ 방법 [표 형식의 배치]
+#       ex) button.grid(row=0,column=1)
+#           button2.grind(row=0,column=2)
+
+# 3. place()를 통한 절대 좌표에 의한 배치 방식 [ 좌표 기반 배치 ]
+#        ex) label1.place(x=50,y=50)
+#            label2.place(x=150,y=100)
+
+# 위 3가지 배치 방식은 혼동하여 쓰지 않도록 한다, 배치 방식의 충돌 가능성 있음.
+# 하나의 window에 대한 위젯 배치 방식은 하나의 방식으로 쓰도록 함
+
+# GUI + DB MYSQL 연습 문제
+
+# 검색/생성/삭제 실습
+# GUI 프로그램을 통해 MYSQL 서버의 데이터 베이스 생성 및 수정 관리할 수 있도록 구현한다
+
+# 1. DB 생성 및 생성한 데이터 USE 설정
+
+# 2. 테이블의 생성
+#    > 테이블이 이미 존재하는 지 검사 후 없으면 생성, 이미 있으면 해당 테이블 사용하도록 설정
+#    + 자체적으로 검사할 수 있는 기능 필요
+
+# 3. 틍성 테이블에 데이터 삽입 및 수정
+#    > 데이터가 SQL 문법과 테이블 구조에 적합한지 검사하는 함수)
+
+# 4. 특정 테이블의 데이터 검색 결과 조회
+#    > SELECT 기능인데 * 전체열 or 특정열인지 선택할 수 있는 기능 필요
+
+# 5. 테이블 삭제
+#    > 어떤 테이블 삭제할건지 지정하는 기능
+
+# 6. 조인 결과 리턴은 뺌
+
+# test_20250218 < 스키마 만듦
+
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import ttk
+import pymysql
+
+connection = pymysql.connect(  # 연결 객체 초기화
+  host='localhost', # 접속하려는 주소 ip 지정
+  user='root', # 해당 ip에 mysql 서버 계정
+  password='0000', # 해당 계정의 pw
+  database='test_20250218', # 접속하려는 DB이름
+  port=3306 # 포트 번호
+)
+
+root=tk.Tk()
+root.title("test_2025.02.19")
+
+tree=ttk.Treeview(root,columns=("Book_Name","Writer", "Publisher", "Recap"), show="headings")
+tree.heading("Book_Name",text="책 이름")
+tree.heading("Writer",text="저자")
+tree.heading("Publisher",text="출판사")
+tree.heading("Recap",text="줄거리(요약)")
+tree.pack(fill=tk.BOTH, expand=True)
+
+cursor=connection.cursor()
+# 입력 받아야 하는 것 > 각 데이터 / 검색 등은 테이블 이름,데이터 이름
+# book_name,writer,publisher,recap
+
+# 테이블 체크
+def check_table(table_name):
+  cursor.execute(f"SHOW TABLES LIKE `{table_name}`")
+  return cursor.fetchone() is not None
+
+# 데이터 체크
+def check_data(table_name,book_name):
+  cursor.execute(f"SELECT*FROM `{table_name}` WHERE book_name=`{book_name}`")
+  return cursor.fetchone() is not None
+
+# 데이터 베이스 조회(팝업) / 테이블 조회 검색 후에는 사이즈 커짐(동적 변환) / 특정 칸 선택 후 삭제 / 추가 갱신 / 특전 칸 선택 후 수정(next로 다음거 수정하도록 팝업)
+# 스키마 검색 SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='301_member';
+
+# 스키마 검색
+def select_schemas(schema_name):
+  cursor.execute(f"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=`{schema_name}`")
+
+
+# 테이블로 검색
+def select_table(table_name,columns_name):
+  # cursor.execute(f"SHOW TABLES LIKE {table_name}")
+  # result=cursor.fetchone()
+  if check_table(table_name):
+    cursor.execute(f"SELECT {columns_name} FROM `{table_name}`")
+    result=cursor.fetchall() # 결과 가져옴
+
+    text_box.delete(1.0,tk.END)
+
+    if result:
+      for row in result:
+        text_box.insert(tk.END,str(row)+"\n")
+    else:
+      text_box.insert(tk.END,"데이터 없음")
+    # show_data(result)
+  else:
+    messagebox.showerror("에러","없는 테이블 입니다.") # 메세지 입력
+
+
+# 테이블 데이터 화면에 표기? 표 만들기 Label ? Treeview?
+# def show_data(data):
+#   for row in tree.get_children():
+#     tree.
+
+# 데이터 등록 > table_name 자동
+def insert_data(table_name,book_name,writer,publisher,recap):
+  if check_data(table_name,book_name):
+    messagebox.showerror("에러","이미 데이터가 있습니다.")
+  else:
+    cursor.execute(f"INSERT INTO `{table_name}` VALUES ('{book_name}','{writer}','{publisher}','{recap}'")
+    connection.commit()
+    messagebox.showinfo("등록 완료", "등록 되었습니다.")
+
+# 데이터 수정 > 선택하면 table_name 자동
+def update_data(table_name,book_name,writer,publisher,recap):
+  if check_data(table_name,book_name):
+    cursor.execute(f"UPDATE `{table_name}` SET book_name='{book_name}',writer='{writer}',publisher='{publisher}',recap='{recap}' WHERE book_name='{book_name}'")
+    connection.commit()
+    messagebox.showinfo("수정 완료", "수정 되었습니다.")
+  else:
+    messagebox.showerror("에러","데이터가 없습니다.")
+
+# 데이터 삭제 > 선택하면 자동으로 넣어지도록
+def delete_data(table_name,book_name):
+  if check_data(table_name,book_name):
+    cursor.execute(f"DELETE FROM `{table_name}` WHERE(book_name='{book_name}')")
+    connection.commit()
+    messagebox.showinfo("삭제 완료","삭제 되었습니다.")
+  else:
+    messagebox.showerror("에러","데이터가 없습니다.")
+
+table_name_text=tk.Entry(root,width=25)
+table_name_text.pack()
+table_name_text.insert(tk.END,"테이블 이름 입력")
+
+book_name_text=tk.Entry(root,width=25)
+book_name_text.pack()
+book_name_text.insert(tk.END,"책 이름 입력")
+
+text_box=tk.Text(root,height=10,width=30)
+text_box.pack()
+
+def show_select():
+  table_name=table_name_text.get()
+  book_name=book_name_text.get()
+  if table_name and book_name:
+    select_table(table_name, "book_name")
+  else:
+    messagebox.showerror("에러","테이블 이름과 책 이름을 입력하세요.")
+
+button=tk.Button(root,text="선택한 책 정보 호출",command=show_select)
+button.pack()
+# for item in[]
+
+#
+#
+
+# 테이블 생성 (칼럼도)
+# table_new="CREATE TABLE book(book_name VARCHAR(50) PRIMARY KEY, writer VARCHAR(20) NULL, publisher VARCHAR(20) NULL, recap VARCHAR(200))"
+# cursor.execute(table_new)
+
+# # 테이블 추가 등록
+# def insert_table(table_name,table_data):
+#   cursor.execute(f"CREATE TABLE '{table_name}'('book_name VARCHAR(60) PRIMARY KEY,  {table_data}")
+#   return
+# # 데이터 검색
+# # def select_data(data_name,table_name):
+# #   cursor.execute(f"SELECT * FROM '{table_name}' WHERE '{data_name}'")
+# #   return
+# # 데이터 체크
+# def check_data(book_name):
+#   cursor.execute(f"SELECT * FROM Book WHERE book_name ='{book_name}")
+#   return cursor.fetchone() is not None
+
+#
+# # 칼럼 추가 등록
+# def insert_columns(table_name,columns_data):
+#   cursor.execute(f"ALTER TABLE '{table_name}' ADD '{columns_data}'")
+#   return
+#
+# # 테이블 수정
+# def update_table(table_name,table_update):
+#   cursor.execute(f"ALTER TABLE '{table_name}' ADD '{table_update}'")
+#   return
+#
+# # 테이블 삭제
+# def delete_table():
+#   pass
+
+
+
+
+
+# 테이블이 있는 지 확인하는 함수
+# def check_table(table_name):
+#   try:
+#     cursor.execute(f"SHOW TABLES LIKE '{table_name}")
+#     result=cursor.fetchone()
+#     cursor.close()
+#     return result is not None
+#   except pymysql.
+# def new_table():
+#   CREATE TABLES  IF NOT EXISTS 테이블명
+# tk와 어떻게 활용해야 할까
+
+# 입력 받고 표로 보여주는 게 나을 것 같고 없으면 없다고 메세지 띄우고
+# 어떻게 값을 가지고 와서 mysql에서 검색하는 걸까
+# 매개변수로 가지고 오나?
+# 데이터 값을 가져오는 법 /
+
+#
+# label=tk.Label(root,text="검색")
+# label.pack()
+#
+# text_box=tk.Text(root,height=10,width=30)
+# text_box.pack()
+#
+# def check_table():
+#   text_content=text_box.get("1.0","end-1c")
+#   label.config(text=f"검색할 텍스트:\n{text_content}")
+#
+# button=tk.Button(root,text="내용보기",command=check_table)
+# button.pack()
+
+
+
+
+
+root.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+

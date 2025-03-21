@@ -1,0 +1,337 @@
+My_SQL < 범용성 높음
+실질적 활용 
+
+localhost(컴퓨터 네트워크) 3306
+
+https://hongong.hanbit.co.kr/mysql-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%EB%B0%8F-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0mysql-community-8-0/ < My_SQL 설치
+
+https://namu.wiki/w/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4 < 데이터베이스 이론(나무위키)
+
+https://www.hanbit.co.kr/support/supplement_survey.html?pcode=B6846155853 <  예제
+
+DB - 붙여서 사용하는 것
+
+데이터 집합
+DBMS 
+MY_SQL
+>RDBMS 관계형 / 쓰는 이유는 무결성 보상/ 테이블 구조(로(r)/컬럼(c))
+관계형이 아닌 것들은 No Sql
+
+스키마 : 데이터베이스에서 데이터 구조, 조직을 정의하는 개념
+스키마를 통해 DB가 어떻게 구성될 것인지를 계획
+
+물리적 스키마: 데이터가 실제 저장되는 방식에 대한 정의
+논리적 스키마: 데이터 베이스의 논리적 구조, 데이터 관계와 제약 조건 등
+
+cred > 
+
+로컬 각자의 컴퓨터
+
+sql
+
+네비게이터 탭
+아웃풋(결과창)
+스키마 탭
+
+ show databases
+
+테이블 생성
+
+모델링
+
+스키마 제작
+CREATE SCHEMA '스키마 이름';
+
+실질적 데이터는 테이블
+
+member(회원 테이블)
+CREATE TABLE `shop_db`.`member` (
+  `member_id` CHAR(8) NOT NULL,
+  `member_name` CHAR(5) NOT NULL,
+  `member_addr` CHAR(20) NULL,
+  PRIMARY KEY (`member_id`));
+
+product(제품 테이블)
+CREATE TABLE `shop_db`.`product` (
+  `product_name` CHAR(4) NOT NULL,
+  `cost` INT NOT NULL,
+  `make_date` DATE NULL,
+  `company` CHAR(5) NULL,
+  `amount` INT NOT NULL,
+  PRIMARY KEY (`product_name`));
+
+SELECT * FROM shop_db.member;
+
+INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('tess', '나훈아', '경기 부천시 중동');
+INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('hero', '임영웅', '서울 은평구 증산동');
+INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('iyou', '아이유', '인천 남구 주안동');
+INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('jyp', '박진영', '경기 고양시 장항동');
+
+INSERT INTO `shop_db`.`product` (`product_name`, `cost`, `make_date`, `company`, `amount`) VALUES ('바나나', '1500', '2021-07-01', '멜몬트', '17');
+INSERT INTO `shop_db`.`product` (`product_name`, `cost`, `make_date`, `company`, `amount`) VALUES ('삼각김밥', '800', '2023-09-01', 'CJ', '22');
+INSERT INTO `shop_db`.`product` (`product_name`, `cost`, `make_date`, `company`, `amount`) VALUES ('카스', '2500', '2022-03-01', 'OB', '3');
+
+
+INSERT INTO `shop_db`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('carry', '머라이어', '미국 텍사스 사막');
+
+UPDATE `shop_db`.`member` SET `member_addr` = '영국 런던 먹자골목' WHERE (`member_id` = 'carry');
+
+수정: UPDATE WHERE
+
+생성: INSERT INTO
+
+DELETE FROM `shop_db`.`member` WHERE (`member_id` = 'carry');
+
+삭제: DELETE FROM
+
+스키마 선택 후 쿼리 작성
+
+select * from member WHERE member_name='아이유'; -- 멤버 이름이 아이유인 사람 찾기 
+
+85p~
+데이터베이스 만들기> 테이블 만들기 > 데이터 입력하기 > 데이터 조회하기
+
+스키마
+
+update
+select
+create
+delete
+
+87p
+
+인덱스 추가 필수
+CREATE INDEX idx_member_name ON member(member_name);
+
+뷰
+
+SELECT addr 주소, debut_date "데뷔일자",mem_name FROM market_db.member WHERE mem_name='블랙핑크';
+
+SELECT mem_id,mem_name FROM member WHERE height <=165;
+
+SELECT mem_id,mem_name FROM member WHERE height >=165 AND mem_number>6;
+
+SELECT mem_id,mem_name FROM member WHERE height >=160 AND height<=186;
+
+SELECT mem_id,mem_name FROM member WHERE height BETWEEN 163 AND 180;
+
+SELECT mem_id,mem_name FROM member WHERE height BETWEEN 163 AND 180;
+SELECT mem_name,addr FROM member WHERE addr='경기' or addr='전남' or addr='경남';
+SELECT mem_name,addr FROM member WHERE addr IN('경기','전남','경남');
+SELECT * FROM member WHERE mem_name LIKE '우%';
+SELECT * FROM member WHERE mem_name LIkE '__핑크';
+
+SELECT * FROM member ORDER BY debut_date;
+-- 정렬 기본값은 ASC 오름차순임, 내림차순 덩렬을 원하면 DESC 입력 
+SELECT * FROM member ORDER BY debut_date DESC;
+
+SELECT*FROM member ORDER BY height>164 DESC,debut_date ASC;
+
+SELECT * FROM member LIMIT 3;
+
+SELECT * FROM member ORDER BY debut_date LIMIT 3;
+-- LIMIT : 출력 결과 수 제한
+-- WHERE 와 ORDER BY 조합에서는 조건식인 WHERE를 먼저 구성
+-- ORDER BY 정렬과 LIMIT 조합에서는 LIMIT을 뒤로 구성하여 정렬된 후에 출력수 제한
+-- 중복 결과 제거를 위한 DISTINCT: 중복된 데이터는 1개만 남기고 보여주지 않음    
+
+SELECT addr FROM member;
+SELECT addr FROM member ORDER BY addr; 
+SELECT DISTINCT addr FROM member;
+
+-- group by
+-- having
+
+SELECT mem_id,sum(amount) FROM buy GROUP BY mem_id;
+SELECT mem_id "회원 아이디",sum(amount) "총 구매 수량" FROM buy GROUP BY mem_id;
+SELECT mem_id "회원 아이디",sum(price*amount) "총 지출" FROM buy GROUP BY mem_id;
+
+SELECT avg(amount) "평균 구매 수량" from buy;
+SELECT mem_id, avg(amount) "평균 구매 수량" from buy GROUP BY mem_id;
+
+SELECT COUNT(*) FROM member;
+SELECT COUNT(phone1) "연락처가 있는 회원" FROM member;
+
+SELECT mem_id " 회원 아이디", SUM(price*amount) "총 지출" from buy GROUP BY mem_id;
+-- group by 그룹화 상태에서 where 대신 having 절로 조건 제한
+-- having은 집계 함수에 대해서 조건을 제한하는 것
+-- having은 group by 뒤에 위치
+
+SELECT mem_id "회원 아이디", sum(price*amount) "총 지출" from buy GROUP BY mem_id having sum(price * amount)>1000;
+SELECT mem_id "회원 아이디", sum(price*amount) "총 지출" from buy GROUP BY mem_id having sum(price * amount)>1000 order by SUM(price*amount) DESC LIMIT 1;
+
+-- 오후
+-- 데이터의 조회 SELECT < 나중으로
+--  SELECT * FROM member;
+
+-- 데이터의 삽입 INSERT 
+--  INSERT INTO 테이블(열1,열2,열3) VALUES(값1,값2,값3);
+-- 테이블 뒤에 나오는 열 이름 생략 가능
+-- 열 이름 생략한 경우에는 VALUES 다음 나오는 값의 순서와 개수를 정확하게 
+use market_db; -- 어떤 db인지 지정 
+CREATE TABLE hongong1(toy_id INT,toy_name CHAR(4),age INT);
+-- 테이블 생성 
+INSERT INTO hongong1 VALUES(1,'우디',25);
+-- 생성 테이블에 데이터 삽입 
+CREATE TABLE hongong2(toy_id INT AUTO_INCREMENT PRIMARY KEY,toy_name CHAR(4),age INT);
+INSERT INTO hongong2 VALUES (NULL,'보핍',25);
+INSERT INTO hongong2 VALUES (NULL,'슬링키',22);
+INSERT INTO hongong2 VALUES (NULL,'렉스',21);
+SELECT * FROM hongong2;
+
+SELECT last_insert_id();
+-- auto increment는 1부터 시작
+-- last_insert_if()로 마지막 번호 확인
+
+ALTER TABLE hongong2 AUTO_INCREMENT=100;
+INSERT INTO hongong2 VALUES (null,'rrr',33);
+SELECT * FROM hongong2;
+
+#145p 
+SELECT COUNT(*) from world.city;
+DESC world.city;
+SELECT * FROM world.city LIMIT 5;
+CREATE TABLE ctiy_popul (city_name CHAR(35),population INT);
+INSERT INTO ctiy_popul select Name,population FROM world.city;
+
+-- 데이터의 수정 UPDATE 
+-- UPDATE 테이블의 수정
+-- UPDATE 테이블 SET 열1=값1, 열2=값2 WHERE 조건;
+
+USE world;
+UPDATE city_popul SET city_name='서울'where city_name='Seoul';
+select * from city_popul where city_name='서울';  
+UPDATE city_popul set city_name='뉴욕',population=0 where city_name='New York';
+SELECT * FROM city_popul where city_name='뉴욕';
+
+
+-- 데이터의 삭제 delete
+-- DELETE FROM 테이블명 where 조건
+
+DELETE FROM city_popul where city_name LIKE 'New%' LIMIT 5;
+
+-- CRUD 
+
+-- TINYINT SMALLINT INT BIGINT
+-- UNSIGNED ALTER
+-- CHAR: 고정길이 문자 CHAR(10) => 3글자 입력 나머지 7 글자 공간 낭비
+-- VARCHAR : 가변길이 문자혈 VARCHAR(10) => 3글자 입력 3칸만 사용
+-- MYSQL 내부적으로 성능면에서는 CHAR가 빠름
+
+-- CHAR는 255자까지
+-- VARCHAR는 16383자 까지 지정 가능
+
+-- TEXT 현식과 BLOB형식은 CHAR로 지정하기에 더 큰 데이터 저장 공간 필요할때
+-- BLOB: Binay Long OBject(필드) 
+
+-- FLOAT 4바이트 
+-- DOUBLE 8바이트
+
+-- DATE 3바이트 날짜만 저장 yyy-mm-dd 형식으로 저장
+-- TIME 3바이트 시간만 저장 HH:MM:SS 형식
+-- DATETIME 8바이트 YYY-MM-DD HH:MM:SS 
+
+-- 외부 JOIN만 알면 됌
+-- 내부 조인
+-- 두 테이블을 연결할 떄 가장 많이 사용하는 조인 방식 
+-- 일대 다수 관계(ERD)
+USE market_db;
+-- SELECT *FROM buy INNER JOIN member ON buy.mem_id = member.mem_id where buy.mem_id='GRL'; 
+-- SELECT *FROM buy INNER JOIN member ON buy.mem_id = member.mem_id; 
+-- SELECT *FROM buy B INNER JOIN member M ON B.mem_id = M.mem_id where B.mem_id='GRL'; 
+-- 내부 조인은 양쪽 테이블에 모두 있는 필드 기반으로 조인: mem_id
+
+-- 외부 조인
+-- 외부 조인 한쪽 테이블만 있어도 됌
+-- SELECT M.mem_id, M.mem_name,B.prod_name,M.addr FROM member M LEFT OUTER JOIN buy B ON M.mem_id = B.mem_id ORDER BY M.mem_id;
+-- SELECT * FROM member M LEFT OUTER JOIN buy B ON M.mem_id = B.mem_id ORDER BY M.mem_id; 
+SELECT * FROM buy B RIGHT OUTER JOIN member M ON M.mem_id = B.mem_id ORDER BY M.mem_id; 
+-- LEFT OUTER JOIN 일떄: 왼쪽 테이블의 모든 행과 오른쪽 테이블에 일치하는 행을 결합한 결과
+-- RIGHT OUTER JOIN 일때: 오른쪽 테이블 모든 행과 왼쪽 테이블에서 일치한 행 결합한 결과  
+
+-- 주로 내부 조인을 사용하고 가끔 외부 조인을 사용
+
+#145p 
+SELECT COUNT(*) from world.city;
+DESC world.city;
+SELECT * FROM world.city LIMIT 5;
+CREATE TABLE ctiy_popul (city_name CHAR(35),population INT);
+INSERT INTO ctiy_popul select Name,population FROM world.city;
+
+파이참
+
+명령 프롬프트> 
+ipconfig < 입력
+
+출력 예시)
+Windows IP 구성
+
+
+이더넷 어댑터 이더넷:
+
+   연결별 DNS 접미사. . . . :
+   링크-로컬 IPv6 주소 . . . . : fe80::2776:a686:43bf:f031%10
+   IPv4 주소 . . . . . . . . . : 192.168.31.30
+   서브넷 마스크 . . . . . . . : 255.255.255.0
+   기본 게이트웨이 . . . . . . : 192.168.31.1
+
+# 2020.02.17
+# 포트번호 3306
+import pymysql
+from debugpy.adapter.servers import connections
+
+
+# def XXXX(sql):
+#   connection=pymysql.connect( # 연결 객체 초기화
+#     host='localhost', # 접속하려는 주소 ip 지정
+#     user='root', # 해당 ip에 mysql 서버 계정
+#     password='0000', # 해당 계정의 pw
+#     database='market_db', # 접속하려는 DB이름
+#     port=3306 # 포트 번호
+#   )
+#
+#   cursor=connection.cursor() # 커서랑 SQL 쿼리를 실행하고 받아오는 객체
+#   cursor.execute("SHOW TABLES") # SQL 쿼리를 입력해서 실행
+#   tables=cursor.fetchall() # 실행한 쿼리 결과를 모두 가져옴
+#   print("market_db내 table 정보")
+#   for table in tables:
+#     print(table[0])
+#
+#   cursor.close() # 커서 객체를 닫는다
+#   connection.close() # SQL서버 연결 객체를 닫는다
+
+# 파이썬 코드를 이용해서
+# 본인 이름으로 된 DB를 localhost DB서버를 생성하고
+# 본인 이름 DB 내에 테이블 2개(301호 내 학생들 인적사항)+(책 테이블)를 만든다
+# 각 테이블에 적절한 정보(책 여러권)를 넣는다
+# 두 테이블을 조안한 결과를 파이썬으로 cursor를 통해 가져와서 출력한다
+
+member_connection=pymysql.connect(
+  host='localhost',  # 접속하려는 주소 ip 지정
+  user='root',  # 해당 ip에 mysql 서버 계정
+  password='0000',  # 해당 계정의 pw
+  database='301_member',  # 접속하려는 DB이름
+  port=3306  # 포트 번호
+)
+mysql_member=member_connection.cursor()
+
+# 테이블 삭제
+# mysql_member.execute("DROP TABLE member")
+# mysql_member.execute("DROP TABLE book")
+
+# 테이블 생성
+# PRIMARY KEY 는 PRIMARY KEY가 될 컬럼 바로 뒤에 지정
+# member="CREATE TABLE member(member_name CHAR(4) PRIMARY KEY, member_phone CHAR(20) NULL, member_age CHAR(2) NULL)"
+# book="CREATE TABLE book(member_name CHAR(4) PRIMARY KEY, book_name VARCHAR(20) NULL, book_writer VARCHAR(15) NULL, book_publisher VARCHAR(10) NULL)"
+# mysql_member.execute(book)
+
+# 컬럼 생성
+# mysql_member.execute("INSERT INTO member VALUES ('',null,null)")
+# ex)INSERT INTO member VALUES ('박은주',null,null) >
+# member_connection.commit() < mysql에 저장
+
+# mysql_member.execute("INSERT INTO book VALUES('박은주','혼자 공부하는 머신러닝+딥러닝',NULL,NULL)")
+mysql_member.execute("")
+member_connection.commit()
+
+

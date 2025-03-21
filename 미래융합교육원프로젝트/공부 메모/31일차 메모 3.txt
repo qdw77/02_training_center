@@ -1,0 +1,387 @@
+import random
+class Character:
+   stats = {
+           "up_count" : 0,
+           "down_count" : 0,
+           "left_count" : 0,
+           "right_count" : 0,
+           "reverse_count" : 0,
+           "bomb_count" : 0,
+           "item_count" : 0,
+           "damage_count" : 0
+           }
+   result = {}
+
+
+   def __init__(self,x,y):
+       self.hp = 3 #캐릭터의 체력
+       self.speed = 1 #캐릭터의 스피드 초기값
+       self.max_speed = 3 #캐릭터의 스피드 최댓값
+       self.b_count = 1 #캐릭터의 물풍선 개수 초기값
+       self.max_b_count = 3 #캐릭터의 물풍선 개수 최댓값
+       self.b_range = 1 #캐릭터의 물풍선 사거리 초기값
+       self.max_b_range = 5 #캐릭터의 물풍선 사거리 최댓값
+       self.x = x #캐릭터의 x좌표
+       self.y = y #캐릭터의 y좌표
+       self.kick = False #아이템 kick 여부
+       self.state = False #캐릭터 사망 여부
+       self.reverse = 0 #아이템 악마 여부
+       self.max_reverse = 5 #아이템 악마 스택 최댓값
+
+
+   def move_up(self, x):
+       if self.reverse != 0:
+           self.x += x
+           self.reverse -= 1
+           Character.stats["reverse_count"] += 1
+           return self.x
+       self.x -= x
+       Character.stats["up_count"] += 1
+       return self.x
+
+
+   def move_down(self,x):
+       if self.reverse != 0:
+           self.x -= x
+           self.reverse -= 1
+           Character.stats["reverse_count"] += 1
+           return self.x
+       self.x += x
+       Character.stats["down_count"] += 1
+       return self.x
+
+
+   def move_left(self,y):
+       if self.reverse != 0:
+           self.y += y
+           self.reverse -= 1
+           Character.stats["reverse_count"] += 1
+           return self.y
+       self.y -= y
+       Character.stats["left_count"] += 1
+       return self.y
+
+
+   def move_right(self,y):
+       if self.reverse != 0:
+           self.y -= y
+           self.reverse -= 1
+           Character.stats["reverse_count"] += 1
+           return self.y
+       self.y += y
+       Character.stats["right_count"] += 1
+       return self.y
+
+
+   instance = None
+   @classmethod
+   def init(cls,x,y):
+       cls.instance = cls(x,y)
+       return cls(x,y)
+
+
+   @classmethod
+   def character_state(cls):
+       return cls.instance.get_state()
+
+
+   @classmethod
+   def tick(cls,**kwargs): #kwargs={m:map}
+       # cls.tic_count = kwargs.get("m")["nowtic"]
+       # cls.get_damage(cls.instance,kwargs.get("m")["hit_count"])
+       # Character.apply_item_effect(kwargs.get("m")["dropped_item"])
+       # if kwargs.get("m")["bomb_hit"] == True:
+           # Character.get_damage(cls.instance, 1)
+       for move,bool in zip(kwargs.get("m")["movement"],kwargs.get("m")["movecheck"]):
+           if move == "w" and bool == True:
+               Character.move_up(cls.instance,1)
+           elif move == "a" and bool == True:
+               Character.move_left(cls.instance,1)
+           elif move == "s" and bool == True:
+               Character.move_down(cls.instance,1)
+           elif move == "d" and bool == True:
+               Character.move_right(cls.instance,1)
+       if kwargs.get("m")["bomb"] == True:
+           Character.put_bomb(cls.instance,Bomb)
+
+       # if kwargs.get("m")["clear"] == True:
+       #     Character.result["stats"] = Character.count_stats()
+       return cls.instance.get_state()
+
+
+   def put_bomb(self,Bomb):
+       bomb = Bomb(self.x,self.y,self.b_range)
+       Character.stats["bomb_count"] += 1
+       print("폭탄 놓기")
+       return bomb
+
+
+   def get_state(self):
+       Character.result = {
+                       "hp": self.hp,
+                       "speed": self.speed,
+                       "b_count": self.b_count,
+                       "b_range": self.b_range,
+                       "x": self.x,
+                       "y": self.y,
+                       "kick": self.kick,
+                       "state": self.state,
+                       "reverse": self.reverse,
+                     }
+       return Character.result
+
+
+   @classmethod
+   def count_stats(cls):
+       return Character.stats
+
+
+   def apply_item_effect(self, effects):
+       for stat, value in effects.items():
+           if hasattr(self, stat):
+               current_value = getattr(self, stat)
+               if isinstance(current_value, bool):  # Boolean 값
+                   setattr(self, stat, True)
+               elif isinstance(current_value, int):  # 숫자 값
+                   max_stat = f"max_{stat}"
+                   if hasattr(self, max_stat):  # 최대값 확인
+                       max_value = getattr(self, max_stat)
+                       new_value = min(current_value + value, max_value)
+                   else:
+                       new_value = current_value + value
+                   setattr(self, stat, new_value)
+
+
+               print(f"아이템 효과 적용됨: {item.name} → {stat}: {getattr(self, stat)}")
+           else:
+               print(f"캐릭터에 {stat} 속성이 없어 효과를 적용할 수 없습니다.")
+
+class Map:
+    def __init__(self,x,y):
+        self.character = None
+        self.map_size = [x, y]
+        self.map_info = [[]]
+        self.max_tick = 1000
+        self.current_tick = 0
+        self.enemy_list = []
+        self.initialize()
+
+
+    def initialize(self):
+        self.map_info = [[0 for i in range(self.map_size[0])] for j in range(self.map_size[1])] # 맵 사이즈
+
+        for i in range(self.map_size[1]):  # y
+            for j in range(self.map_size[0]):  # x
+                point_num = random.uniform(0, 1)  # 확률
+                if point_num > 0.3:  # 70% 박스
+                    box_hp = random.uniform(0, 1)  # 확률
+                    if box_hp < 0.07:
+                        self.map_info[i][j] = 28 # 부서지지 않는 박스 -1
+                    elif 0.07 <= box_hp <= 0.2:
+                        self.map_info[i][j] = 12 # 박스 체력 3
+                    elif 0.2 < box_hp <= 0.5:
+                        self.map_info[i][j] = 8 # 박스 체력 2
+                    else:
+                        self.map_info[i][j] = 4  # 박스 체력 1
+                else: # 아니면 빈 공간
+                    self.map_info[i][j] = 0
+
+        # 구역 9개
+        for i in range(3):
+            for j in range(3):
+                self.map_info[(self.map_size[0]+1) // 2 - i][(self.map_size[1]+1) // 2 - j] = 0  # 중앙 고정 값(보스)
+                self.map_info[(self.map_size[0] - 2) - i][(self.map_size[1] - 2) - j] = 0  # 오른쪽 모서리 아래 # [24][24]
+                self.map_info[(self.map_size[0] - 2) - i][3 - j] = 0  # 왼쪽 모서리 아래 # [24][2]
+                self.map_info[3 - i][(self.map_size[1] - 2) - j] = 0  # 오른쪽 모서리 위 # [2][24]
+                self.map_info[3 - i][3 - j] = 0  # 왼쪽 위 모서리 # [2][2]
+                self.map_info[(self.map_size[0] - 2) - i][(self.map_size[1]+1) // 2 - j] = 0  # 아래 중앙 # [24][13]
+                self.map_info[3 - i][(self.map_size[1]+1) // 2 - j] = 0  # 위 중앙 # [2][13]
+                self.map_info[(self.map_size[0]+1) // 2 - i][3 - j] = 0  # 왼쪽 중앙 # [13][2]
+                self.map_info[(self.map_size[0]+1) // 2 - i][(self.map_size[1] - 2) - j] = 0  # 오른쪽 중앙 # [13][24]
+
+        # 맵 외곽을 4로(나중에 안 부서지는 걸로 채움)
+        for i in range(self.map_size[0]):
+            for j in range(self.map_size[1]):
+                self.map_info[0][i] = 28  # 윗줄
+                self.map_info[-1][i] = 28  # 아랫줄
+                self.map_info[j][0] = 28  # 왼쪽줄
+                self.map_info[j][-1] = 28  # 오른쪽줄
+
+        # # 초기화
+        # character=Character.init() # 캐릭터 초기 좌표
+        # mob=Mob.init() # {보스 좌표: [], 쫄 좌표: []} 좌표는 [x,y]
+        # box=Box.init() # {박스 체력들: []}
+        # self.current_tick = 0
+
+        # 테스트용
+        for i in range(self.map_size[0]):
+            for j in range(self.map_size[1]):
+                print(self.map_info[i][j], end="\t")
+            print()
+
+        # 입력 받는거 성공시 True, 실패시 False 리턴
+
+    def inp_user_act(self):
+        # 방향값 입력 확인용
+        direct_check = ["w", "a", "s", "d"]
+        # 케릭터 정보 연결
+        char_info = Character.character_state()
+        # 분류용 리스트
+        _inp = input("입력>>")
+        # 기본 입력 크기 : 케릭터의 스피드 크기 + 물풍선 사용가능한 개수
+        if 0 < len(_inp) <= (char_info["speed"] + char_info["b_count"]):
+            directions = []  # 방향
+            install_bomb = []  # 폭탄 설치 여부
+
+            for ele in _inp:
+                # 이동방향 및 물풍선 설치만 입력받음
+                if ele in direct_check:
+                    directions.append(ele)
+                    self.user_input.append(ele)
+
+
+                elif ele == "q":
+                    install_bomb.append(True)
+                    self.user_input.append(ele)
+
+
+                else:
+                    print("이동방향(wasd) 및 물풍선 설치(q) 만 입력 할 수 있습니다.")
+                    self.user_input.clear()
+                    return False
+
+            # 조건 만족시 패스, 만족못할시 유저인풋 초기화
+            if len(directions) <= char_info["speed"] and len(install_bomb) <= char_info["b_count"]:
+                return True
+            else:
+                self.user_input.clear()
+                # print("오류메시지~~~")
+                return False
+        else:
+            print("입력 가능 범위를 벗어남")
+            return False
+
+        # 이동가능여부
+
+    def can_move(self):
+        # 반환 값 저장 리스트
+        result = []
+
+        # 케릭터 정보 불러오기
+        char_info = Character.character_state()
+        x = char_info["x"]
+        y = char_info["y"]
+
+        # 입력값 확인
+        for act in self.user_input:
+            # 방향 값 일 경우 해당 방향 진행가능 여부 체크 후 T/F 값 반환
+            if act == "w" and self.map_info[y - 1][x] == 0:
+                result.append(True)
+
+
+            # 왼쪽으로 이동
+            elif act == "a" and self.map_info[y][x - 1] == 0:
+                result.append(True)
+
+
+            # 아래로 이동
+            elif act == "s" and self.map_info[y + 1][x] == 0:
+                result.append(True)
+
+
+            # 오른쪽로 이동
+            elif act == "d" and self.map_info[y][x + 1] == 0:
+                result.append(True)
+
+
+            # 물풍선 설치는 패스
+            elif act == "q":
+                pass
+
+
+            # 이동 불가
+            else:
+                result.append(False)
+
+        return result
+
+    map = {
+        "movement": [],
+        "movecheck": [],
+        "nowtic": 3,
+        "hit_count": 2,
+        "bomb": None,
+        "bomb_hit": True,
+        "dropped_item": ["skate"],
+        "clear": True
+    }
+
+    Character.init(2, 2)
+    # m = Map()
+    # for y in Map().map_info:
+    #     print(y)
+    # m.inp_user_act()
+    # print(m.user_input)
+
+    def play(self):
+        # 이벤트 진행
+        # display
+        # while (게임 진행중)
+        # 현재틱 +1
+        # input 받기
+        # input 검사
+        # input에 따른 처리
+        #
+        # 캐릭터한테 정보전달
+        
+        # 박스한테 정보전달
+        # 적한테 정보전달
+        #
+        # 화면 출력
+        pass
+
+    def display(self):
+        # 현재맵 정보랑 캐릭터 상태, 적 체력 등 콘솔 출력
+        # 왼쪽부분에 맵 오른쪽에 상태, 정보 이거
+        # 캐릭터, 바닥, 박스, 아이템, 적, 보스, 물풍선, 물줄기, << 이것들이 겹쳤을때
+        # 기본: 흰색, 물풍선: 하늘색, 적이랑 보스는 빨간색, 박스/아이템 …
+        # 문자, 색깔
+        pass
+
+    def game_state(self):
+        # 게임 진행 상황
+        #     if 적 리스트에서 체력 검사해서 싹다 죽었으면
+        #     return 클리어
+        #     if 캐릭터가 죽었으면
+        #     return 게임오버
+        #     if 틱이 최대틱 넘었으면
+        #     return 게임오버
+        #
+        # return 아직진행중
+        # 0이면 클리어
+        # 1이면 게임오버
+        # 2이면 진행중
+        pass
+
+class Item:
+    pass
+
+class Character:
+    @classmethod
+    def init(cls, **kwargs):
+        pass  # 캐릭터 정보
+
+
+class Box:
+    @classmethod
+    def init(cls, **kwargs):
+        pass  # 박스 정보
+
+
+class Mob:
+    @classmethod
+    def init(cls,**kwargs):
+        pass # 몬스터 정보
+
+
+m = Map(25, 25)

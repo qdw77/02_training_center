@@ -1,0 +1,259 @@
+
+    # def create_budget(self):
+    #     # 테이블에서 값을 가져와 bkData에 저장
+    #     for row in range(len(self.bkData)):
+    #         for col in range(1, len(self.bkData[row])):  # 0번째 열은 제외하고
+    #             # 셀 값 가져오기
+    #             self.bkData[row][col] = self.someTable.get_value(row, col)
+    #
+    #     # 수정된 데이터 확인용 출력 (디버깅용)
+    #     print("저장된 예산 데이터:", self.bkData)
+
+    def save_data(self):
+        # 저장된 데이터를 self.someTable.changed에서 가져오기
+        updated_data = self.someTable.changed['updated'][0]
+
+        # 예시: 데이터를 저장
+        self.saved_data = updated_data
+
+        # 저장된 데이터 확인
+        print(f"저장된 데이터: {self.saved_data}") 안의 [] 값을 가져오고 싶은 뎁
+
+@staticmethod
+    def f30303(**kwargs):
+        # order_code는 필수 값이므로 없으면 오류 발생 방지
+        if 'order_code' not in kwargs:
+            print("오류: order_code가 없습니다.")
+            return {"sign": 0, "data": []}
+
+        # 컬럼 목록
+        columns = [
+            'order_code', 'product_name', 'internal_external', 'creator_name', 'creator_position',
+            'creator_phone', 'creator_email', 'administrator_name', 'administrator_position',
+            'administrator_phone', 'administrator_email', 'unit_price', 'stock', 'material_cost',
+            'personnel_expenses', 'expenses', 'transaction_quantity', 'total_price', 'order_vat',
+            'correspondent_code', 'correspondent_name', 'correspondent_type', 'address',
+            'account_manager', 'account_phone', 'account_email', 'sledding', 'delivery_date',
+            'creation_date', 'modified_date'
+        ]
+
+        # 업데이트할 값이 존재하는 경우만 처리
+        values = [f"{col} = %s" for col in kwargs if col in columns and col != "order_code"]
+        params = [kwargs[col] for col in kwargs if col in columns and col != "order_code"]
+
+        # 업데이트할 데이터가 없는 경우
+        if not values:
+            print("오류: 업데이트할 데이터가 없습니다.")
+            return {"sign": 0, "data": []}
+
+        # SQL 쿼리 구성
+        sql_query = f"""
+            UPDATE test_data.order_form 
+            SET {", ".join(values)}
+            WHERE order_code = %s
+        """
+        params.append(kwargs["order_code"])  # WHERE 조건 값 추가
+
+        # 쿼리 실행
+        try:
+            Order.db.query(sql_query, tuple(params))  # 클래스 변수 사용
+            sign = 1  # 성공
+        except Exception as e:
+            print("오류:", e)
+            sign = 0  # 오류 발생
+
+        # 결과 반환
+        return {"sign": sign, "data": []}
+
+
+    # def save_action(self):
+    #     # 저장 버튼 클릭 시 처리
+    #     if self.mode == 'create':
+    #         print("생성 모드에서 저장 버튼 클릭")
+    #         self.insert_order() # db
+    #         self.btn_update.grid()  # 저장 후 수정 버튼 다시 보이기
+    #         self.btn_update.grid(row=2, column=3, padx=5, pady=5, sticky="e")
+    #
+    #     elif self.mode == 'update':
+    #         print("수정 모드에서 저장 버튼 클릭")
+    #         self.update_order() # db
+    #         self.btn_create.grid()  # 저장 후 생성 버튼 다시 보이기
+    #         self.btn_create.grid(row=1, column=3, padx=5, pady=5, sticky="e")
+
+
+    # def create_action(self):
+    #     # 생성 버튼 클릭 시 처리
+    #     print("생성 버튼 클릭")
+    #     self.mode = 'create'
+    #     self.btn_update.grid_forget()  # 수정 버튼 숨기기
+    #
+    # def update_action(self):
+    #     # 수정 버튼 클릭 시 처리
+    #     print("수정 버튼 클릭")
+    #     self.mode = 'update'
+    #     self.btn_create.grid_forget()  # 수정 버튼 숨기기
+
+
+@staticmethod
+def f30301(**kwargs):
+    # DB 연결
+    DataBase = DB.ConnectDB()  # db
+    DataBase.connection_DB()
+
+    # 조회할 컬럼
+    columns = [
+        'creation_date', 'order_code', 'internal_external', 'creator_name', 'administrator_name',
+        'product_name', 'unit_price', 'transaction_quantity', 'total_price', 'order_vat',
+        'account_code', 'account_name', 'account_type', 'account_manager', 'delivery_date', 'modified_date'
+    ]
+
+    # 기본 쿼리
+    sql_query = f'SELECT {", ".join(columns)} FROM test_data.order_form'
+
+    conditions = []  # 조건 리스트 초기화
+
+    for key, value in kwargs.items():
+        if value is not None:
+            column_name = key  # 기본적으로 key를 column_name으로 설정
+
+            # 모든 값에 LIKE 조건을 적용 (단, 문자열인 경우에만)
+            if isinstance(value, str):
+                conditions.append(f"{column_name} LIKE '%{value}%'")
+            else:
+                # 문자열이 아니면 정확한 값으로 비교
+                conditions.append(f"{column_name} = '{value}'")
+
+            # 시작 날짜 처리
+            if "start" in key:
+                start_value = value
+                column_name = key.replace('_start', '')  # '_start'를 제거하여 실제 컬럼명 추출
+
+            # 종료 날짜 처리
+            elif "end" in key:
+                end_value = value
+                column_name = key.replace('_end', '')  # '_end'를 제거하여 실제 컬럼명 추출
+
+            # start와 end 값이 같으면 조건을 추가하지 않음
+            if "start_value" in locals() and "end_value" in locals():
+                if start_value == end_value:
+                    continue
+                else:
+                    if start_value:  # 시작 날짜가 None이 아닐 때
+                        current_date = datetime.datetime.now().strftime('%Y-%m-%d')
+                        if start_value != current_date:  # 오늘 날짜가 아니면 조건 추가
+                            conditions.append(f"{column_name} >= '{start_value} 00:00:00'")
+                    if end_value:  # 종료 날짜가 None이 아닐 때
+                        conditions.append(f"{column_name} <= '{end_value} 23:59:59'")
+
+            elif "start_value" not in locals() and "end_value" in locals():
+                if end_value:
+                    conditions.append(f"{column_name} <= '{end_value} 23:59:59'")
+
+            elif "start_value" in locals() and "end_value" not in locals():
+                if start_value:
+                    current_date = datetime.datetime.now().strftime('%Y-%m-%d')
+                    if start_value != current_date:  # 오늘 날짜가 아니면 조건 추가
+                        conditions.append(f"{column_name} >= '{start_value} 00:00:00'")
+
+    # WHERE 절이 존재할 경우 조건을 추가
+    if conditions:
+        sql_query += " WHERE " + " OR ".join(conditions)
+
+    # 최종 SQL 쿼리
+    print("쿼리:", sql_query)
+
+    try:
+        # 쿼리 실행
+        result = DataBase.query(sql_query)
+        print(result)
+        sign = 1
+    except Exception as e:
+        print("오류:", e)
+        result = None
+        sign = 0
+
+    # 연결 해제
+    DataBase.close()
+
+    # 결과 반환
+    recv = {
+        "sign": sign,
+        "data": result if result else []  # 결과가 없으면 빈 리스트 반환
+    }
+    print(recv)
+
+    return recv
+
+    def select_point(self):
+        print(f"선택된 발주 코드: {self.allOrdering_entry.get()}")
+        # 조건값 가져오기
+        order_code = self.allOrdering_entry.get().strip() or None
+        print(order_code)
+        product_name = self.allproduction_entry.get().strip() or None
+        correspondent_code = self.allCorrespondent_entry.get().strip() or None
+        administrator = self.entryd.get().strip() or None
+
+        delivery_date_start = self.date_entry4.get_date()
+        delivery_date_start = delivery_date_start.strftime('%Y-%m-%d') if delivery_date_start else None
+
+        delivery_date_end = self.date_entry5.get_date()
+        delivery_date_end = delivery_date_end.strftime('%Y-%m-%d') if delivery_date_end else None
+
+        creation_date_start = self.creation_date_start.get_date()
+        creation_date_start = creation_date_start.strftime('%Y-%m-%d') if creation_date_start else None
+
+        creation_date_end = self.creation_date_end.get_date()
+        creation_date_end = creation_date_end.strftime('%Y-%m-%d') if creation_date_end else None
+
+        modified_date_start = self.modified_date_start.get_date()
+        modified_date_start = modified_date_start.strftime('%Y-%m-%d') if modified_date_start else None
+
+        modified_date_end = self.modified_date_end.get_date()
+        modified_date_end = modified_date_end.strftime('%Y-%m-%d') if modified_date_end else None
+
+        send = {
+            "code": 30301,
+            "args": {
+                "order_code": order_code,
+                "product_name": product_name,
+                "correspondent_code": correspondent_code,
+                "administrator": administrator,
+                "delivery_date_start": delivery_date_start,
+                "delivery_date_end": delivery_date_end,
+                "creation_date_start": creation_date_start,
+                "creation_date_end": creation_date_end,
+                "modified_date_start": modified_date_start,
+                "modified_date_end": modified_date_end,
+            }
+        }
+
+        result = self.f30301(**send["args"])
+        aa = result.get("data", []) if result["sign"] == 1 else []  # result["data"]가 없으면 빈 리스트로 처리
+
+        # self.root.send_(json.dumps(send, ensure_ascii=False))
+        self.table=TableWidget(self.bottom_Frame,
+                               data=aa,
+                               col_name=["작성일자", "발주서 코드", "내/외부", "작성자명","관리자명","완제품명","단가","거래수량","총 가격","부가세","거래처 코드","거래처 이름","거래처 종류","담당자명","납기일","수정 일자"],
+                               new_row=False,
+                               width=1300,
+                               height=350)
+
+        self.table.place(x=0, y=0)
+
+
+        return result
+
+
+        # order_code가 없으면 예외 처리 (필수 항목)
+        if 'order_code' not in kwargs or kwargs['order_code'] is None:
+            print("오류: order_code가 없습니다.")
+            return {"sign": 0, "data": "order_code가 없습니다."}
+
+
+        # 디버깅: kwargs에서 order_code 값 확인
+        print("kwargs에서 order_code 값:", kwargs.get("order_code"))
+
+        # 쿼리 확인용 출력
+        print("쿼리 생성 전:", sql_query)
+
+allCorrespondent_entry,allproduction_entry,allAuthor_entry

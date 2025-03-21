@@ -1,0 +1,55 @@
+# 2025.02.25
+# 이미지 클라이언트 테스트
+import socket # 이미지 다룸
+from PIL import Image # 이미지 다루는 것에 특화
+from io import BytesIO
+
+def receive_image(connection,save_path):
+    with open(save_path,'wb') as image_file:
+        # 바이너리 쓰기 모드로 파일 open 텍스트 데이터는 encode/decode로 송수신 단계에서 암호화 복호화를 진행하고 이미지,오디오,동영상 객체 데이터느,ㄴ wb 형태로 바이너리 모드로 생성해서 rcx 받은 daa를 바로 write()하는 현태
+        while True:
+            data=connection.recv(1024)
+            if not data:
+                break
+            print(data)
+            print(type(data))
+            # print(data,__lab__())
+            image_file.write(data)
+            # 파일 쓰기, 혼자 디렉터리에 파일 저장
+
+
+
+def main():
+    client_socket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    # AF_INET : ipv4 체계를 사용하겠다
+    # ipv4 32비트 주소 체계 Internet Protocol version 4
+    # SOCK_STREAM TCP 소켓 생성
+    client_socket.connect(('localhost',1111))
+    save_path='rcvimg.jpg'
+    receive_image(client_socket,save_path)
+    print("이미지 수신 완료")
+
+    with open(save_path,'rb') as file:
+        image_data=file.read()
+
+    binaryToObj=BytesIO(image_data)
+    # BytesIO를 통해 바이너리 데이터를 파일 객체 형태로 읽을 수 있도록 변환
+    imgForshow=Image.open(binaryToObj)
+    # PIL의 IMAGE 제공 메서드 open으로 이미지 파일 오픈
+    imgForshow.show()
+    # PIL 의 show를 통해 객체 보여주기
+    client_socket.close()
+
+if __name__ =="__main__":
+    main()
+    
+    # PNG : 파일 시그니처 : PNG 확장자 식별
+    # IHOR : 이미지에 대한 메타 데이터 정보 이미지 너비 넢이 색상 타입 변수
+    # IDAT : 실제 이미지 픽셀 테이터 영역(압축된 형태 PNG)
+    # IEND : PNG 파일 끝임을 나타내는 신호
+
+
+    # 소켓을 통한 통신에서 - 동영상과 이미지는 어떤 처리 방식의 차이가 있으까?
+    # 프레임
+    # 데이터가 무겁다
+    # queue 큐 - 데이터 보관소

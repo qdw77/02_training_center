@@ -1,0 +1,24 @@
+import socket
+from threading import Thread
+import tkinter as tk
+
+class sales_performance(tk.Frame):
+    def __init__(self):
+        super().__init__()
+
+
+        # top
+        self.top_Frame=tk.Frame(self)
+
+        # 총 4가지 영역으로 나뉘어 지고
+        # 왼쪽 위에는 기본 값은 시기별 막대(선)그래프
+
+        # / 왼쪽 밑 리스트 하나를 선택하면 이 위치에 나오게
+        # 왼쪽 밑 전체 리스트 한번에 15개 까지 나머진 페이지로
+        # 오른쪽 밑은 제품별,거래처별,납기일별,거래 일자별,국가별,담당자별,설립일자별,사용하지 않는 거래처별,작성자별
+        # 오른쪽 위는 실적 검색(조회)
+
+
+
+
+

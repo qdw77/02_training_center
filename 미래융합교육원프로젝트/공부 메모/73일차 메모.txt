@@ -1,0 +1,246 @@
+    #
+    # @staticmethod
+    # def f30303(**kwargs):
+    #
+    #     # 컬럼 목록
+    #     columns = [
+    #         'order_code', 'product_name', 'internal_external', 'creator_name', 'creator_position',
+    #         'creator_phone', 'creator_email', 'administrator_name', 'administrator_position',
+    #         'administrator_phone', 'administrator_email', 'unit_price', 'stock', 'material_cost',
+    #         'personnel_expenses', 'expenses', 'transaction_quantity', 'total_price', 'order_vat',
+    #         'correspondent_code', 'correspondent_name', 'correspondent_type', 'address',
+    #         'account_manager', 'account_phone', 'account_email', 'sledding', 'delivery_date',
+    #         'creation_date', 'modified_date'
+    #     ]
+    #
+    #     # 초기화
+    #     values = []
+    #
+    #     for key, value in kwargs.items():
+    #         if value is not None:
+    #             values.append(f"{key} = '{value}'")
+    #
+    #     sql_query = f"UPDATE test_data.order_form SET "
+    #     sql_query += ", ".join(values)
+    #     sql_query += f" WHERE order_code = '{kwargs['order_code']}'"
+    #     # 쿼리 실행
+    #     try:
+    #         dbm.query(sql_query)
+    #         sign = 1  # 성공
+    #     except Exception as e:
+    #         print("오류:", e)
+    #         sign = 0  # 오류 발생
+    #
+    #     # 결과 반환
+    #     recv = {"sign": sign, "data": []}
+    #     return recv
+
+    # @staticmethod
+    # def f30304(**kwargs):
+    #     pass
+
+
+    def save_data(self):
+        # 저장된 데이터를 self.someTable.changed에서 가져오기
+        updated_data = self.someTable.changed['updated'][0]
+
+        # 예시: 데이터를 저장
+        self.saved_data = updated_data
+
+        # 저장된 데이터 확인
+        print(f"저장된 데이터: {self.saved_data}")
+
+    # 값 저장하는 것 후 불러 와서 insert 해야하는 데 changed 에서 가져옴 여기로 어떻게 가져오지?
+    # def test(self):
+    #     self.someTable.insert([self.someTable.last_index - 1, True, 4, 4])
+
+
+
+   # # 새 창에서 저장된 예산 위에서 확인 버튼을 다시 누르면 입력된 값 그대로 불러오기
+    # def open_budget_window(self):
+    #     # 예산 세부 정보 창을 생성
+    #     self.budget_window = tk.Toplevel(self.master)
+    #     self.budget_window.title("예산 세부 정보")
+    #     self.budget_window.geometry("400x150")
+    # 
+    #     # 저장 버튼 생성
+    #     self.save_button = tk.Button(self.budget_window, text="저장", command=self.save_data)
+    #     self.save_button.pack(pady=10)
+    # 
+    #     # 예산 데이터 테이블 (재료비, 인건비, 경비)
+    #     self.bkData = [
+    #         ["%", "", "", ""], ["예산", "", "", ""]
+    #     ]
+    # 
+    #     self.someTable = tablewidget.TableWidget(self.budget_window,
+    #                                              data=self.bkData,  # 데이터
+    #                                              col_name=["X", "재료비", "인건비", "경비"],  # 열 이름
+    #                                              col_width=[50, 50, 50, 50],  # 열 너비
+    #                                              has_checkbox=False,  # 체크박스 여부
+    #                                              cols=4,
+    #                                              editable=[False, True, True, True],
+    #                                              width=300,  # 테이블 너비
+    #                                              height=130,  # 테이블 높이
+    #                                              new_row=False  # 새 행 추가 여부
+    #                                              )
+    #     self.someTable.pack()
+
+
+
+
+
+
+
+   # def send_(self, some_dict):
+   #  # 아래 둘 중 하나만 호출
+   #
+   #  # 서버에 보내기 (코드 합친 이후에만 작동함)
+   #  # 로컬에서 테스트 할 때 주석처리
+   #  # self.root.send_(json.dumps(some_dict, ensure_ascii=False))
+   #
+   #  # 로컬에서 테스트하기
+   #  # 코드 합칠 때 주석처리
+   #  self.send_test(json.dumps(some_dict, ensure_ascii=False))
+  # try:
+        #     # 쿼리 실행
+        #     result = dbm.query(sql_query)
+        #     print(result)
+        #     sign = 1
+        # except Exception as e:
+        #     print("오류:", e)
+        #     result = None
+        #     sign = 0
+
+        # 연결 해제
+        # dbm.close()
+
+    # 선택한 칸에 엔터를 눌러도 수정 불가능하고 대신 입력했던 내용들이 topleft_Frame 여기에 나오도록 바꾸고 대신 수정 버튼을 누르면 topleft_Frame 부분들이 입력할 수 있게 바뀌며 수정 버튼은 생성 버튼을 눌렀을 땐 사라짐(내용이 없거나)
+
+
+
+
+        # # 행 간격 최소화
+        # self.topleft_Frame.grid_rowconfigure(0, minsize=0)
+        # self.topleft_Frame.grid_rowconfigure(1, minsize=0)
+
+
+
+
+        # self.namebudget = tk.Label(self.topleft_Frame, text="예산:")
+        # self.namebudget.grid(row=1, column=2, padx=5, pady=5, sticky="w")
+        #
+        # self.getbudget = tk.Label(self.topleft_Frame, text="전체 예산", width=20, height=1)
+        # self.getbudget.grid(row=1, column=3, padx=5, pady=5, sticky="w")
+        #
+        # self.btnbudget = tk.Button(self.topleft_Frame, text="확인", command=self.open_budget_window, state="disabled")
+        # self.btnbudget.grid(row=1, column=3, padx=5, pady=5, sticky="e")
+
+
+
+
+    # # def clear_fields(self):
+    #     self.order_date.delete(0, tk.END)
+    #     self.order_entry.delete(0, tk.END)
+    #     self.inout_entry.delete(0, tk.END)
+    #     self.author_entry.delete(0, tk.END)
+    #     self.author_position_antry.delete(0, tk.END)
+    #     self.author_phone_entry.delete(0, tk.END)
+    #     self.author_email_entry.delete(0, tk.END)
+    #     self.manager_entry.delete(0, tk.END)
+    #     self.manager_position_entry.delete(0, tk.END)
+    #     self.manager_phone_entry.delete(0, tk.END)
+    #     self.manager_email_entry.delete(0, tk.END)
+    #     self.product_entry.delete(0, tk.END)
+    #     self.unitprice_entry.delete(0, tk.END)
+    #     self.inventory_entry.delete(0, tk.END)
+    #     self.quantity_entry.delete(0, tk.END)
+    #     self.total_entry.delete(0, tk.END)
+    #     self.VAT_antry.delete(0, tk.END)
+    #     self.correspondent_combobox.delete(0, tk.END)
+    #     self.correspondent_name_entry.delete(0, tk.END)
+    #     self.type_entry.delete(0, tk.END)
+    #     self.address_entry.delete(0, tk.END)
+    #     self.account_manager_entry.delete(0, tk.END)
+    #     self.account_phone_entry.delete(0, tk.END)
+    #     self.account_email_entry.delete(0, tk.END)
+    #     self.sledding_entry.delete(0, tk.END)
+    #     self.deadline_entry.delete(0, tk.END)
+
+
+
+
+    # def check_btn(self):
+    #     self.clear_fields()  # 기존 데이터 초기화
+    #     return not bool(self.order_entry.get().strip())  # 발주 코드가 없으면 새 데이터
+
+
+
+
+    # def get_selected_cell_info(self):
+    #     # 선택된 행, 열 인덱스
+    #     selected_row = self.someTable.selected_row
+    #     selected_col = self.someTable.selected_col
+    #
+    #     # 선택된 셀의 값 가져오기
+    #     selected_value = self.someTable.get(selected_row, selected_col)
+    #
+    #     # 선택된 행 전체 정보 가져오기
+    #     selected_row_data = self.someTable.get_row(selected_row)
+    #
+    #     print(f"선택된 셀의 행: {selected_row}, 열: {selected_col}")
+    #     print(f"선택된 셀의 값: {selected_value}")
+    #     print(f"선택된 행의 데이터: {selected_row_data}")
+
+    # 예시 사용
+    # 예를 들어, 버튼 클릭 시 해당 함수 호출
+
+
+
+        # material_cost=self.save_data
+        # print(material_cost)
+        # material_cost = self.someTable.data[1][1]  # 재료비 (테이블에서 가져온 데이터)
+        # personnel_expenses = self.someTable.data[1][2]  # 인건비
+        # expenses = self.someTable.data[1][3]  # 경비
+
+        # 값 확인용 출력 (디버깅용)
+        # print("재료비:", material_cost)
+        # print("인건비:", personnel_expenses)
+        # print("경비:", expenses)
+
+                # "material_cost": material_cost,  # 자재 비용
+                # "personnel_expenses": personnel_expenses,  # 인건비
+                # "expenses": expenses,  # 기타 비용
+
+    # root.mainloop()
+
+
+
+        self.line = tk.Frame(self.topright_Frame, width=1, height=350, bg="black")
+        self.line.pack(side="left", fill="y")
+
+
+
+        # self.btn_delete = tk.Button(self.topright_Frame, text="삭제",command=self.delete_action)
+        # self.btn_delete.grid(row=4, column=3, padx=5, pady=5, sticky="e" ) 
+
+
+
+
+    def delete_action(self):
+        # db 삭제 delete
+        pass
+
+
+
+        # self.labelg = tk.Label(self.topright_Frame, text="삭제 일자")
+        # self.labelg.grid(row=8, column=0, padx=5, pady=5, sticky="w")
+        #
+        # self.date_entry8 = DateEntry(self.topright_Frame, width=40, background="#e3e3e3", foreground="white",date_pattern="yyyy-mm-dd")
+        # self.date_entry8.grid(row=8, column=1, padx=5, pady=5)
+
+
+판매 실적 아이디, 발주 코드, 내/외부 여부,작성자명,작성자 직책,작성자 연락처,작성자 이메일,관리자,관리자 직책,관리자 연락처,관리자 이메일,완제품 코드, 완제품 명,단가,현 재고, 거래 수량, 총 가격, 부가세,순 이익, 거래처 코드, 사업자 번호,거래처 명, 거래처 종류,거래처 주소,거래처 담당자,연락처,이메일,납기일,작성일자,수정일자 < 불러와야하는 것들
+
+조건 거래처 코드, 완제품 코드,작성자명,관리자 명,거래처 담당자명,납기일,작성일자,수정일자
+
+performanceEntry,entry2,entry3

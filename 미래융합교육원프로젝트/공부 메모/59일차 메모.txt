@@ -1,0 +1,36 @@
+소켓 > 통신을 위한 통로 
+
+ThreadingMixIn < 스레드 종료를 기다림
+
+TCPServer > 
+
+클레스(myTcpHandler) 내부에 있는 socketserver.BaseRequestHandler 의 handle 호출 
+클레스에선 handle 및 변수 재정의 
+
+ 
+스레드 > 
+
+데이터 스트림 > 
+
+#채팅 정보
+Table: chat_log
+Columns:
+user_name varchar(20) PK # 유저 이름 
+chat_logcol text # 유저가 남긴 메세지
+sender varchar(45) # 보낸 사람
+receiver varchar(45) # 받는 사람
+time_chat datetime # 언제 채팅 보냈는 지
+
+Table: user
+Columns:
+user_name varchar(20) PK  # 유저 이름
+user_password varchar(45) # 비번
+user_ip varchar(100) # ip주소
+user_socket varchar(200) # 소켓 
+user_memory varchar(200) # 메모리 주소(선택 사항 )
+
+Table: user_log (로그 인 아웃 정보)
+Columns:
+user_name varchar(20) PK  #유저 이름
+user_login datetime # 로그인 시간
+user_logout datetime # 로그 아웃 시간

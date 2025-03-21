@@ -1,0 +1,149 @@
+# 2025.02.21
+import socketserver
+import threading
+import pymysql
+from datetime import datetime
+
+connection = pymysql.connect(
+    host='localhost',  # 접속하려는 주소 ip 지정
+    user='root',  # 해당 ip에 mysql 서버 계정
+    password='0000',  # 해당 계정의 pw
+    database='test_messenger',  # 접속하려는 DB이름
+    port=3306  # 포트 번호
+)
+
+cursor = connection.cursor()
+
+HOST = 'localhost'
+PORT = 9900
+lock = threading.Lock()  # 동기화 진행 스레드 (락 생성)
+
+
+class User_Manager:
+    def __init__(self):
+        self.users = {}
+
+    def adduser(self, username, password, conn, addr):
+        if username in self.users:
+            conn.send("이미 등록된 사용자".encode())
+            return None
+
+        lock.acquire()
+        self.users[username] = (password, conn, addr)
+        lock.release()
+
+        self.sendMessageToAll('[%s] 접속' % username)
+        # DB 연결
+        self.UserLogin(username)
+        print('대화 참여 수 [%d]' % len(self.users))  # 개화 참여 수 출력
+        return username
+
+    def removeUser(self, username, password):
+        if username not in self.users:
+            return
+        lock.acquire()
+        del self.users[username]
+        time_logout = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute("UPDATE user_log SET user_logout = (%s) WHERE user_name=(%s)",(time_logout,username))
+        lock.release()
+
+        self.sendMessageToAll('[%s]접속해제' % username)
+        print('대화 참여자 수 [%d]' % len(self.users))
+
+    def UserLogin(self, username,password,addr):
+        # 로그인 DB 저장
+        time_login = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute("INSERT INTO user (user_name, password,user_ip) VALUES (%s, %s, %s)", (username, password, addr))  # 로그인 정보 저장
+        cursor.execute("INSERT INTO user_log (user_name, user_login) VALUES (%s, %s)",(username, time_login))  # 로그인,아웃 시간 정보 저장
+        connection.commit()
+
+    def messageHandler(self, username, msg, password):
+        if msg.strip() == '/w':
+            # self. 유저 귓말
+            self.whisper_user("[%s] %s"%(username,msg))
+            return
+
+        if msg.strip() == '/kick':
+            # self. 강퇴
+            return
+
+        if msg.strip() == '/ban':
+            # 밴 처리
+            return
+
+        if msg[0] != '/':
+            self.sendMessageToAll("[%s] %s" % (username, msg))
+            return
+
+        if msg.strip() == '/quit':
+            self.removeUser(username, password)
+            return -1
+
+    def sendMessageToAll(self, msg):
+        print(threading.active_count())
+        for conn, addr in self.users.values():
+            conn.send(msg.encode())
+
+    def whisper_user(self):  # 귓말
+        pass
+    # 밴 처리 / 강퇴
+
+
+class myTcpHandler(socketserver.BaseRequestHandler):
+    userman = User_Manager()
+
+    def handle(self):
+        print(self, '')
+        print('client[%s]연결' % self.client_address[0])
+        try:
+            username, password = self.registerUsername()  # 이름 등록
+            print(username, ':username')
+            msg = self.request.recv(1024)
+            print(self.request)
+            print(self.client_address)
+            print(self.server)
+            while msg:
+                print(msg.decode())
+                if self.userman.messageHandler(username, msg.decode(), password) == -1:
+                    self.request.close()
+                    break
+                msg = self.request.recv(1024)
+        except Exception as e:
+            print(e)
+
+        print("[%s]접속 종료" % self.client_address[0])  # ip주소
+        self.userman.removeUser(username)  # 아이디 지우기
+
+    def registerUsername(self):
+        while True:
+            self.request.send('ID'.encode())
+            username = self.request.recv(1024)
+            self.request.send('PW'.encode())
+            password = self.request.recv(1024)
+
+            username = username.decode().strip()
+            password = password.decode().strip()
+            if self.userman.adduser(username, password, self.request, self.client_address):
+                return username, password
+
+
+class up1_myTcpHandler(myTcpHandler):
+    # 업데이트 귓속말 / 차단 / 밴
+    pass
+
+
+class ChatingServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    pass
+
+
+def runServer():
+    try:
+        server = ChatingServer((HOST, PORT), up1_myTcpHandler)
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("서버 종료")
+        server.shutdown()
+        server.server_close()
+
+# runServer()
+# pass

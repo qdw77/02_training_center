@@ -1,0 +1,411 @@
+# client_server
+#서버와 클라이언트 통신
+#클라이언트 사이드
+
+
+#GUI : tkinter / ttk / QT
+#TCP & SOCKET : 통신 기반
+
+#TCP transmisson control protocol로 통신 규칙
+#TCP 특징 : 연결 지향적 -> TCP는 데이터를 보내기 전 서버와 클라이언트가 서로 확인 절차 (3way 핸드셰이크)가 있음.
+#3way핸드셰이크로 서로 확인 후 데이터에 대한 전송이 이루어짐
+#데이터 전송 신뢰성이 높다 : TCP는 데이터가 정확하게 전달되도록 보장해줌
+#예를들어 데이터가 전송 중 끊기거나 잘못 전달되면 다시 보내는 등 처리를 함
+
+#순서를 보장해줌(보내는 데이터가 엉키지 않도록)
+#보내고자하는 데이터가 12345 인 경우
+#여러 환경적 이유로 13245 등 데이터가 꼬이는 현상이 발생할 수 있는데, TCP는 이런 현상을 방지해줌
+
+#흐름제어
+#(tick으로 양방향에서의 박자를 맞추는 것 처럼 서버와 클라이언트가 서로 데이터 송수신과정을 소화할 수 있는 흐름으로 제어)
+
+
+
+
+#3way handshake
+#TCP 연결시 3way handshake 상세 과정
+#1.syn (송신자의 연결 요청)
+#2.syn-ack(수신자의 연결 요청 수락)
+#3.ack(송신자의 연결 확인)
+
+
+
+#TCP의 연결 종료시 4way handshake 과정으로 처리함
+#1.한쪽에서 연결종료 요청(FIN)
+#2.상대방은 1번 요청을 확인 (ACK)
+#3.상대방도 종료 준비가 되면 연결 종료 요청을 보냄(FIN)
+#4.송신자는 그 요청을 확인하고 연결을 완전히 종료 (ACK)
+
+
+
+#위 특징들로 TCP는 데이터가 정확하고 , 손실없이 송수신과정에서 신뢰성을 보장받으며 통신할 수 있도록 하는 규약
+
+import socketserver
+import threading
+
+HOST='localhost'
+PORT=9900
+lock=threading.Lock() #동기화 진행 스레드 (락 생성)
+
+class UserManager:
+    def __init__(self):
+        self.users={} # 키 값(튜플)
+
+    def addUser(self,username,conn,addr):
+        if username in self.users:
+            conn.send("등록된 사용자".encode())
+            return None
+
+        lock.acquire() # 다른 사람이 접근 못하도록 락을 걸음
+        self.users[username]=(conn,addr) # 목록 추가
+        lock.release() # 목록 추가를 했으므로 락을 계속 걸고 있을 이유 없음/계속 막으면 다음 진행 불가해서 풀어줌
+
+        self.sendMessageToAll('[%s]접속' % username) # 전체 접속 메세지 전송
+        print('대화 참여 수 [%d]'% len(self.users)) # 개화 참여 수 출력
+        return username
+
+    def removeUser(self,username):
+        if username not in self.users:
+            return
+        lock.acquire() # 아이디 확인을 위해 락을 걸음
+        del self.users[username] # 제거
+        lock.release() # 제거 후 풀기
+        
+        self.sendMessageToAll('[%s]접속해제'%username) # 접속 해제 후 메세지 전송
+        print('대화 참여 수 [%d]'%len(self.users)) # 대화 참여수 업데이트
+
+    def messageHandler(self,username,msg):
+        if msg[0]!='/': # 일반 메세지
+            self.sendMessageToAll("[%s] %s"%(username,msg))
+            return
+        if msg.strip()=='/quit': # /quit 입력(명령어) 종료시
+            self.removeUser(username)
+            return -1 # 참여수 줄이기
+
+    def sendMessageToAll(self,msg):
+        print(threading.active_count()) # 스레드 호출 확인 / 메인,서브 등
+        for conn,addr in self.users.values(): # users 튜플 내용 가져옴
+            conn.send(msg.encode())  # 메세지 출력
+
+class myTcpHandler(socketserver.BaseRequestHandler): # socketserver.BaseRequestHandler 여기에 request 있음
+    userman=UserManager() # 전 class 담아서 변수로 사용
+
+    def handle(self):
+        print(self,'self memory')
+        print('client[%s]연결'%self.client_address[0]) # 클라이언트 ip 정보 출력
+        try: # try
+            username=self.registerUsername() # 사용자 이름 등록
+            print(username,":username") # 이름 출력
+            msg=self.request.recv(1024)
+            # 보통 1024 / 2048 / 4096 / 8192 / 65535
+            # recv(1024)는 버퍼(데이터를 받는 공간)사이즈 / 1024바이트까지 데이터를 읽겠다는 의미 /
+            # 클라이언트가 데이터를 1024이하로 보내면 그만큼만 읽고 1024이상 보내면 1024까지 짤라서 읽고 그 이후 다시 recv로 받음
+            print(self.request) # 소켓 출력 ex) <socket.socket fd=388, family=2, type=1, proto=0, laddr=('127.0.0.1', 9900), raddr=('127.0.0.1', 65434)>
+            print(self.client_address) # ip 주소 출력 ('127.0.0.1', 65434)
+            print(self.server) # 서버 객체 정보(메모리 주소) <__main__.ChatingServer object at 0x0000014F45EFD2B0>
+            while msg:
+                print(msg.decode()) # 수신한 메세지 출력(바이트를 문자열로)
+                if self.userman.messageHandler(username,msg.decode())==-1: # messageHandler 여기 반환 값이 -1 그러니까 이미 종료했다면 닫기
+                    self.request.close() # 소켓 연결 종료 self.request> 서버 간의 연결을 나타냄
+                    break
+                msg=self.request.recv(1024) # 다시 바이트로
+        except Exception as e: # Exception 예외 처리
+            print(e)
+          
+        print("[%s]접속 종료" %self.client_address[0]) # ip주소
+        self.userman.removeUser(username) # 아이디 지우기
+
+    def registerUsername(self):
+        while True:
+            self.request.send('ID'.encode()) # ID 입력 요청
+            username=self.request.recv(1024) # 이름 받기
+            username=username.decode().strip() # 공백 제거
+            if self.userman.addUser(username,self.request,self.client_address): # 이름 등록
+                return username
+
+class ChatingServer(socketserver.ThreadingMixIn,socketserver.TCPServer):
+    # 멀티 스레드를 만듦
+    pass
+
+def runServer():
+    # 서버 시작
+    try:
+        server=ChatingServer((HOST,PORT),myTcpHandler) #서버 만들기
+        server.serve_forever() # shutdown(서버 종료) 전까지 실행
+    except KeyboardInterrupt:
+        print("서버 종료")
+        server.shutdown() # 서버 종료
+        server.server_close() # 서버 정리
+runServer()
+
+
+# DATABASE : 프로젝트 데이터 관리
+
+
+# DB
+# 1. 귓속말 주고 받기 보내는 표기 >>> / 받는 표기 <<< / 둘에게만 보이도록 한다 / 색상은 전체 대화 색상과 다르게 기능 (A > B 귓말 시 다른 자들에겐 보이지 않아야 하고 특별한 표기)
+# 받은 귓속말 텍스트를 마우스로 누르면 보내온 사람에게 답장 모드로 변환
+# /w 아이디 보내려는 텍스트 GUI / 핸들러 변경만으로 가능
+
+# 2. DB 연동하기
+# 각자 로컬 mysql서버를 이용해서 현재 대화방의 로그를 기록한다
+# 테이블 총 3개
+# 접속자의 오늘 로그인 여부 > 접속자 로그의 테이블은 1일 1개 생성
+# 대화방 로그 테이블에는 모든 텍스트 기록이 담긴다 (귓말/대화 내용 등)
+# 강제퇴장 인원 / 채팅 금지 관련 로그
+
+# 3. 강제 퇴장 기능 - 관리자의 권환
+# 4. 채팅 금지 /해제 기능 - 관리자의 권한
+# 5. 관리자 계정 기능 - DB에 관리자 / 회원 계정 테이블이 존재한다
+# 6. DB에 회전 계정 테이블에 존재하는 화면만 로그인 ID/PW 방식으로 로그인하여 대화방에 진입한다
+
+# 소켓
+
+
+# client_check
+import socket
+from threading import Thread
+import tkinter
+
+tk=tkinter.Tk()
+tk.geometry("1000x400")
+entry=tkinter.Entry(tk)
+entry2=tkinter.Listbox(tk,height=50,width=30)
+
+# HOST='192.168.0.2' check 스레드 방식 / 2가 ip
+HOST='localhost'
+PORT=9900
+
+def rcvMsg(sock):
+  while True:
+    try:
+      data=sock.recv(1024)
+
+      if not data:
+        break
+      print(data.decode())
+      entry2.insert(-1,data.decode()+"\n")
+      entry2.update()
+      entry2.see(0)
+
+    except:
+      pass
+
+def runChat():
+  with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as sock:
+    sock.connect((HOST,PORT))
+    t=Thread(target=rcvMsg,args=(sock,))
+    t.daemon=True
+    t.start()
+    def onClick():
+      sock.send(entry.get().encode())
+    def onEnter(event):
+      onClick()
+      entry.delete(0,tkinter.END)
+    entry2.pack(side=tkinter.LEFT,fill=tkinter.BOTH,padx=5,pady=5)
+    label=tkinter.Label(tk,text='chat message')
+    entry.pack()
+    label.pack()
+    btn=tkinter.Button(tk,text='확인',command=onClick)
+    btn.pack()
+    entry.bind("<Return>",onEnter)
+    tk.mainloop()
+runChat()
+
+GUI
+# # 20250218 ~ 20250219
+# #GUI.py
+
+# GUI + DB MYSQL 연습 문제
+
+# 검색/생성/삭제 실습
+# GUI 프로그램을 통해 MYSQL 서버의 데이터 베이스 생성 및 수정 관리할 수 있도록 구현한다
+
+# 1. DB 생성 및 생성한 데이터 USE 설정
+
+# 2. 테이블의 생성
+#    > 테이블이 이미 존재하는 지 검사 후 없으면 생성, 이미 있으면 해당 테이블 사용하도록 설정
+#    + 자체적으로 검사할 수 있는 기능 필요
+
+# 3. 틍성 테이블에 데이터 삽입 및 수정
+#    > 데이터가 SQL 문법과 테이블 구조에 적합한지 검사하는 함수)
+
+# 4. 특정 테이블의 데이터 검색 결과 조회
+#    > SELECT 기능인데 * 전체열 or 특정열인지 선택할 수 있는 기능 필요
+
+# 5. 테이블 삭제
+#    > 어떤 테이블 삭제할 건지 지정하는 기능
+
+# test_20250218 < 스키마 만듦
+
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import ttk
+import pymysql
+
+connection = pymysql.connect(  # 연결 객체 초기화
+  host='localhost', # 접속하려는 주소 ip 지정
+  user='root', # 해당 ip에 mysql 서버 계정
+  password='0000', # 해당 계정의 pw
+  database='test_20250218', # 접속하려는 DB이름
+  port=3306 # 포트 번호
+)
+
+root=tk.Tk()
+root.title("test_2025.02.19")
+
+table_name_text=tk.Entry(root,width=25)
+table_name_text.pack()
+table_name_text.insert(tk.END,"테이블 이름 입력")
+
+book_name_text=tk.Entry(root,width=25)
+book_name_text.pack()
+book_name_text.insert(tk.END,"책 이름 입력")
+
+text_box=tk.Text(root,height=10,width=30)
+text_box.pack()
+
+# 추가할 저자 및 출판 연도 입력 필드
+author_text = tk.Entry(root, width=25)
+author_text.pack()
+author_text.insert(tk.END, "저자 입력")
+
+year_text = tk.Entry(root, width=25)
+year_text.pack()
+year_text.insert(tk.END, "출판 연도 입력")
+
+tree=ttk.Treeview(root,columns=("Book_Name","Writer", "Publisher", "Recap"), show="headings")
+tree.heading("Book_Name",text="책 이름")
+tree.heading("Writer",text="저자")
+tree.heading("Publisher",text="출판사")
+tree.heading("Recap",text="줄거리(요약)")
+tree.pack(fill=tk.BOTH, expand=True)
+
+cursor=connection.cursor()
+
+# 테이블 체크
+def check_table(table_name):
+  cursor.execute(f"SHOW TABLES LIKE `{table_name}`")
+  return cursor.fetchone() is not None
+
+# 데이터 체크
+def check_data(table_name,book_name):
+  cursor.execute(f"SELECT*FROM `{table_name}` WHERE book_name=`{book_name}`")
+  return cursor.fetchone() is not None
+
+# 스키마 검색
+def select_schemas(schema_name):
+  cursor.execute(f"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=`{schema_name}`")
+
+
+# 테이블로 검색
+def select_table(table_name,book_name):
+  # cursor.execute(f"SHOW TABLES LIKE {table_name}")
+  # result=cursor.fetchone()
+  if check_table(table_name):
+    cursor.execute(f"SELECT * FROM `{table_name}` WHERE book_name='{book_name}'")
+    result=cursor.fetchall() # 결과 가져옴
+    for row in tree.get_children():
+      text_box.delete(row)
+
+    if result:
+      for row in result:
+        text_box.insert("","end",values=row)
+    else:
+      messagebox.showerror("에러","데이터가 없습니다.")
+  else:
+    messagebox.showerror("에러","없는 테이블 입니다.") # 메세지 입력
+
+# 데이터 등록
+def insert_data():
+  table_name=table_name_text.get()
+  book_name=book_name_text.get()
+  writer=writer_text.get()
+  publisher=publisher_text.get()
+  recap=recap_text.get()
+
+  if not table_name or not book_name or not writer or not publisher or not recap:
+    messagebox.showerror("에러","모든 값들을 채워주세요.")
+    return
+  cursor.execute(f"INSERT INTO `{table_name}` VALUES ('{book_name,writer,publisher,recap}'")
+  connection.commit()
+  messagebox.showinfo("등록 완료", "등록 되었습니다.")
+
+  # if check_data(table_name,book_name):
+  #   messagebox.showerror("에러","이미 데이터가 있습니다.")
+  # else:
+  #   cursor.execute(f"INSERT INTO `{table_name}` VALUES ('{book_name}','{writer}','{publisher}','{recap}'")
+  #   connection.commit()
+  #   messagebox.showinfo("등록 완료", "등록 되었습니다.")
+
+# 데이터 수정
+def update_data():
+  table_name=table_name_text.get()
+  book_name=book_name_text.get()
+  # writer=writer_text.get()
+  # publisher=publisher_text.get()
+  # recap=recap_text.get()
+  if check_data(table_name,book_name):
+    cursor.execute(f"UPDATE `{table_name}` SET book_name='{book_name}',writer='{writer}',publisher='{publisher}',recap='{recap}' WHERE book_name='{book_name}'")
+    connection.commit()
+    messagebox.showinfo("수정 완료", "수정 되었습니다.")
+  else:
+    messagebox.showerror("에러","데이터가 없습니다.")
+
+# 데이터 삭제
+def delete_data(table_name,book_name):
+  if check_data(table_name,book_name):
+    cursor.execute(f"DELETE FROM `{table_name}` WHERE(book_name='{book_name}')")
+    connection.commit()
+    messagebox.showinfo("삭제 완료","삭제 되었습니다.")
+  else:
+    messagebox.showerror("에러","데이터가 없습니다.")
+
+def show_select():
+  table_name=table_name_text.get()
+  book_name=book_name_text.get()
+  if table_name and book_name:
+    select_table(table_name, book_name)
+  else:
+    messagebox.showerror("에러","테이블 이름과 책 이름을 입력하세요.")
+
+root.mainloop()
+
+#
+# button=tk.Button(root,text="선택한 책 정보 호출",command=show_select)
+# button.pack()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,127 @@
+드롭다운 기능변환
+깨지는 것들
+박민환 
+nav는 하나인게 좋음
+header>header_wrap>div/nav/nav
+category_wrap (1번 ul)
+각각 항목 ul li 
+ex) coffee > div(dropdown)> ul > li
+<div id="header"> < 이걸 <header>로 아예 작성
+#header {
+	position: fixed; (헤더가 따라다녀서 입력)(빼면 우선 빈 공간이 생기고 따라다니지 않음)
+	top: 0; (맨 위로 입력)
+        width: 100%; (바디 사이즈 100%로 비율 안망가지게)
+        background-color: #f6f5ef;
+        z-index: 1000; (제일 위쪽에 올거라 큰 값을 줌)
+    }
+    #header .header_wrap {
+        width: 1100px; ()
+        margin: 0 auto;(양쪽 일정 수준 이상 여백 남겨주려고)
+    }
+    #header .logo {
+        float: left;
+        margin-top: 12px; (위쪽에만 여백)
+    }
+    #header .nav_wrap { (1번 nav ul)
+        text-align: right; (안에 있는 콘텐츠(이미지나 다른것 포함)를 오른쪽)
+        margin: 10px 50px 10px 0; ()
+    }
+    #header .nav_wrap li {(nav_wrap li < li 개별항목)
+        display: inline; (일렬로)
+        margin: 0;
+    }
+    #header .nav_wrap a { (nav_wrap a <각각 링크들)
+        padding: 0 15px; 
+        border-right: 1px solid #e1e1e1; 
+        font-size: 12px;
+        font-weight: 300;
+        color: #555;
+        text-decoration: none; (밑줄 없애기)
+    }
+    #header .nav_wrap a:hover { 
+        text-decoration: underline; (마우스 위로 올릴 때 밑줄)
+    }
+    #header .nav_wrap .search {
+        display: inline-block; (일렬로)
+        border: 1px solid #999;
+        border-radius: 5px;
+        background-color: #fff;
+        padding: 5px 0;
+        vertical-align: middle;(수직방향 위치를 중앙으로)
+    }
+    #header .nav_wrap .search button {
+        background-color: #fff;
+        border: none;
+        padding: 0 5px;
+        cursor: pointer; (커서 바꿔주는 것)
+    }
+    #header .category_wrap { (2번 nav)
+        text-align: right;
+        margin-top: 10px;
+    }
+    #header .category_wrap > li { (자식 li (coffee등 소분류))
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 300;
+        padding: 10px 30px 28px;(살찌워 줘서 마우스를 내릴 떄 끊킴이 없음)
+        cursor: pointer;
+        color: #000;
+        text-decoration: none; (밑줄 지우기)
+        /* position: relative; */
+    }
+    #header .category_wrap > li:hover {
+        background-color: #2c2a29;
+        color: #00754a;
+        text-decoration: underline;
+    }
+
+    .menu-group > li:hover{
+        text-decoration: underline; (마우스 위로 올릴 때 밑줄)
+    }
+
+    .dropdown {
+        display: none;(영역 할당을 받지 않음)
+        position: absolute; (부모 기준에 상대 기준 / 부모에 static이 아닌게 있어야 함)/(없으면 배열이 망가짐/이걸 준 이유는 판 자체가 abs 부모기준 상대 위치 (dropdown의 부모 li(coffee) 기준으로 없으면(static 이라면) 그위로 올라가다가 body를 기준로 삼음, 현재 이것도 coffee값이 static이라서 body가 부모이고 top,left것들의 값을 줘야해서 값 지정, 안주면 부모 값 바로 아래에서 시작)
+        margin: 0px;
+        padding: 0px;
+        top: 110px;(숫자가 커질수록 밑으로 내려감)
+        width: 100%; (모두 나타나도록)
+        left: 0px;
+        background-color: #2c2a29;
+        padding: 10px;
+        text-align: center;
+    }
+    .dropdown .menu-group{
+        margin: 50px;
+        vertical-align: top; (위가 기준으로 정렬)
+        display: inline-block; (덩어리들끼리 따로 옆으로 배치를 원해서 값 지정)
+        text-align: left;
+    }
+    .dropdown ul { (>menu-group/따로 둔 이유는 둘이 같아 보이지만 가르게 반응/폰트 간격 등/모든 dropdown ul/ )
+        list-style: none;(마커 없애기)
+        padding: 0;
+        margin: 0;
+    }
+    .dropdown ul li {
+        padding: 5px 10px;(중복)/처음 컨테이너 잘 짜야함
+        font-size: 12px;
+        color: #999;
+    }
+
+    .dropdown ul li strong {
+        font-size: 14px;
+        color: #fff;
+    }
+    #header .category_wrap li:hover .dropdown {
+        display: block; d(여기 까지 coffee/coffee에 해당된 )
+    }
+자식 구조/ 부모로 삼으려면 static이 아니여야 하고 아니면 body로 간다
+한줄씩 지워가며 공부/
+
+우선 전체 div(class) > 각각 header(class)/nav(class)등 나눠서 넣고 그 안에서 ul(class)> li >div(class) > ul(class)>li
+
+내일 휴강
+
+//js
+
+https://developer.mozilla.org/ko/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript

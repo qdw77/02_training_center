@@ -1,0 +1,41 @@
+# 2025.02.25
+# 이미지 서버 테스트
+import socket
+import tkinter
+from tkinter import filedialog
+from threading import Thread
+
+
+def send_image(connection,image_path):
+    with open(image_path,'rb') as image_file:
+        image_data=image_file.read()
+        connection.sendall(image_data)
+
+
+def main(path):
+    server_socket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    server_socket.bind(('localhost',1111))
+    server_socket.listen()
+
+
+    print('서버 켜짐')
+    connection, address=server_socket.accept()
+    print('클라이언트 연결: ',address)
+
+    image_path=path
+    send_image(connection,image_path)
+    connection.close()
+    server_socket.close()
+
+def runtk():
+    root=tkinter.Tk()
+    root.withdraw() # root창 실행 필요 x 의미
+    file_path=filedialog.askopenfilename(title='이미지 파일 선택',filetypes=[('이미지 파일', "*.png;*.jpg;*.jpeg")],initialdir='/')
+
+    if file_path:
+        t=Thread(target=main,args=(file_path,))
+        t.start()
+
+
+if __name__=="__main__":
+    runtk()

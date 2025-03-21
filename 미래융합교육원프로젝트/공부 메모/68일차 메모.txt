@@ -1,0 +1,573 @@
+    # 선택한 칸에 엔터를 눌러도 수정 불가능하고 대신 입력했던 내용들이 topleft_Frame 여기에 나오도록 바꾸고 대신 수정 버튼을 누르면 topleft_Frame 부분들이 입력할 수 있게 바뀌며 수정 버튼은 생성 버튼을 눌렀을 땐 사라짐(내용이 없거나)
+
+import mysql.connector
+from tkinter import messagebox
+
+def create_order_form(self):  # 등록
+    # (기존 코드 생략)
+
+    # "저장" 버튼 추가
+    self.btn_save = tk.Button(self.topright_Frame, text="저장", command=self.save_order)
+    self.btn_save.grid(row=3, column=3, padx=5, pady=5, sticky="e")
+
+def save_order(self):
+    # 데이터베이스 연결
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",    # 데이터베이스 호스트 (예: localhost)
+            user="root",         # MySQL 사용자 이름
+            password="your_password",  # MySQL 비밀번호
+            database="your_database"  # 사용할 데이터베이스 이름
+        )
+
+        cursor = conn.cursor()
+
+        # 삽입할 SQL 쿼리 준비
+        insert_query = """
+            INSERT INTO orders (
+                작성일자, 발주코드, 내외부, 작성자명, 작성자직책, 작성자연락처, 작성자이메일,
+                관리자, 관리자직책, 관리자연락처, 관리자이메일, 완제품명, 예산, 단가, 현재고,
+                거래수량, 총가격, 부가세, 거래처코드, 사업자번호, 거래처명, 거래처종류,
+                거래처주소, 거래처담당자, 거래처담당자연락처, 거래처담당자이메일, 납기일, 수정일자,
+                발주코드_조회, 완제품코드_조회, 완제품명_조회, 거래처코드_조회, 관리자_조회
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+
+        # 사용자 입력값을 튜플로 묶어서 삽입
+        data = (
+            self.date_entry1.get(),
+            self.entry2.get(),
+            self.entry3.get(),
+            self.entry4.get(),
+            self.entry5.get(),
+            self.entry6.get(),
+            self.entry7.get(),
+            self.entry8.get(),
+            self.entry9.get(),
+            self.entry10.get(),
+            self.entry11.get(),
+            self.product_name.get(),
+            self.getbudget.cget("text"),
+            self.entry14.get(),
+            self.entry15.get(),
+            self.entry16.get(),
+            self.entry17.get(),
+            self.entry18.get(),
+            self.getCorrespondent.get(),
+            self.entry20.get(),
+            self.entry21.get(),
+            self.entry22.get(),
+            self.entry23.get(),
+            self.entry24.get(),
+            self.entry25.get(),
+            self.entry26.get(),
+            self.date_entry2.get(),
+            self.date_entry3.get(),
+            self.allOrdering.get(),
+            self.allproduct_code.get(),
+            self.allproduction.get(),
+            self.allCorrespondent.get(),
+            self.entryd.get()
+        )
+
+        # 쿼리 실행
+        cursor.execute(insert_query, data)
+
+        # 변경사항을 데이터베이스에 커밋
+        conn.commit()
+
+        # DB 연결 종료
+        cursor.close()
+        conn.close()
+
+        # 성공 메시지
+        messagebox.showinfo("저장 완료", "주문이 성공적으로 저장되었습니다.")
+
+    except mysql.connector.Error as err:
+        # 오류 처리
+        messagebox.showerror("저장 오류", f"오류 발생: {err}")
+
+
+입력한 값들을 db에 저장 
+TNSERT INTO 테이블 명(들어갈 칼럼) VALUES (칼럼 값)
+
+조건을 줘서 검색(조회)
+SELECT * FROM 테이블 명 WHERE 컬럼명= 찾을 값 AND 컬럼명= 찾을 값 AND .....
+
+import tkinter as tk
+import mysql.connector
+from tkinter import messagebox
+
+class SampleFrame(tk.Frame):
+    def __init__(self, root):
+        super().__init__(root, width=1300, height=700)
+        self.root = root
+        self.pack()  # 프레임을 화면에 배치합니다.
+
+        # DB 연결 설정
+        self.db_connection = mysql.connector.connect(
+            host="localhost",  # MySQL 서버 호스트
+            user="root",  # MySQL 사용자명
+            password="password",  # MySQL 비밀번호
+            database="your_database"  # 사용할 데이터베이스명
+        )
+        self.cursor = self.db_connection.cursor()
+
+        # 버튼 생성
+        self.create_widgets()
+
+    def create_widgets(self):
+        # 생성 버튼
+        self.btn_create = tk.Button(self, text="생성", command=self.create_action)
+        self.btn_create.grid(row=0, column=0, padx=5, pady=5)
+
+        # 수정 버튼
+        self.btn_update = tk.Button(self, text="수정", command=self.update_action)
+        self.btn_update.grid(row=0, column=1, padx=5, pady=5)
+
+        # 저장 버튼
+        self.btn_save = tk.Button(self, text="저장", command=self.save_action)
+        self.btn_save.grid(row=0, column=2, padx=5, pady=5)
+
+        # 상태 추적을 위한 변수
+        self.mode = None  # 현재 모드를 추적 (None, 'create', 'update')
+
+    def create_action(self):
+        # 생성 버튼 클릭 시 처리
+        print("생성 버튼 클릭")
+        self.mode = 'create'
+        self.show_save_button()
+
+    def update_action(self):
+        # 수정 버튼 클릭 시 처리
+        print("수정 버튼 클릭")
+        self.mode = 'update'
+        self.show_save_button()
+
+    def save_action(self):
+        # 저장 버튼 클릭 시 처리
+        if self.mode == 'create':
+            print("생성 모드에서 저장 버튼 클릭")
+            self.save_to_db(create=True)
+        elif self.mode == 'update':
+            print("수정 모드에서 저장 버튼 클릭")
+            self.save_to_db(create=False)
+
+    def show_save_button(self):
+        # 저장 버튼이 클릭될 때만 활성화
+        self.btn_save.config(state="normal")
+
+    def save_to_db(self, create=True):
+        try:
+            if create:
+                # 생성 모드: 새로운 데이터 삽입
+                query = "INSERT INTO your_table (column1, column2) VALUES (%s, %s)"
+                values = ("value1", "value2")  # 이 부분을 실제 값으로 교체하세요.
+                self.cursor.execute(query, values)
+                self.db_connection.commit()
+                messagebox.showinfo("성공", "데이터가 성공적으로 생성되었습니다.")
+            else:
+                # 수정 모드: 기존 데이터 업데이트
+                query = "UPDATE your_table SET column1 = %s WHERE column2 = %s"
+                values = ("updated_value", "value2")  # 이 부분을 실제 값으로 교체하세요.
+                self.cursor.execute(query, values)
+                self.db_connection.commit()
+                messagebox.showinfo("성공", "데이터가 성공적으로 수정되었습니다.")
+        except mysql.connector.Error as err:
+            messagebox.showerror("오류", f"DB 오류: {err}")
+        finally:
+            # DB 연결 종료
+            self.cursor.close()
+            self.db_connection.close()
+
+# GUI 실행
+if __name__ == "__main__":
+    root = tk.Tk()
+    frame = SampleFrame(root)
+    root.mainloop()
+
+
+import tkinter as tk
+
+class ExampleApp:
+    def __init__(self, root):
+        self.root = root
+        self.saved_budget = {}  # 예산 데이터 저장
+
+        # 상단 프레임 설정
+        self.topleft_Frame = tk.Frame(root)
+        self.topleft_Frame.pack(padx=10, pady=10)
+
+        # 예산 레이블
+        self.namebudget = tk.Label(self.topleft_Frame, text="예산:")
+        self.namebudget.grid(row=1, column=2, padx=5, pady=5, sticky="w")
+
+        # 예산 값 레이블 (저장된 예산이 없다면 기본값 설정)
+        self.getbudget = tk.Label(self.topleft_Frame, text="전체 예산", width=20, height=1)
+        self.getbudget.grid(row=1, column=3, padx=5, pady=5, sticky="w")
+
+        # 확인 버튼
+        self.btnbudget = tk.Button(self.topleft_Frame, text="확인", command=self.open_budget_window)
+        self.btnbudget.grid(row=1, column=4, padx=5, pady=5, sticky="e")
+
+    def open_budget_window(self):
+        # 예산 세부 정보 창을 생성
+        self.budget_window = tk.Toplevel(self.root)
+        self.budget_window.title("예산 세부 정보")
+        self.budget_window.geometry("400x150")
+
+        # 테이블의 행과 열 정의
+        row_name = ["재료비", "인건비", "경비"]
+        column_name = ["", "%", "예산"]
+        col_width = [60, 200, 200]
+
+        # 라벨로 열 이름 표시
+        for col_idx, col in enumerate(column_name):
+            label = tk.Label(self.budget_window, text=col, width=col_width[col_idx] // 10, borderwidth=1, relief="solid")
+            label.grid(row=0, column=col_idx, padx=0, pady=0)
+
+        # 각 항목에 대한 데이터 입력 필드 생성 (표 형태로)
+        self.entries = {}
+        for row_idx, row in enumerate(row_name):
+            # 행 이름 표시
+            label = tk.Label(self.budget_window, text=row, width=col_width[0] // 10, borderwidth=1, relief="solid")
+            label.grid(row=row_idx + 1, column=0, padx=0, pady=0)
+
+            for col_idx, col in enumerate(column_name[1:]):  # 첫 번째 빈 칸은 제외하고 나머지 열 처리
+                entry = tk.Entry(self.budget_window, width=20)
+                entry.grid(row=row_idx + 1, column=col_idx + 1, padx=0, pady=0)
+                self.entries[(row, col)] = entry
+
+                # 저장된 예산이 있으면 해당 값 입력, 없으면 빈 칸으로 남겨둠
+                if (row, col) in self.saved_budget:
+                    entry.insert(0, self.saved_budget[(row, col)])
+
+        # 저장 버튼 추가
+        save_button = tk.Button(self.budget_window, text="저장", command=self.save_budget)
+        save_button.grid(row=len(row_name) + 1, columnspan=len(column_name), pady=10)
+
+    def save_budget(self):
+        # 예산 입력값 저장
+        budget_data = {}
+        for (row, col), entry in self.entries.items():
+            budget_data[(row, col)] = entry.get()
+
+        # 저장된 예산 데이터 업데이트
+        self.saved_budget = budget_data
+
+        # 확인 메시지
+        print("저장된 예산 정보:", budget_data)
+
+        # 예산 값 레이블 업데이트
+        self.update_budget_label()
+
+    def update_budget_label(self):
+        # 예산 값 레이블을 저장된 예산 정보로 업데이트
+        total_budget = 0
+        for (row, col), value in self.saved_budget.items():
+            if col == "예산":
+                try:
+                    total_budget += int(value.replace(",", ""))  # 예산 금액을 합산 (콤마 제거)
+                except ValueError:
+                    pass
+
+        # 합산된 예산 값으로 레이블 업데이트
+        self.getbudget.config(text=f"전체 예산: {total_budget:,}")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ExampleApp(root)
+    
+    root.mainloop()
+
+
+CREATE TABLE orders (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,  -- 주문서 고유 ID
+    creation_date DATE NOT NULL,  -- 작성일자
+    order_code VARCHAR(50) NOT NULL,  -- 발주 코드
+    internal_external VARCHAR(20) NOT NULL,  -- 내/외부
+    creator_name VARCHAR(100) NOT NULL,  -- 작성자 명
+    creator_position VARCHAR(50),  -- 작성자 직책
+    creator_contact VARCHAR(50),  -- 작성자 연락처
+    creator_email VARCHAR(100),  -- 작성자 이메일
+    admin_name VARCHAR(100),  -- 관리자 이름
+    admin_position VARCHAR(50),  -- 관리자 직책
+    admin_contact VARCHAR(50),  -- 관리자 연락처
+    admin_email VARCHAR(100),  -- 관리자 이메일
+    product_name VARCHAR(100) NOT NULL,  -- 완제품 명
+    budget DECIMAL(15, 2),  -- 예산
+    unit_price DECIMAL(15, 2),  -- 단가
+    stock DECIMAL(15, 2),  -- 현 재고
+    transaction_quantity INT,  -- 거래 수량
+    total_price DECIMAL(15, 2),  -- 총 가격
+    vat DECIMAL(15, 2),  -- 부가세
+    correspondent_code VARCHAR(50) NOT NULL,  -- 거래처 코드
+    business_number VARCHAR(50),  -- 사업자 번호
+    correspondent_name VARCHAR(100),  -- 거래처 명
+    correspondent_type VARCHAR(50),  -- 거래처 종류
+    correspondent_address VARCHAR(200),  -- 거래처 주소(국가)
+    correspondent_contact VARCHAR(50),  -- 거래처 담당자 연락처
+    correspondent_email VARCHAR(100),  -- 거래처 담당자 이메일
+    delivery_date DATETIME,  -- 납기일
+    modified_date DATETIME  -- 수정 일자
+);
+
+
+        # 테이블의 행과 열 정의
+        row_name = ["재료비", "인건비", "경비"]
+        column_name = ["", "%", "예산"]
+        
+        col_width = [60, 200, 200] # 칸 크기
+
+        # 라벨로 열 이름 표시
+        for col_idx, col in enumerate(column_name):
+            label = tk.Label(self.budget_window, text=col, width=col_width[col_idx] // 10, borderwidth=1, relief="solid")
+            label.grid(row=0, column=col_idx, padx=0, pady=0)
+
+        # 각 항목에 대한 데이터 입력 필드 생성 (표 형태로)
+        self.entries = {}
+        for row_idx, row in enumerate(row_name):
+            # 행 이름 표시
+            label = tk.Label(self.budget_window, text=row, width=col_width[0] // 10, borderwidth=1, relief="solid")
+            label.grid(row=row_idx + 1, column=0, padx=0, pady=0)
+
+            for col_idx, col in enumerate(column_name[1:]):  # 첫 번째 빈 칸은 제외하고 나머지 열 처리
+                entry = tk.Entry(self.budget_window, width=20)
+                entry.grid(row=row_idx + 1, column=col_idx + 1, padx=0, pady=0)
+                self.entries[(row, col)] = entry
+
+        # 저장 버튼 추가
+        save_button = tk.Button(self.budget_window, text="저장", command=self.save_budget)
+        save_button.grid(row=len(row_name) + 1, columnspan=len(column_name), pady=10)
+
+    def save_budget(self):
+        # 예산 입력값 저장 (예시로 콘솔에 출력)
+        budget_data = {}
+        for (row, col), entry in self.entries.items():
+            budget_data[(row, col)] = entry.get()
+
+        # 확인 메시지
+        print("저장된 예산 정보:", budget_data)
+
+self.topleft_Frame.columnconfigure(열번호(column), weight=가중치, uniform=그룹이름)
+
+self.topleft_Frame.grid_rowconfigure(행 번호, minsize=(최소 높이))
+
+DateEntry< 달력 선택만 하고 표시만 됌 / 값은 .get()으로 가져와야하고 
+
+import pymysql
+from tkinter import messagebox
+
+##DB table만들어지기 전까진 password 와 database 수정 후 사용
+class ConnectDB():
+    def __init__(self):
+        self.select='select'
+        self.insert='insert'
+        self.update='update'
+        self.delete='delete'
+        self.tablist=[]
+
+    def connection_DB(self,sql):
+        try:
+            self.connection = pymysql.connect(
+                    host='localhost',
+                    user = 'root',
+                    password = '0000', #바꿔서쓰셈
+                    database = 'erp_test',  #바꿔서쓰셈
+                    port = 3306
+                )
+
+            self.cursor = self.connection.cursor()  # 커서란 SQL쿼리를 실행하고 받아 오는 객체
+
+            #sql 처리
+            if(self.select in sql or self.select.upper() in sql):
+                self.cursor.execute(sql)
+                self.result = self.cursor.fetchall()
+                for i in self.result:
+                    self.tablist.append(list(i))
+                print('select tablist')
+                print(self.tablist)
+
+            elif(self.insert in sql or self.insert.upper() in sql):
+                self.cursor.execute(sql)
+                self.connection.commit()
+                self.result=self.cursor.fetchall()
+                print('insert tablist')
+                print(self.result)
+
+            elif(self.update in sql or self.update.upper() in sql):
+                self.cursor.execute(sql)
+                self.connection.commit()
+                self.result=self.cursor.fetchall()
+                print('update tablist')
+                print(self.result)
+
+            elif(self.delete in sql or self.delete.upper() in sql):
+                self.cursor.execute(sql)
+                self.connection.commit()
+                self.result=self.cursor.fetchall()
+                print('delete tablist')
+                print(self.result)
+
+            self.cursor.close()
+            self.connection.close()
+
+        except pymysql.MySQLError as e:
+            messagebox.showerror("DB 오류", str(e))
+
+
+def select_performance():
+    # 사용자가 선택한 값들 가져오기
+    correspondent_code = self.allCorrespondent.get()  # 거래처 코드
+    production_code = self.allproduction.get()  # 완제품 코드 또는 이름
+    author = self.allAuthor.get()  # 작성자
+    manager = self.allmanager.get()  # 관리자
+
+    # 납기일 및 작성일자 범위
+    delivery_date_from = self.date_entry4.get_date() if self.date_entry4.get_date() else None
+    delivery_date_to = self.date_entry5.get_date() if self.date_entry5.get_date() else None
+    creation_date_from = self.date_entry6.get_date() if self.date_entry6.get_date() else None
+    creation_date_to = self.date_entry7.get_date() if self.date_entry7.get_date() else None
+
+    # 수정일자 범위
+    update_date_from = self.date_entry8.get_date() if self.date_entry8.get_date() else None
+    update_date_to = self.date_entry9.get_date() if self.date_entry9.get_date() else None
+
+    # 기본 쿼리 시작
+    query = "SELECT * FROM your_table WHERE 1=1"  # 1=1은 조건을 추가하기 위한 기본 조건
+
+    # 각 조건에 대해 값이 있으면 쿼리 조건 추가
+    if correspondent_code:
+        query += f" AND 거래처_ID = '{correspondent_code}'"
+    if production_code:
+        query += f" AND 완제품_ID = '{production_code}'"
+    if author:
+        query += f" AND 작성자 = '{author}'"
+    if manager:
+        query += f" AND 관리자 = '{manager}'"
+    if delivery_date_from and delivery_date_to:
+        query += f" AND 납기일 BETWEEN '{delivery_date_from}' AND '{delivery_date_to}'"
+    elif delivery_date_from:  # 시작일만 있는 경우
+        query += f" AND 납기일 >= '{delivery_date_from}'"
+    elif delivery_date_to:  # 종료일만 있는 경우
+        query += f" AND 납기일 <= '{delivery_date_to}'"
+    if creation_date_from and creation_date_to:
+        query += f" AND 작성일자 BETWEEN '{creation_date_from}' AND '{creation_date_to}'"
+    elif creation_date_from:  # 시작일만 있는 경우
+        query += f" AND 작성일자 >= '{creation_date_from}'"
+    elif creation_date_to:  # 종료일만 있는 경우
+        query += f" AND 작성일자 <= '{creation_date_to}'"
+    if update_date_from and update_date_to:
+        query += f" AND 수정일자 BETWEEN '{update_date_from}' AND '{update_date_to}'"
+    elif update_date_from:  # 시작일만 있는 경우
+        query += f" AND 수정일자 >= '{update_date_from}'"
+    elif update_date_to:  # 종료일만 있는 경우
+        query += f" AND 수정일자 <= '{update_date_to}'"
+
+    # 쿼리 실행
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    # 조회된 결과 처리 (예시로 출력)
+    for row in result:
+        print(row)  # 또는 적절히 화면에 표시
+
+def select_performance(self):
+    # 각 필드에서 값을 가져오기
+    correspondent_code = self.get_Correspondent()  # 거래처 코드
+    production_code = self.get_Production()  # 완제품 코드 또는 이름
+    author = self.get_Author()  # 작성자
+    manager = self.get_Manager()  # 관리자
+
+    # 납기일 및 작성일자 범위
+    delivery_date_from = self.get_DeliveryDateFrom()
+    delivery_date_to = self.get_DeliveryDateTo()
+    creation_date_from = self.get_CreationDateFrom()
+    creation_date_to = self.get_CreationDateTo()
+    update_date_from = self.get_UpdateDateFrom()
+    update_date_to = self.get_UpdateDateTo()
+
+    # 기본 쿼리 시작
+    query = "SELECT * FROM your_table WHERE 1=1"
+
+    # 각 조건에 대해 값이 있으면 쿼리 조건 추가
+    if correspondent_code:
+        query += f" AND 거래처_ID = '{correspondent_code}'"
+    if production_code:
+        query += f" AND 완제품_ID = '{production_code}'"
+    if author:
+        query += f" AND 작성자 = '{author}'"
+    if manager:
+        query += f" AND 관리자 = '{manager}'"
+    if delivery_date_from and delivery_date_to:
+        query += f" AND 납기일 BETWEEN '{delivery_date_from}' AND '{delivery_date_to}'"
+    elif delivery_date_from:  # 시작일만 있는 경우
+        query += f" AND 납기일 >= '{delivery_date_from}'"
+    elif delivery_date_to:  # 종료일만 있는 경우
+        query += f" AND 납기일 <= '{delivery_date_to}'"
+    if creation_date_from and creation_date_to:
+        query += f" AND 작성일자 BETWEEN '{creation_date_from}' AND '{creation_date_to}'"
+    elif creation_date_from:  # 시작일만 있는 경우
+        query += f" AND 작성일자 >= '{creation_date_from}'"
+    elif creation_date_to:  # 종료일만 있는 경우
+        query += f" AND 작성일자 <= '{creation_date_to}'"
+    if update_date_from and update_date_to:
+        query += f" AND 수정일자 BETWEEN '{update_date_from}' AND '{update_date_to}'"
+    elif update_date_from:  # 시작일만 있는 경우
+        query += f" AND 수정일자 >= '{update_date_from}'"
+    elif update_date_to:  # 종료일만 있는 경우
+        query += f" AND 수정일자 <= '{update_date_to}'"
+
+    # 쿼리 실행
+    cursor.execute(query)
+    result = cursor.fetchall()
+
+    # 조회된 결과를 test_data 형식으로 변환
+    test_data = []
+    for row in result:
+        # 각 행을 test_data 형식으로 변환
+        # 예시로, 데이터에서 각 항목을 가져와서 리스트로 변환
+        test_data.append([
+            row['작성일자'],  # 작성일자 데이터 베이스 컬럼 명 ex) creation_date 
+            row['발주코드'],   # 발주 코드
+            row['내외부'],     # 내/외부
+            row['작성자'],     # 작성자
+            row['관리자'],     # 관리자
+            row['완제품명'],   # 완제품 명
+            row['총예산'],     # 총 예산
+            row['단가'],       # 단가
+            row['현재고'],     # 현 재고
+            row['거래수량'],   # 거래 수량
+            row['총가격'],     # 총 가격
+            row['부가세'],     # 부가세
+            row['거래처코드'], # 거래처 코드
+            row['거래처명'],   # 거래처 명
+            row['거래처종류'], # 거래처 종류
+            row['거래처담당자'], # 거래처 담당자
+            row['납기일'],     # 납기일
+            row['수정일자'],   # 수정일자
+        ])
+
+    # `test_data`를 TableWidget에 전달
+    self.someTable = tablewidget.TableWidget(self.bottom_Frame,
+                                             data=test_data,  # 변환된 데이터
+                                             col_name=["작성 일자", "발주 코드", "내/외부", "작성자 명", "관리자", "완제품 명", "총 예산", "단가", "현 재고", "거래 수량",
+                                                       "총 가격", "부가세", "거래처 코드", "거래처 명", "거래처 종류", "거래처 담당자", "납기일", "수정일자"],
+                                             cols=18,
+                                             editable=[False, False, False, False, False, False, False, False, False,
+                                                       False, False, False, False, False, False, False, False, False],
+                                             width=1300,  # 테이블 그려질 너비
+                                             height=350)  # 테이블 그려질 높이
+
+    self.someTable.pack()  # 테이블 패킹
+
+> 주말동안 해야할 것은 우선 db 입력받을 수 있도록 제작하고 예산 표 만들고 값 받을 수 있도록 제작, 저장, 조회까지 완성되게끔 하고 버튼 위치 ,  콤보박스 내용도 입력 받도록 할 것 
+
+# values 값으로 콤보박스 내용 db
+
+
+입력한 값들을 db에 저장 
+.execute("TNSERT INTO orders(creation_date,order_code.....) VALUES (?,?,....)",(write_date,order_code....))
+
+조건을 줘서 검색(조회)
+SELECT * FROM orders WHERE order_code= ? AND creation_date= ? >= ? AND .....)",(order_code,write_dateA,write_dateB)
