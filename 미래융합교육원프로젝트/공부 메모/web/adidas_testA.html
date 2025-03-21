@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>아디다스 사진 확대</title>
+	<style type="text/css">
+		body{margin: 0;}
+		.imgA img{
+			width: 300px; height: 300px;
+		}
+		.imgB video{
+			width: 300px; height: 300px;
+		}
+		#a1{
+			display: flex;
+			flex-direction: column;
+		}
+	</style>
+</head>
+<body>
+	<div id="a1">
+		<!-- 이미지 확대 및 영상 -->
+		<div class="imgA">
+			<img id="souseA"  src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/cafbea1ed4354c66a4e3fed22440ea49_9366/93_Green_IH0973_01_00_standard.jpg">
+		</div>	
+<!-- 		<div id="souseB" class="imgB">
+			<video playsinline loop src="https://assets.adidas.com/videos/ar_1,w_480,c_fill,q_auto,f_auto/6230fa4de14241a6b68e2ef9cd849f79_d98c/93_Green_IH0973_video.mp4" autoplay muted>
+			//	controls  < 자동재생(autoplay muted)이 없을 시 필수 / loop 반복 재생  preload="auto" 
+		</div>	 -->
+		<div id="souseC" class="imgA">
+			<img src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/8bfcf02059a24a528149528f42694d98_9366/93_Green_IH0973_01_03_hover_standard.jpg">	
+		</div>	
+		<div id="souseD" class="imgA">
+			<img src="https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/292c8381bb25487ca99f486fa5d2ed94_9366/93_Green_IH0973_02_standard.jpg">
+		</div>
+	</div>
+	<div id="a2">
+		<!-- 오른쪽 끝 고정바 -->
+		<h3>사이드 고정바</h3>
+	</div>
+
+	<script type="text/javascript">
+
+		let imga=document.querySelector('#souseA');
+		// let Aimg=document.getElementById('souseA');
+		// let Bimg=document.getElementById('imgB');
+		// let Cimg=document.getElementById('imgC');
+		// let Dimg=document.getElementById('imgD');
+		let imgTF=false;
+		let x;
+		let y;
+
+		const sideBar=document.getElementById('a2');
+		// 이미지 위 마우스 위치 
+		// function imgOn(event) {
+		// 	// 이미지 위치 가져오는 법
+		// 	x=e.offsetX;
+		// 	y=e.offsetY; 
+
+		// }
+
+		imga.addEventListener('mousemove',(e)=>{
+			x=e.offsetX;
+			y=e.offsetY; 
+			if(imgTF){
+				// 현재 해야하는 건 이미지는 그대로고 내용민 확대 되야
+				imga.style.scale='2'; // 이미지 전체 확대
+				// 위치 
+			}
+			
+		})
+
+		imga.addEventListener('mouseover',(e)=>{
+			imgTF=true;
+		})
+
+		imga.addEventListener('mouseout',(e)=>{
+			imga.style.scale='1';
+		})
+
+
+
+		// Aimg.addEventListener('mousemove',(e)=>{
+		// 	// imgTF = true;
+		// 	x=e.offsetX;
+		// 	y=e.offsetY;
+		// 	console.log(x)
+		// })
+
+		// Aimg.addEventListener('mouseover',(e)=>{
+
+		// })
+		// Aimg.addEventListener('mouseout',(e)=>{
+
+		// })
+
+
+
+	</script>
+
+</body>
+</html>

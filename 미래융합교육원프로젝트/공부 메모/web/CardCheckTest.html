@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<style>
+		table{
+
+		}
+
+		tr{
+
+		}
+
+		td{
+
+		}
+
+		td img{
+			visibility: hidden;
+		}
+	</style>
+</head>
+<body>
+	<table>
+		<tr>
+			<td class="card"></td>
+			<td class="card"></td>
+			<td class="card"></td>
+			<td class="card"></td>
+		</tr>		
+		<tr>
+			<td class="card"></td>
+			<td class="card"></td>
+			<td class="card"></td>
+			<td class="card"></td>
+		</tr>		
+		<tr>
+			<td class="card"></td>
+			<td class="card"></td>
+			<td class="card"></td>
+			<td class="card"></td>
+		</tr>		
+		<tr>
+			<td class="card"></td>
+			<td class="card"></td>
+			<td class="card"></td>
+			<td class="card"></td>
+		</tr>
+	</table>
+
+	<script>
+
+		let count =0;
+		let index=0;
+		let prevIndex;
+		let cardSelect=[null,null];
+		//이미지 배열
+		const images=[
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			""
+		]
+
+		window.onkeydown = function(e) {
+
+	// console.log(key);
+	switch(e.key){
+		case "ArrowDown":
+			if(index/4>=3) return;
+			index+=4;
+			console.log(index);
+			break;	
+		
+		case "ArrowUp":
+			if(index/4<1) return;
+			index-=4;
+			console.log(index);
+			break;	
+		
+		case "ArrowLeft":
+			if(index%4==0) return;
+			index--;
+			console.log(index);
+			break;	
+		
+		case "ArrowRight":
+			if(index%4==3) return;
+			index++;
+			console.log(index);
+			break;
+		case "Enter":
+			count++;
+
+
+		// document.querySelectorAll('.card').forEach(i =>{
+
+		// })
+		// 선언 이후 랜덤으로 값 지정 후 내용 저장
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<title>card</title> 
+		<meta charset="utf-8"> <!-- 규격-->
+		<style>
+			*{margin: 0; padding: 0; height: 100%}
+			.Card{position: absolute; text-align: center; left: 40%; top: 45%;}
+
+			/*1*/
+			/*	https://mblogthumb-phinf.pstatic.net/20120104_47/honamia_1325615195515bsseL_JPEG/%C0%AF%C8%F1%BF%D5_%B5%DE%B8%E9300dpi.jpg?type=w420 < 유희왕 카드 뒷면*/
+			.card_in{visibility:hidden; position: absolute; color: black; bottom: -100px}
+			.CardA{z-index: 10px; left: 1px; width: 100px; height: 100px; background-color: lightblue; position: absolute; text-align: center; border: 2px solid #049ecc;}
+			.CardA:hover{background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXi2TWsRiJW8c9LW10sfreGbK8H1qJvyuQsknM4m43PZC63MHsI8KXfzwW7d0-8XkX94JCbPfcLstJxPheXGLWiw); background-repeat: no-repeat; width: 550px; height: 500px; color: white; box-shadow: 5px 10px 10px lightblue; top: -5px;}
+			.CardA:hover #card_inA{visibility: visible;}
+
+
+			.CardB{z-index: 30px; left: 107px; width: 100px; height: 100px; background-color: lightcoral; position: absolute;text-align: center; border: 2px solid #ea5f47;}
+			.CardB:hover{background-image: url(https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTaY_RuESPdaKdhPZ41kXopfFkPbdJk4dzTn5EfT4ojOYKAperH1h7_A2maxZUbRWNLVhcszuocXuEbri2FZwKC9g); background-repeat: no-repeat; width: 550px; height: 500px; color: white; box-shadow: 5px 10px 10px lightpink; top: -5px;}
+			.CardB:hover #card_inB{visibility: visible; color: white;}
+
+
+			.CardC{z-index: 50px; left: 212px; width: 100px; height: 100px; background-color: lightcyan; position: absolute;text-align: center; border: 2px solid #22e6d6;}
+			.CardC:hover{background-image: url(file:///C:/Users/301-10/Desktop/web/%EB%82%98%EB%A7%8C%20%EC%97%86%EC%96%B4%20%EA%B3%A0%EC%96%91%EC%9D%B4.webp); background-repeat: no-repeat; width: 300px; height: 440px; color: white;  box-shadow: 5px 10px 10px lightskyblue; top: -5px;}
+			.CardC:hover #card_inC{visibility: visible;}
+
+
+			.CardD{z-index: 70px; left: 317px; width: 100px; height: 100px; background-color: lightgray; position: absolute;text-align: center; border: 2px solid #747d80;}
+			.CardD:hover{background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeHcWwxFY-aRIZjc2oVodjPdINNARQF2xJ_A&s); background-repeat: no-repeat; width: 225px; height: 225px; color: white; box-shadow: 5px 10px 10px lightgray; top: -5px;}
+			.CardD:hover #card_inD{visibility: visible; position: absolute; color: black;}
+
+
+			.CardE{z-index: 90px; left: 422px; width: 100px; height: 100px; background-color: lightpink; position: absolute;text-align: center; border: 2px solid #ec738d;}
+			.CardE:hover{background-image: url(file:///C:/Users/301-10/Desktop/web/%EB%A9%94%EC%9D%B8%EC%BF%A4.webp); background-repeat: no-repeat; width: 500px; height: 400px; color: white; box-shadow: 5px 10px 10px lightpink; top: -5px;}
+			.CardE:hover #card_inE{visibility: visible; position: absolute; color: black;}
+
+
+			.fixedCard{position: fixed; bottom: 10px; right: 10px; padding: 5px; color: white; background-color: lightblue; width: 70px; height: 50px }
+		</style>	
+	</head>
+
+	<body>
+		<div class="Card">
+			<div class="CardA">
+			<!-- 1번 -->
+				<div>1번 카드</div>
+				<p class="card_in" id="card_inA">아메리칸 쇼트헤어</p>
+			</div>
+			<div class="CardB">
+				<!-- 2번 -->
+				<div>2번 카드</div>
+				<p class="card_in" id="card_inB">베타</p>
+			</div>
+			<div class="CardC">
+				<!-- 3번 -->
+				<div>3번 카드</div>
+				<p class="card_in" id="card_inC">나만 없어 고양이(영화)</p>
+			</div>
+			<div class="CardD">
+				<!-- 4번 -->
+				<div>4번 카드</div>
+				<p class="card_in" id="card_inD">볼프손비스카차</p>
+			</div>
+			<div class="CardE">
+				<!-- 5번 -->
+				<div>5번 카드</div>
+				<p class="card_in" id="card_inE">메인쿤</p>
+			</div>
+		</div>
+		
+		
+		<div class="fixedCard">
+			<a href="">새로고침</a>
+		</div>
+
+	</body>
+
+</html>
