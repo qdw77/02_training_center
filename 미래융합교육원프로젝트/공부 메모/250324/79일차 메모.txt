@@ -1,0 +1,66 @@
+5 * 5
+0~255 RGB
+
+[-1,-1,-1][-1,9,-1][-1,-1,-1]
+커널은 9번 적용
+> 커널 찍는 것을 합성곱 ( 컴볼루션 )
+
+
+
+인공지능
+> 사람의 뉴런과 동일
+> 시신경 마다 선,색 등의 각각의 프레임을 봄
+가중치가 뉴런마다 있음
+> 가중치는 ptsd 등의 원인
+> 자극을 느끼지만 일정 수준 이하면 커팅
+> 하이퍼 파라미터로 조정
+
+
+
+
+# while True:
+#     ret, frame = cap.read()
+#     if not ret:
+#         break
+#     gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+#     faces=face_cascade.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5,minSize=(30,30))
+#     for (x, y, w, h) in faces:
+#         # 얼굴 필터용 좌표
+#         face_region = frame[y:y + h, x:x + w] # y부터 y + h(높이)까지, x부터 x+w(넓이)까지
+#         face_test = cv2.filter2D(face_region,-1,kernel_face) # 필터 적용
+#         frame[y:y+h,x:x+w] = face_test
+#     cv2.imshow('filter', frame)
+#     if cv2.waitKey(1) & 0xFF == ord('q'):
+#         break
+# cap.release()
+# cv2.destroyAllWindows()
+
+
+
+
+# face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+
+
+# def image_m(cap,factor=7):
+#     factor = 7
+#     height,width = cap.shape[:2] # shape는 이미지 크기,높이 등 가져옴
+#     s = cv2.resize(cap,(width // factor, height // factor),interpolation=cv2.INTER_LINEAR) # 모자이크
+#     m = cv2.resize(s,(width,height),interpolation=cv2.INTER_LINEAR)
+#     return m
+#     
+# cap = cv2.imread('test_IMG5.webp')
+# # kernel_face = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+# m_img=image_m(cap) # 모자이크
+# 
+# gray=cv2.cvtColor(cap,cv2.COLOR_BGR2GRAY)
+# faces = face_cascade.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5,minSize=(30,30))
+# for (x,y,w,h) in faces:
+#     face_area = cap[y:y+h, x:x+w]
+#     # face_test = cv2.filter2D(face_area, -1, kernel_face)
+#     # cap[y:y+h,x:x+w] = face_test
+#     m_img[y:y+h, x:x+w] = cap[y:y+h,x:x+w]
+# cv2.imshow('filter', m_img)
+# 
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
