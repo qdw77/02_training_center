@@ -1,0 +1,25 @@
+폼 데이터 
+DTO 컨트롤러로
+F/B > DTO .. db
+
+form 태그 내부 데이터 전달 action 부분
+
+인터 페이스 구체화된 클래스로 객체를 뽑음
+
+클래스 실질적인 구체를 만들기 위한 설계도
+
+h2-console  > jdbc:h2:~/test (매번 달라짐)
+> 실행 후 콘솔 하단 에 
+2025-03-27T11:30:14.469+09:00  INFO 15052 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:505832cb-8d50-4d1e-9492-0eec5e259246 user=SA
+여기 있음
+
+jdbc:h2:mem:505832cb-8d50-4d1e-9492-0eec5e259246 < 이 부분 JDBC URL에 작성
+SELECT * FROM ARTICLE
+
+UI > 컨트롤러 > db
+
+다음주 금요일 코드 작성이 목표
+피그마 시뮬 가능
+
+
+컴퓨터활용능력 필기 시험은 4/19에 보는 걸 목표로 하고, 실기 시험은 4/27일에 보려고 합니다. 하지만 최종 프로젝트 때문에 4/27일에 실기를 보기 어려우면 5월 초 내에 볼 예정입니다.
