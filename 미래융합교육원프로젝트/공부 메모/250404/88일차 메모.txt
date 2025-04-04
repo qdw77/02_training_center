@@ -1,0 +1,123 @@
+차트 설명
+메뉴바 
+
+
+개요 페이지
+ㄴ 설치 할때 얼마나 탄소중립 
+
+마지막 페이지 
+ㄴ 얼마나 절감
+ㄴ 탄소 중립이 얼마나 돼는 가
+ㄴ 강조
+
+
+
+데이터 테이블
+> 파일
+> 
+
+
+지역,업종,전력 사용량,국내 에너지원(석탄,석유 등) 별 발전비율, 신재생 에너지 사용량
+위성 지도로 위치 찾고 AI추천과 사용자 임의 설치 일치율, AI추천시 발전량, 사용자 설치시 발전량,설치 개수,면적,예상 에너지 생산량, 패널은 크기 2개,주소 입력창, 위도,경도,주소 및 장소 검색,일조량 별 색변화, 설치개수,면적,예상 발전량,태양광 발전량,N만큼 발전시 발생하는 탄소량, 탄소를 얼마나 절감했는 지, 석유사용,석탄 사용, 턴연가스 사용,바이오매스 사용시 나타나는 탄소량, 얼만큼 더 절약 가능한지(기간별 예측 누적 탄소 저감량), 에너지원 별 탄소 배출량, 태양광 발전시 탄소 배출량(시뮬 결과)
+기상
+위치
+시뮬
+
+
+
+
+energy_usage (에너지 사용량
+
+
+1. 큰 지역 별 , 업종별 전력 사용량, 전력 사용량, 신재생 에너지 사용 비율, 국내 에너지원별(석탄,석유 등) 발전 비율
+2. 위성 지도에서 실시간 날씨에 따른 일조량(색깔로)표기,선택 혹은 검색 등으로 확대 가능하고 그곳을 확대 후 설치 가능한 위치 표기 및 일조량에 따라 색 변화, 시뮬레이션에서 설치 개수, 패널은 총 두개 , 설치 면적, 예상 에너지 생산량, AI 추천, 사용자 임의 설치, ai 추천 발전량, 사용자 설치 발전량, 
+3. 시뮬 결과(설치 갯수(재치 결과 사진으로 가져옴), 설치 면적, 예상 발전량, 태양광 발전량, 탄소를 얼마나 절감했는 지, n만큼 발전시 발생하는 석유,석탄,천연가스,바이오매스등의 탄소량과 태양광 발전시 탄소 배출량 > 에너지원별 탄소 배출량 ㅂ교,  앞으로 얼마나 절약가능한가(기간 년도별(1년씩) 예측 누적 탄소 저감랴ㅇ)
+
+
+1. 전력 소비 및 에너지 사용 데이터 (energy_usage)
+컬럼명	타입	설명
+id	INT, PK, AUTO_INCREMENT	고유 ID
+year	YEAR	데이터 연도
+total_energy_consumption	BIGINT	전체 전력 소비량 (MWh)
+renewable_ratio	INT	신재생에너지 사용 비율 (%)
+coal_ratio	INT	석탄 발전 비율 (%)
+oil_ratio	INT	석유 발전 비율 (%)
+gas_ratio	INT	천연가스 발전 비율 (%)
+biomass_ratio	INT	바이오매스 발전 비율 (%)
+
+
+
+ 2. 위성 데이터 및 실시간 일조량 테이블 (solar_irradiance)
+컬럼명	데이터 타입	설명
+id	INT (PK, AUTO_INCREMENT)	고유 식별자
+latitude	INT	위도 (정수 값으로 변환)
+longitude	INT	경도 (정수 값으로 변환)
+region	VARCHAR(255)	지역명
+solar_irradiance	INT	실시간 일조량 (W/m²)
+weather_condition	VARCHAR(50)	날씨 상태 (맑음, 흐림 등)
+timestamp	DATETIME	측정 시간
+
+
+ 3. 태양광 패널 설치 시뮬레이션 테이블 (solar_simulation)
+컬럼명	데이터 타입	설명
+id	INT (PK, AUTO_INCREMENT)	고유 식별자
+latitude	INT	위도 (정수 값으로 변환)
+longitude	INT	경도 (정수 값으로 변환)
+address	VARCHAR(255)	주소
+selected_area	INT	선택한 설치 면적 (m²)
+panel_count	INT	설치한 패널 개수
+panel_size	VARCHAR(50)	패널 크기 (예: "1x2m", "2x3m")
+expected_energy_production	INT	예상 에너지 생산량 (kWh)
+ai_suggested	BOOLEAN	AI 추천 여부 (0 또는 1)
+user_defined	BOOLEAN	사용자 임의 설정 여부 (0 또는 1)
+
+
+ 4. 태양광 발전 및 탄소 저감 효과 테이블 (carbon_reduction)
+컬럼명	데이터 타입	설명
+id	INT (PK, AUTO_INCREMENT)	고유 식별자
+simulation_id	INT (FK, solar_simulation.id)	시뮬레이션 참조
+expected_solar_generation	INT	태양광 발전량 (kWh)
+carbon_reduction	INT	탄소 절감량 (kg CO₂)
+energy_source_comparison	TEXT	기존 에너지원 대비 탄소 배출량 비교 (JSON 대신 TEXT)
+predicted_savings	TEXT	연도별 예상 탄소 저감량 (JSON 대신 TEXT)
+
+
+region_energy_usage	지역 및 업종별 전력 사용량 저장	region_name (지역), industry (업종), year (연도), total_energy_consumption (총 전력 사용량), renewable_energy_ratio (신재생 에너지 비율)
+energy_source_distribution	국내 에너지원별 발전 비율	year (연도), energy_source (에너지원), generation_ratio (발전 비율)
+energy_source_carbon	에너지원별 탄소 배출량 (gCO₂/kWh)	energy_source (에너지원), carbon_emission (탄소 배출량)
+solar_installation_sites	태양광 설치 가능 지역 정보	latitude (위도), longitude (경도), solar_radiation (일조량), is_building (옥상 여부), shading_factor (그림자 영향도)
+solar_panel_simulation	태양광 시뮬레이션 결과 저장	site_id (설치 위치 ID), panel_type (패널 종류), installation_area (설치 면적), panel_count (패널 개수), expected_production (예상 발전량), ai_recommended (AI 추천 여부)
+carbon_reduction_results	태양광 발전으로 절감한 탄소량 저장	simulation_id (시뮬 ID), energy_source (기존 에너지원), carbon_saved (절감된 탄소량), year (연도), predicted_savings (해당 연도 예상 절감량)
+
+
+> csv 파일로 데이터 전부 받아와서 쓸모없고 대신 파이어베이스로 구글 로그인 정보 받아오기 > 로그인 없이 
+ERO ?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
