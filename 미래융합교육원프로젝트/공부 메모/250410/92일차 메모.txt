@@ -1,0 +1,18 @@
+.gitignore 으로 깃에 올리지 않을 폴더 혹은 파일 설정 가능
+
+
+
+스크롤 없애기 두번째 / 세번쨰 페이지
+헤드 에니매이션
+
+커밋 
+안될때 
+git 연결 끊고 git 연결 후 브랜치 다시 설정 후 커밋 준비  
+
+git add . 
+
+git status
+
+git pull origin feature/front --rebase
+
+git push origin feature/front
