@@ -1,0 +1,95 @@
+ERP 포로젝트 포폴 제작
+
+2월 25일부터 2월 27일까지 요구사항 정의, 27일부터 3월 4일까지 설계도면 작성, 3월 4일부터 6일까지 db테이블 정의서 작성, 3월 6일부터  17일까지 개인 프레임을 개발하면서 3월 14일부터 19일까지는 테스트를 진행하였으며 3월 19일부터 20일 오전까지는 발표 준비를 하였습니다
+
+그중 저는 같은 영업팀의 거래처와 연계되는 발주서 관리(수정,삭제,등록)와 판매실적조회 프레임을 제작하였습니다.
+
+
+
+
+  /* /* .home-page.menu-open .logo{
+    min-width: 100%;
+  }
+
+  .home-page.menu-open .dropdown-menu{
+    width: 100%;
+  } */
+
+  /* .menu-open .logo .info-page {
+    width: ;
+  }
+
+  .info-page.menu-open .logo {
+    min-width: 50%;
+  } */
+
+
+
+  /* 홈 intro 전용 로고 조정 */
+  /* .home-page .logo-title {
+    width: 50px;
+    height: 24px;
+  } */
+
+
+
+/* .home-page .dropdown-menu .logo{
+  background-color: gray;
+} */
+
+
+670 ? 420?
+
+
+
+
+/* 화면 넓을 시 */
+/* @media (min-width: 1210px) {
+  .simulation-info {
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .result-stats, .donut-chart-group {
+    flex: 1 1 48%;
+  }
+  
+} */
+
+/* @media (max-width: 1100px){
+  .donut-chart-group{
+    margin-top: 1.4rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .donut-chart-group {
+    margin-top: 6rem !important;
+  }
+  
+  .simulation-info {
+    margin-top: 8rem;
+  }
+
+}
+
+@media (max-width: 1200px) and (max-height: 1200px) {
+  .donut-chart-group {
+    margin-top: 12rem; 
+  }
+}
+
+@media (min-width: 1201px) and (min-height: 1201px) {
+  .donut-chart-group {
+    margin-top: 8.5rem;
+  }
+} */
+
+
+  /* flex: 1 1 45%; */]
+
+시뮬 페이지 
+장소 검색창/패널창 아래로
+

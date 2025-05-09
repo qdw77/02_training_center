@@ -1,0 +1,91 @@
+                        <div className="panel-info">
+                          <label className="panel-label">AI 추천 면적</label>
+                          <input
+                            type="text"
+                            value={`${aiMaskArea.toFixed(2)} ㎡`}
+                            className="panel-input"
+                            readOnly
+                          />
+                        </div>
+
+                      {/* <div className="panel-info">
+                        <label className="panel-label">설치 목록</label>
+                        <ul className="panel-list">
+                          {placedPanels.map((p, i) => (
+                            <li key={i}>
+                              {p.src.includes("solarpanel1")
+                                ? "패널1"
+                                : "패널2"}{" "}
+                              - 회전: {p.rotation}°
+                              <button
+                                onClick={() =>
+                                  handleRightClick(
+                                    { preventDefault: () => { } },
+                                    i
+                                  )
+                                }
+                              >
+                                X
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div> */}
+
+
+탄소 중립 및 개요 > 국내 에너지 사용량 및 
+
+
+
+
+├── ① 접속 `HomePage` → `info` 을 통하거나 `HomePage`에서 시뮬 페이지로 이동  
+│
+├── ② `/simulation` 페이지 진입  → NaverMap 기반 패널 배치 UI
+│    ├── 직접 배치 or
+│    └── 📤 이미지 캡처 후 Flask API로 POST (`/predict`)
+│            └── Flask (app.py)
+│                ├── 이미지 저장
+│                ├── run_inference() 호출 (AI 모델)
+│                └── 분석 결과 반환 (box, mask, score)
+│
+│                
+│
+├── ③ 분석 결과 수신 → 마스크 UI 표시 → 사용자 수정
+│
+├── ④ "배치 완료" 클릭 시 → 시뮬 결과와 이미지 base64 저장
+│    └── `ResultPage`로 이동
+│        ├── 시각화: PieChart, BarChart, 나무 등가 효과
+│        └── 25년간 누적 탄소 절감 효과까지 계산 표시
+│
+└── ⑤ 백엔드 로그 기록
+     └── Flask → SQLAlchemy → MySQL에 추론 로그 기록
+
+
+
+├── ① 접속 `HomePage`에서 직접 혹은 `Header`로 `/simulation` 페이지로 이동  ​
+│​
+├── ② `/simulation` 페이지 진입  → NaverMap 기반 패널 배치 UI​
+│    ├── AI 배치 ​
+│            └── Flask (app.py)​
+│                ├── 이미지 저장​
+│                ├── run_inference() 호출 (AI 모델)​
+│                └── 분석 결과 반환 ​
+│​
+├── ③ 분석 결과 수신 → 마스크 UI 표시 → 사용자 수정​
+│​
+├── ④ "배치 완료" 클릭 시 → 시뮬 결과와 이미지 저장​
+│    └── `ResultPage`로 이동​
+│        ├── 시각화: PieChart, BarChart, 나무 등가 효과​
+│        └── 누적 탄소 절감 효과까지 계산 표시​
+│​
+└── ⑤ 백엔드 로그 기록​
+
+     └── Flask → SQLAlchemy → MySQL에 추론 로그 기록
+
+
+리엑트
+기능 구현에 대해서 조금 아쉬운 부분이 많았다. 특히나 AI 배치 혹은 
+
+
+
+

@@ -1,0 +1,44 @@
+시뮬 패널 배치
+ㄴ 
+
+  const detectCenterRegionAndFocus = () => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    const pt = svg.createSVGPoint();
+    pt.x = svg.clientWidth / 2;
+    pt.y = svg.clientHeight / 2;
+    const ctm = svg.getScreenCTM().inverse();
+    const transformed = pt.matrixTransform(ctm);
+
+    const elements = svg.querySelectorAll(".region");
+    for (const el of elements) {
+      const bbox = el.getBBox();
+      if (
+        transformed.x >= bbox.x &&
+        transformed.x <= bbox.x + bbox.width &&
+        transformed.y >= bbox.y &&
+        transformed.y <= bbox.y + bbox.height
+      ) {
+        const name = el.getAttribute("data-name");
+        if (name && name !== selectedRegion?.name) {
+          handleRegionClick(name, { target: el, clientX: pt.x, clientY: pt.y });
+          break;
+        }
+      }
+    }
+  };
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+    setZoom(prev => Math.min(2, Math.max(0.5, prev - e.deltaY * 0.001)));
+  };
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+    setZoom(prev => Math.min(2, Math.max(0.5, prev - e.deltaY * 0.001)));
+  };
+
+  const handleMouseDown = (e) => {
+    setDragging(true);
+    setStart({ x: e.clientX, y: e.clientY });
+  };

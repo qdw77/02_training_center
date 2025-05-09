@@ -1,0 +1,32 @@
+ {/* <div className="panel-image-box custom-panel-box">
+                        <div className="custom-panel-inputs">
+                          <label>커스텀 패널</label>
+                          <div className="custom-dimensions">
+                            <input
+                              type="number"
+                              placeholder="너비 (cm)"
+                              value={customWidth}
+                              onChange={(e) => setCustomWidth(Number(e.target.value))}
+                            />
+                            <span>x</span>
+                            <input
+                              type="number"
+                              placeholder="높이 (cm)"
+                              value={customHeight}
+                              onChange={(e) => setCustomHeight(Number(e.target.value))}
+                            />
+                          </div>
+                          <button
+                            onClick={() => {
+                              if (!aiPlacementMode) return;
+                              setPlacingPanel(null); // 이미지 없이 커스텀
+                              setPlacingSize({
+                                width: cmToPx(customWidth),
+                                height: cmToPx(customHeight),
+                              });
+                            }}
+                          >
+                            커스텀 패널 적용
+                          </button>
+                        </div>
+                      </div> */}
